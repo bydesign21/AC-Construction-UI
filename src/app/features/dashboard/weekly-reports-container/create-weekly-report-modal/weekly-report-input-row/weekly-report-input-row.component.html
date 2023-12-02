@@ -1,0 +1,43 @@
+<div class="flex lg:flex-row w-full flex-col gap-4 items-center">
+  <app-date-range-picker
+    class="[&>*]:w-full w-full"
+    (changed)="handleDateRangeChange($event)"
+    [isRequired]="true"
+    label="Date Range" />
+  <div class="flex flex-col w-full">
+    <nz-form-label
+      [nzRequired]="true"
+      class="!text-left [&>*]:!text-lg"
+      [nzNoColon]="true"
+      >Revenue</nz-form-label
+    >
+    <input
+      currencyMask
+      [(ngModel)]="revenueTotal"
+      type="text"
+      title="revenue"
+      placeholder="Enter Revenue"
+      label="revenue"
+      nz-input
+      class="!text-left"
+      (ngModelChange)="handleChange()" />
+  </div>
+  <div class="flex flex-col w-full">
+    <nz-form-label
+      [nzRequired]="true"
+      class="!text-left [&>*]:!text-lg"
+      [nzNoColon]="true"
+      >Payroll Amount</nz-form-label
+    >
+    <input
+      currencyMask
+      type="text"
+      title="payroll"
+      placeholder="Enter Payroll Amount"
+      label="payroll"
+      nz-input
+      class="!text-left"
+      [(ngModel)]="payrollTotal"
+      (ngModelChange)="handleChange()" />
+  </div>
+</div>

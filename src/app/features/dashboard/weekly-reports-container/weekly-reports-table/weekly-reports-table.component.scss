@@ -1,0 +1,49 @@
+.search-box {
+  padding: 8px;
+}
+
+.search-box input {
+  width: 188px;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.search-box button {
+  width: 90px;
+}
+
+.search-button {
+  margin-right: 8px;
+}
+
+::ng-deep {
+  .weekly-report-table {
+    nz-pagination {
+      position: relative;
+      bottom: 2rem;
+    }
+    nz-table {
+      height: 75dvh;
+      nz-spin {
+        height: 100%;
+        .ant-spin-container {
+          height: 100%;
+          .ant-table {
+            height: 100%;
+            .ant-table-container {
+              height: 70dvh;
+              .ant-table-content {
+                height: 70dvh;
+                table {
+                  tr.ant-table-placeholder > td {
+                    height: 70dvh;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

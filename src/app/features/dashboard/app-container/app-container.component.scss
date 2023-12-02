@@ -1,0 +1,11 @@
+::ng-deep {
+  .drawer-navigation {
+    position: static;
+    top: 4rem;
+  }
+
+  .stop-scrolling {
+    height: 100dvh;
+    overflow: hidden;
+  }
+}

@@ -1,0 +1,134 @@
+<div
+  #table
+  class="flex flex-col justify-center items-center min-w-full overflow-hidden">
+  <nz-table
+    class="min-w-full overflow-hidden"
+    #editRowTable
+    nzBordered
+    [nzTableLayout]="'fixed'"
+    [nzPageSize]="8"
+    [nzPaginationPosition]="'bottom'"
+    [nzShowPagination]="items!.length > 8"
+    [nzData]="items || []">
+    <thead>
+      <tr>
+        <th>Plan #</th>
+        <th class="w-[15rem]">Address</th>
+        <th>Quantity</th>
+        <th>Rate</th>
+        <th>Discount</th>
+        <th>Subtotal</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        *ngFor="let data of editRowTable.data; index as i"
+        class="editable-row"
+        (click)="stopEdit(); startEdit(data.id)"
+        (blur)="stopEdit()">
+        <td>
+          <div [hidden]="editId === data.id" (click)="startEdit(data.id)">
+            {{ data.planId }}
+          </div>
+          <input
+            aria-label="Plan #"
+            (click)="$event.stopPropagation()"
+            [hidden]="editId !== data.id"
+            nz-input
+            [(ngModel)]="data.planId" />
+        </td>
+        <td>
+          <div [hidden]="editId === data.id" (click)="startEdit(data.id)">
+            {{ data.address }}
+          </div>
+          <input
+            aria-label="Address"
+            (click)="$event.stopPropagation()"
+            [hidden]="editId !== data.id"
+            nz-input
+            type="text"
+            [(ngModel)]="data.address" />
+        </td>
+        <td>
+          <div [hidden]="editId === data.id" (click)="startEdit(data.id)">
+            {{ data.quantity }}
+          </div>
+          <input
+            aria-label="Quantity"
+            (click)="$event.stopPropagation()"
+            [hidden]="editId !== data.id"
+            nz-input
+            type="number"
+            [(ngModel)]="data.quantity" />
+        </td>
+        <td>
+          <div [hidden]="editId === data.id" (click)="startEdit(data.id)">
+            {{ data.rate | currency }}
+          </div>
+          <input
+            aria-label="Rate"
+            (click)="$event.stopPropagation()"
+            [hidden]="editId !== data.id"
+            nz-input
+            type="number"
+            [(ngModel)]="data.rate" />
+        </td>
+        <td>
+          <div [hidden]="editId === data.id" (click)="startEdit(data.id)">
+            {{ data.discount | currency }}
+          </div>
+          <input
+            aria-label="Discount"
+            (click)="$event.stopPropagation()"
+            [hidden]="editId !== data.id"
+            nz-input
+            type="number"
+            [(ngModel)]="data.discount" />
+        </td>
+        <td>
+          <div [hidden]="editId === data.id" (click)="startEdit(data.id)">
+            {{ data.total | currency }}
+          </div>
+          <input
+            aria-label="Total"
+            (click)="$event.stopPropagation()"
+            [hidden]="editId !== data.id"
+            nz-input
+            type="number"
+            [(ngModel)]="data.total" />
+        </td>
+
+        <td class="flex flex-col items-center justify-center">
+          <button
+            title="Delete Row"
+            type="button"
+            class="!rounded-lg items-center justify-center flex flex-col"
+            nz-button
+            nz-popconfirm
+            nzPopconfirmTitle="Are you sure?"
+            (nzOnConfirm)="deleteItem(data.id)">
+            <span
+              class="items-center !text-red-400 justify-center h-[1.4rem]"
+              nz-icon
+              [nzType]="'delete'"
+              nzTheme="outline"
+              ><span class="sr-only">Delete Item</span></span
+            >
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+  <div
+    class="fixed bottom-[5rem] w-full flex flex-col justify-center items-center">
+    <button
+      nz-button
+      (click)="requestAddItem()"
+      nzType="primary"
+      nzSize="large"
+      class="!rounded-lg w-[40%] justify-center items-center flex flex-auto">
+      Add Line Item
+    </button>
+  </div>
+</div>

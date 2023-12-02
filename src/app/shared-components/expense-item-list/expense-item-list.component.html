@@ -1,0 +1,169 @@
+<div
+  #table
+  class="flex flex-col justify-center items-center min-w-full overflow-hidden">
+  <nz-table
+    class="min-w-full overflow-hidden"
+    #editRowTable
+    nzBordered
+    [nzTableLayout]="'fixed'"
+    [nzPageSize]="8"
+    [nzPaginationPosition]="'bottom'"
+    [nzShowPagination]="items!.length > 8"
+    [nzData]="items || []">
+    <thead>
+      <tr>
+        <th class="w-[10rem]">Employee</th>
+        <th class="w-[15rem]">Address</th>
+        <th>Sqft Price</th>
+        <th>Sqft</th>
+        <th>Amount</th>
+        <th>Paid</th>
+        <th class="w-[10rem]">Date</th>
+        <th class="w-[8rem]">Type</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        *ngFor="let data of editRowTable.data; index as i"
+        class="editable-row"
+        (click)="stopEdit(); startEdit(data.id)"
+        (blur)="stopEdit()">
+        <td>
+          <div
+            [hidden]="editId === data.id"
+            (click)="startEdit(data.id); $event.stopPropagation()">
+            {{ getEmployeeLabelById(data?.employeeId || '') }}
+          </div>
+          <nz-select
+            class="w-[8rem]"
+            (click)="$event.stopPropagation()"
+            [hidden]="editId !== data.id"
+            [nzOptions]="employeeList"
+            [(ngModel)]="data.employeeId" />
+        </td>
+        <td>
+          <div [hidden]="editId === data.id" (click)="startEdit(data.id)">
+            {{ data.address }}
+          </div>
+          <input
+            aria-label="Address"
+            (click)="$event.stopPropagation()"
+            [hidden]="editId !== data.id"
+            nz-input
+            [(ngModel)]="data.address" />
+        </td>
+        <td>
+          <div [hidden]="editId === data.id" (click)="startEdit(data.id)">
+            {{ data.sqftPrice | currency }}
+          </div>
+          <input
+            aria-label="Sqft Price"
+            (click)="$event.stopPropagation()"
+            [hidden]="editId !== data.id"
+            nz-input
+            type="number"
+            [(ngModel)]="data.sqftPrice"
+            (ngModelChange)="handleSqftCostCalc(i)" />
+        </td>
+        <td>
+          <div [hidden]="editId === data.id" (click)="startEdit(data.id)">
+            {{ data.sqft | number }}
+          </div>
+          <input
+            aria-label="Sqft"
+            (click)="$event.stopPropagation()"
+            [hidden]="editId !== data.id"
+            nz-input
+            type="number"
+            [(ngModel)]="data.sqft"
+            (ngModelChange)="handleSqftCostCalc(i)" />
+        </td>
+        <td>
+          <div [hidden]="editId === data.id" (click)="startEdit(data.id)">
+            {{ data.amount | currency }}
+          </div>
+          <input
+            aria-label="Amount"
+            (click)="$event.stopPropagation()"
+            [hidden]="editId !== data.id"
+            nz-input
+            type="number"
+            [(ngModel)]="data.amount" />
+        </td>
+        <td>
+          <div
+            class="flex flex-col items-center justify-center"
+            [hidden]="editId === data.id"
+            (click)="startEdit(data.id)">
+            <input
+              aria-label="Is Paid?"
+              type="checkbox"
+              [checked]="data.isPaid"
+              disabled />
+          </div>
+          <div
+            class="flex flex-col items-center justify-center"
+            (click)="startEdit(data.id)">
+            <input
+              aria-label="Is Paid?"
+              (click)="$event.stopPropagation()"
+              [hidden]="editId !== data.id"
+              type="checkbox"
+              [(ngModel)]="data.isPaid" />
+          </div>
+        </td>
+        <td class="editible-cell">
+          <div [hidden]="editId === data.id" (click)="startEdit(data.id)">
+            {{ data.date }}
+          </div>
+          <nz-date-picker
+            (click)="$event.stopPropagation()"
+            [hidden]="editId !== data.id"
+            nzFormat="MM/dd/yyyy"
+            [(ngModel)]="data.date" />
+        </td>
+        <td class="w-[6rem]">
+          <div [hidden]="editId === data.id" (click)="startEdit(data.id)">
+            {{ data.type }}
+          </div>
+          <nz-select
+            class="w-[6rem]"
+            (click)="$event.stopPropagation()"
+            [hidden]="editId !== data.id"
+            [nzOptions]="typeOptions"
+            [(ngModel)]="data.type" />
+        </td>
+        <td class="flex flex-col items-center justify-center">
+          <button
+            title="Delete Row"
+            type="button"
+            class="!rounded-lg items-center justify-center flex flex-col"
+            nz-button
+            nz-popconfirm
+            nzPopconfirmTitle="Are you sure?"
+            (nzOnConfirm)="deleteItem(data.id)">
+            <span
+              class="items-center !text-red-400 justify-center h-[1.4rem]"
+              nz-icon
+              [nzType]="'delete'"
+              nzTheme="outline"
+              ><span class="sr-only">Delete Item</span></span
+            >
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+  <div
+    class="fixed bottom-[5rem] w-full flex flex-col justify-center items-center">
+    <button
+      nz-button
+      (click)="requestAddItem()"
+      nzType="primary"
+      nzSize="large"
+      class="!rounded-lg w-[40%] justify-center items-center flex flex-auto">
+      Add Expense
+    </button>
+  </div>
+</div>

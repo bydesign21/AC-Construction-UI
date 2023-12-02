@@ -1,0 +1,66 @@
+<div
+  *ngIf="isMenuVisible"
+  class="min-w-screen overflow-hidden h-[2.5rem] bg-gray-200 flex flex-row justify-center items-center">
+  <ng-container *ngIf="!isMobileViewPort; else mobileViewTemplate">
+    <div class="mx-[0.5rem] sm:mx-[4rem] flex flex-row">
+      <ng-container [ngTemplateOutlet]="menuContent"></ng-container>
+    </div>
+  </ng-container>
+  <ng-template #mobileViewTemplate>
+    <div class="flex flex-col justify-center items-center">
+      <div
+        (click)="handleMenuIconClicked()"
+        class="!flex ant-menu-item !flex-row !items-center !px-2 !justify-center">
+        <span class="h-[2.5rem] mx-1 justify-center items-center flex flex-col"
+          >Menu</span
+        >
+        <span
+          class="items-center mx-1 justify-center flex items-center flex-col"
+          nz-icon
+          nzType="menu"
+          nzTheme="outline"></span>
+      </div>
+      <nz-drawer
+        [nzContent]="menuContent"
+        (nzOnClose)="handleMenuIconClicked()"
+        [nzCloseOnNavigation]="'true'"
+        [nzVisible]="isMobileMenuOpen"
+        [nzClosable]="true"
+        [nzPlacement]="'top'"
+        [nzMask]="false"
+        [nzHeight]="'100dvh'"
+        [nzWrapClassName]="
+          'static top-[4rem] !bg-gray-500 ' + isMobileMenuOpen ? '' : 'hidden'
+        "
+        [nzBodyStyle]="{
+          padding: '0.25rem',
+          'background-color': 'rgb(229 231 235)'
+        }"></nz-drawer>
+    </div>
+  </ng-template>
+</div>
+
+<ng-template #menuContent>
+  <ul
+    nz-menu
+    class="m-0 p-0 !my-4 !bg-gray-200 flex flex-col sm:flex-row"
+    *ngIf="items">
+    <li
+      class="h-[2.5rem] border-slate-500 border-y-[0.05rem] border-solid sm:border-none z-[1] !px-6 !mt-0 !mb-0 !flex !flex-col !sm:flex-row relative"
+      nz-menu-item
+      *ngFor="let item of items"
+      [nzMatchRouter]="true"
+      [routerLink]="item?.routerUrl"
+      (click)="handleLinkClicked()">
+      <span
+        class="relative bottom-[0.2rem] z-[1]"
+        *ngIf="item.iconUrl"
+        nz-icon
+        [nzType]="item.iconUrl || ''"
+        nzTheme="outline"></span>
+      <span class="z-[1] relative">
+        {{ item.label }}
+      </span>
+    </li>
+  </ul>
+</ng-template>

@@ -1,0 +1,29 @@
+<div class="flex flex-col pt-4">
+  <h3>
+    {{ label }}
+    <ng-container *ngIf="!isExpense; else reverseTemplate">
+      <span
+        [class]="
+          value === 0
+            ? 'text-black'
+            : value! > 0
+              ? 'text-green-800'
+              : 'text-red-500'
+        "
+        >{{ value | currency }}</span
+      >
+    </ng-container>
+    <ng-template #reverseTemplate>
+      <span
+        [class]="
+          value === 0
+            ? 'text-black'
+            : value! > 0
+              ? 'text-red-500'
+              : 'text-green-800'
+        "
+        >{{ value | currency }}</span
+      >
+    </ng-template>
+  </h3>
+</div>
