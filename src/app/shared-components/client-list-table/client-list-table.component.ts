@@ -6,19 +6,7 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-
-export interface Client {
-  id?: string;
-  name: string;
-  address: string;
-  city: string;
-  state: string;
-  zipCode: string;
-  phone: string;
-  email: string;
-  fax?: string;
-  vendorNumber?: string;
-}
+import { Client } from '../../features/dashboard/invoices-container/invoices-model/model';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

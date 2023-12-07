@@ -25,6 +25,7 @@ import {
   BankOutline,
   BarChartOutline,
   EditOutline,
+  ExclamationCircleOutline,
 } from '@ant-design/icons-angular/icons';
 import { AuthService } from '../auth/auth.service';
 import { NzMessageModule } from 'ng-zorro-antd/message';
@@ -60,6 +61,15 @@ import { CreateClientFormComponent } from './invoices-container/clients-modal/cr
 import { ClientListTableModule } from '../../shared-components/client-list-table/client-list-table.module';
 import { InvoiceItemListModule } from '../../shared-components/invoice-item-list/invoice-item-list.module';
 import { NzSelectModule } from 'ng-zorro-antd/select';
+import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
+import { ChecksContainerComponent } from './checks-container/checks-container.component';
+import { CreateCheckModalComponent } from './checks-container/create-check-modal/create-check-modal.component';
+import { CreateChecksReportModalComponent } from './checks-container/create-checks-report-modal/create-checks-report-modal.component';
+import { EmployeeModalComponent } from './checks-container/employee-modal/employee-modal.component';
+import { CreateEmployeeFormComponent } from './checks-container/employee-modal/create-employee-form/create-employee-form.component';
+import { ChecksReportTableModule } from '../../shared-components/checks-report-table/checks-report-table.module';
+import { EmployeeListTableModule } from '../../shared-components/employee-list-table/employee-list-table.module';
+import { WeeklyReportsService } from './weekly-reports-container/weekly-reports-services/weekly-reports.service';
 
 const icons = [
   SettingOutline,
@@ -80,6 +90,7 @@ const icons = [
   BankOutline,
   BarChartOutline,
   EditOutline,
+  ExclamationCircleOutline,
 ];
 
 @NgModule({
@@ -97,6 +108,11 @@ const icons = [
     CreateInvoiceModalComponent,
     CreateReportModalComponent,
     CreateClientFormComponent,
+    ChecksContainerComponent,
+    CreateCheckModalComponent,
+    CreateChecksReportModalComponent,
+    EmployeeModalComponent,
+    CreateEmployeeFormComponent,
   ],
   imports: [
     CommonModule,
@@ -128,12 +144,16 @@ const icons = [
     InvoiceItemListModule,
     ExpenseItemListModule,
     NzSelectModule,
+    NzToolTipModule,
+    ChecksReportTableModule,
+    EmployeeListTableModule,
   ],
   providers: [
     provideRouter(routes),
     AuthService,
     CurrencyPipe,
     ExpensesService,
+    WeeklyReportsService,
   ],
   exports: [
     DashboardComponent,
@@ -148,6 +168,10 @@ const icons = [
     CreateReportModalComponent,
     ClientsModalComponent,
     CreateClientFormComponent,
+    ChecksContainerComponent,
+    CreateCheckModalComponent,
+    CreateChecksReportModalComponent,
+    EmployeeModalComponent,
   ],
 })
 export class DashboardModule {}

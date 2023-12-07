@@ -6,7 +6,9 @@
     {{ label }}
   </nz-form-label>
   <nz-range-picker
+    (blur)="onBlur()"
     class="w-[15rem]"
-    [(ngModel)]="date"
-    (ngModelChange)="onChange($event)"></nz-range-picker>
+    [nzDisabled]="disabled"
+    (ngModelChange)="onChangeResult($event)"
+    [(ngModel)]="value"></nz-range-picker>
 </div>

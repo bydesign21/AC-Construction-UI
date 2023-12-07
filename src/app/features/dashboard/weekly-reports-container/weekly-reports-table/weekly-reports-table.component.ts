@@ -5,20 +5,7 @@ import {
   Input,
   Output,
 } from '@angular/core';
-
-export interface WeeklyReport {
-  id?: string;
-  date: string;
-  revenue: number;
-  total: number;
-  profit: number;
-  profitSplit: number;
-  payroll: number;
-  moulding: number;
-  framing: number;
-  misc: number;
-  decking: number;
-}
+import { WeeklyReport } from '../weekly-reports-model/model';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -11,7 +11,7 @@ import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 import { CreateClientFormComponent } from './create-client-form/create-client-form.component';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { Subject, debounceTime, takeUntil } from 'rxjs';
-import { Client } from '../../../../shared-components/client-list-table/client-list-table.component';
+import { Client } from '../invoices-model/model';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -22,6 +22,126 @@ import { Client } from '../../../../shared-components/client-list-table/client-l
 })
 export class ClientsModalComponent implements OnInit, OnDestroy {
   @Input() clientList: Client[] = [
+    {
+      id: '1',
+      name: 'Client 1',
+      address: '123 Main St',
+      city: 'City',
+      state: 'State',
+      zipCode: '12345',
+      phone: '1234567890',
+      email: 'loganvasquez@gmail.com',
+    },
+    {
+      id: '1',
+      name: 'Client 1',
+      address: '123 Main St',
+      city: 'City',
+      state: 'State',
+      zipCode: '12345',
+      phone: '1234567890',
+      email: 'loganvasquez@gmail.com',
+    },
+    {
+      id: '1',
+      name: 'Client 1',
+      address: '123 Main St',
+      city: 'City',
+      state: 'State',
+      zipCode: '12345',
+      phone: '1234567890',
+      email: 'loganvasquez@gmail.com',
+    },
+    {
+      id: '1',
+      name: 'Client 1',
+      address: '123 Main St',
+      city: 'City',
+      state: 'State',
+      zipCode: '12345',
+      phone: '1234567890',
+      email: 'loganvasquez@gmail.com',
+    },
+    {
+      id: '1',
+      name: 'Client 1',
+      address: '123 Main St',
+      city: 'City',
+      state: 'State',
+      zipCode: '12345',
+      phone: '1234567890',
+      email: 'loganvasquez@gmail.com',
+    },
+    {
+      id: '1',
+      name: 'Client 1',
+      address: '123 Main St',
+      city: 'City',
+      state: 'State',
+      zipCode: '12345',
+      phone: '1234567890',
+      email: 'loganvasquez@gmail.com',
+    },
+    {
+      id: '1',
+      name: 'Client 1',
+      address: '123 Main St',
+      city: 'City',
+      state: 'State',
+      zipCode: '12345',
+      phone: '1234567890',
+      email: 'loganvasquez@gmail.com',
+    },
+    {
+      id: '1',
+      name: 'Client 1',
+      address: '123 Main St',
+      city: 'City',
+      state: 'State',
+      zipCode: '12345',
+      phone: '1234567890',
+      email: 'loganvasquez@gmail.com',
+    },
+    {
+      id: '1',
+      name: 'Client 1',
+      address: '123 Main St',
+      city: 'City',
+      state: 'State',
+      zipCode: '12345',
+      phone: '1234567890',
+      email: 'loganvasquez@gmail.com',
+    },
+    {
+      id: '1',
+      name: 'Client 1',
+      address: '123 Main St',
+      city: 'City',
+      state: 'State',
+      zipCode: '12345',
+      phone: '1234567890',
+      email: 'loganvasquez@gmail.com',
+    },
+    {
+      id: '1',
+      name: 'Client 1',
+      address: '123 Main St',
+      city: 'City',
+      state: 'State',
+      zipCode: '12345',
+      phone: '1234567890',
+      email: 'loganvasquez@gmail.com',
+    },
+    {
+      id: '1',
+      name: 'Client 1',
+      address: '123 Main St',
+      city: 'City',
+      state: 'State',
+      zipCode: '12345',
+      phone: '1234567890',
+      email: 'loganvasquez@gmail.com',
+    },
     {
       id: '1',
       name: 'Client 1',
@@ -109,7 +229,6 @@ export class ClientsModalComponent implements OnInit, OnDestroy {
 
   handleCreateClientModalOk() {
     const instance = this.createClientModalRef.getContentComponent();
-    console.log('instance', instance);
     if (instance.isFormValid()) {
       const form = instance.onSubmit();
       const isClientUpdated = Boolean(instance?.data?.client);

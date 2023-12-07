@@ -7,7 +7,7 @@ import {
   Output,
 } from '@angular/core';
 import { SharedUtilsService } from '../../../../shared-components/shared-utils.service';
-import { Invoice } from '../../../../shared-components/invoice-item-list/invoice-item-list.component';
+import { Invoice } from '../invoices-model/model';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -23,7 +23,7 @@ export class CreateReportModalComponent {
   constructor(
     private cd: ChangeDetectorRef,
     private utils: SharedUtilsService
-  ) { }
+  ) {}
 
   handleDateChanged(dateRange: Date[]) {
     const rangeString = this.utils.formatDateRange(dateRange);

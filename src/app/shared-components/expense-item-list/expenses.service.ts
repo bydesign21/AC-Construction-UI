@@ -1,16 +1,10 @@
 import { Injectable } from '@angular/core';
-import { ExpenseItem, ExpenseTypes } from './expense-item-list.component';
 import { SharedUtilsService } from '../shared-utils.service';
-
-export interface WeeklyReportTotals {
-  total: number;
-  decking: number;
-  framing: number;
-  misc: number;
-  moulding: number;
-  profit: number;
-  profitSplit: number;
-}
+import {
+  ExpenseItem,
+  ExpenseTypes,
+  WeeklyReportTotals,
+} from '../../features/dashboard/weekly-reports-container/weekly-reports-model/model';
 
 @Injectable({
   providedIn: 'root',
@@ -55,7 +49,6 @@ export class ExpensesService {
     expenses.total += params.payroll;
     expenses.profit = params.revenue - expenses.total;
     expenses.profitSplit = expenses.profit / 2;
-    console.log('expenses Service', expenses, params.payroll, params.revenue);
     return expenses as WeeklyReportTotals;
   }
 

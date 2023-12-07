@@ -1,34 +1,60 @@
-<div class="flex lg:flex-row w-full flex-col gap-4 items-center">
+<form
+  [formGroup]="form"
+  class="flex lg:flex-row w-full flex-col gap-4 items-center">
   <app-date-range-picker
     class="[&>*]:w-full w-full"
+    formControlName="dateRange"
     (changed)="handleDateRangeChange($event)"
     [isRequired]="true"
     label="Date Range" />
   <div class="flex flex-col w-full">
     <nz-form-label
       [nzRequired]="true"
-      class="!text-left [&>*]:!text-lg"
+      class="!text-left [&>*]:!text-lg !flex !flex-row !items-center !justify-between"
       [nzNoColon]="true"
-      >Revenue</nz-form-label
-    >
+      ><span>Revenue</span>
+      <span
+        *ngIf="
+          form.controls.revenueTotal.invalid &&
+          form.controls.revenueTotal.touched
+        "
+        nz-icon
+        nzType="exclamation-circle"
+        nzTheme="outline"
+        class="!text-red-500 !text-lg ml-1 relative bottom-[0.15rem]"
+        [nz-tooltip]="tooltipTemplate"
+        [nzTooltipTitleContext]="{ field: 'revenueTotal' }">
+      </span
+    ></nz-form-label>
     <input
       currencyMask
-      [(ngModel)]="revenueTotal"
+      formControlName="revenueTotal"
       type="text"
       title="revenue"
       placeholder="Enter Revenue"
       label="revenue"
       nz-input
-      class="!text-left"
-      (ngModelChange)="handleChange()" />
+      class="!text-left" />
   </div>
   <div class="flex flex-col w-full">
     <nz-form-label
       [nzRequired]="true"
-      class="!text-left [&>*]:!text-lg"
+      class="!text-left [&>*]:!text-lg !flex !flex-row !items-center !justify-between"
       [nzNoColon]="true"
-      >Payroll Amount</nz-form-label
-    >
+      ><span>Payroll Amount</span>
+      <span
+        *ngIf="
+          form.controls.payrollTotal.invalid &&
+          form.controls.payrollTotal.touched
+        "
+        nz-icon
+        nzType="exclamation-circle"
+        nzTheme="outline"
+        class="!text-red-500 !text-lg ml-1 relative bottom-[0.15rem]"
+        [nz-tooltip]="tooltipTemplate"
+        [nzTooltipTitleContext]="{ field: 'payrollTotal' }">
+      </span
+    ></nz-form-label>
     <input
       currencyMask
       type="text"
@@ -37,7 +63,16 @@
       label="payroll"
       nz-input
       class="!text-left"
-      [(ngModel)]="payrollTotal"
-      (ngModelChange)="handleChange()" />
+      formControlName="payrollTotal" />
   </div>
-</div>
+</form>
+
+<ng-template #tooltipTemplate let-field="field">
+  <div
+    class="flex flex-col items-center bg-white border border-red-400 rounded-lg p-2 shadow-lg">
+    <span class="text-red-500 font-semibold text-sm">Error</span>
+    <span class="text-gray-700 text-xs mt-1">
+      {{ getErrorMessageForField(field) }}
+    </span>
+  </div>
+</ng-template>

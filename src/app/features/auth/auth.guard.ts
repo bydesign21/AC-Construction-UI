@@ -23,7 +23,6 @@ export class AuthGuardService implements CanActivate {
   ): Observable<boolean> | Promise<boolean> | boolean {
     return this.authService.checkSession().pipe(
       tap(isAuthenticated => {
-        console.log('isAuthenticated', isAuthenticated);
         if (!isAuthenticated) {
           this.router.navigate(['/auth/login']); // Redirect to login or another route
         }

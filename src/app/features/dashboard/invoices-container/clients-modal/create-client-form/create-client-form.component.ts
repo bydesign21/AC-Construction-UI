@@ -8,9 +8,9 @@ import {
   Output,
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Client } from '../../../../../shared-components/client-list-table/client-list-table.component';
 import { NZ_MODAL_DATA } from 'ng-zorro-antd/modal';
 import { Subject, takeUntil } from 'rxjs';
+import { Client } from '../../invoices-model/model';
 
 @Component({
   selector: 'app-create-client-form',
@@ -101,11 +101,19 @@ export class CreateClientFormComponent implements OnInit, OnDestroy {
 
   onSubmit(): Client {
     if (this.data?.client) {
-      this.clientUpdated.emit(this.createClientForm.value);
+      console.log('createClientForm', this.data.client);
+      this.clientUpdated.emit({
+        id: this.data?.client.id,
+        ...this.createClientForm.value,
+      });
+      return {
+        id: this.data?.client.id,
+        ...this.createClientForm.value,
+      };
     } else {
       this.clientCreated.emit(this.createClientForm.value);
+      return this.createClientForm.value;
     }
-    return this.createClientForm.value;
   }
 
   isFormValid(): boolean {

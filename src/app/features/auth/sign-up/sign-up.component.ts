@@ -40,7 +40,6 @@ export class SignUpComponent {
     ) {
       const { email, firstname, lastname, password } = this.signupForm.value;
       if (email && firstname && lastname && password) {
-        console.log(this.signupForm.value);
         this.handleSignUp(email, password, firstname, lastname);
       } else {
         this.message.error('Please ensure all fields are completed');

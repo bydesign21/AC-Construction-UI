@@ -2,15 +2,13 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  Inject,
   Input,
   OnInit,
 } from '@angular/core';
-import { Client } from '../../../../shared-components/client-list-table/client-list-table.component';
-import {
-  Invoice,
-  InvoiceItem,
-} from '../../../../shared-components/invoice-item-list/invoice-item-list.component';
-import { NzModalRef } from 'ng-zorro-antd/modal';
+import { NZ_MODAL_DATA, NzModalRef } from 'ng-zorro-antd/modal';
+import { BehaviorSubject } from 'rxjs';
+import { Client, Invoice, InvoiceItem } from '../invoices-model/model';
 
 export const generateId = () => {
   return Math.random().toString(36).substr(2, 9);
@@ -26,19 +24,34 @@ export const generateId = () => {
 export class CreateInvoiceModalComponent implements OnInit {
   @Input() clientList: Client[] = [];
   @Input() invoice?: Invoice;
-  selectedClient: Client | null = null;
+  isValid$ = new BehaviorSubject<boolean>(false);
+  selectedClient$: BehaviorSubject<string> = new BehaviorSubject('');
   invoiceItemList: InvoiceItem[] = [];
   invoiceId: string = '';
 
   constructor(
     private cd: ChangeDetectorRef,
-    private modal: NzModalRef
+    private modal: NzModalRef,
+    @Inject(NZ_MODAL_DATA)
+    public data?: { clientList: Client[]; invoice?: Invoice }
   ) {}
 
+  get selectedClient() {
+    return this.selectedClient$.getValue();
+  }
+
+  set selectedClient(clientId: string) {
+    this.selectedClient$.next(clientId);
+  }
+
   ngOnInit(): void {
+    if (this.data) {
+      this.clientList = this.data.clientList;
+      this.invoice = this.data.invoice;
+    }
     if (this.invoice) {
       this.invoiceId = this.invoice.id;
-      // this.selectedClient = this.invoice.clientId;
+      this.selectedClient$.next(this.invoice.clientId);
       this.invoiceItemList = this.invoice.items;
     } else {
       this.invoiceId = generateId();
@@ -47,7 +60,6 @@ export class CreateInvoiceModalComponent implements OnInit {
 
   handleAddLineItem() {
     const newItemTemplate: InvoiceItem = {
-      id: generateId(),
       address: '',
       discount: null,
       total: null,
@@ -61,23 +73,19 @@ export class CreateInvoiceModalComponent implements OnInit {
     this.cd.detectChanges();
   }
 
-  handleClientChanged(client: Client) {
-    this.selectedClient = client;
+  handleClientChanged(clientId: string) {
+    this.selectedClient$.next(clientId);
   }
 
-  handleDeleteLineItem(id: string) {
-    console.log('delete item', id);
-    this.invoiceItemList = [
-      ...this.invoiceItemList.filter(item => item.id !== id),
-    ];
-    console.log(this.invoiceItemList);
+  handleDeleteLineItem(index: number) {
+    this.invoiceItemList = this.invoiceItemList.filter((_, i) => i !== index);
     this.cd.detectChanges();
   }
 
   emitAndCloseModal() {
     const invoice: Invoice = {
       id: this.invoiceId,
-      clientId: this.selectedClient?.id || '',
+      clientId: this.selectedClient$.getValue() || '',
       date: new Date().toISOString(),
       items: this.invoiceItemList,
       total: 0,
@@ -92,7 +100,11 @@ export class CreateInvoiceModalComponent implements OnInit {
   }
 
   handleLineItemsChanged(items: InvoiceItem[]) {
-    console.log('line items changed', items);
+    this.invoiceItemList = items;
     this.cd.detectChanges();
+  }
+
+  handleIsValid(isValid: boolean) {
+    this.isValid$.next(isValid);
   }
 }

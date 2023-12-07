@@ -1,3 +1,5 @@
+<!-- eslint-disable @angular-eslint/template/interactive-supports-focus -->
+<!-- eslint-disable @angular-eslint/template/click-events-have-key-events -->
 <div
   #table
   class="flex flex-col justify-center items-center min-w-full overflow-hidden">
@@ -12,127 +14,243 @@
     [nzData]="items || []">
     <thead>
       <tr>
-        <th class="w-[10rem]">Employee</th>
-        <th class="w-[15rem]">Address</th>
-        <th>Sqft Price</th>
-        <th>Sqft</th>
-        <th>Amount</th>
-        <th>Paid</th>
-        <th class="w-[10rem]">Date</th>
-        <th class="w-[8rem]">Type</th>
+        <th class="w-[10rem]">
+          <div class="flex flex-row items-center justify-between">
+            <span>Employee</span>
+            <span
+              *ngIf="isFieldErrorPresent('employeeId')"
+              nz-icon
+              nzType="exclamation-circle"
+              nzTheme="outline"
+              class="!text-red-500 !text-lg ml-1 flex flex-row justify-center items-center relative bottom-[0.04rem]"
+              [nz-tooltip]="tooltipTemplate"
+              [nzTooltipTitleContext]="{ field: 'employeeId' }">
+            </span>
+          </div>
+        </th>
+        <th class="w-[15rem]">
+          <div class="flex flex-row items-center justify-between">
+            <span>Address</span>
+            <span
+              *ngIf="isFieldErrorPresent('address')"
+              nz-icon
+              nzType="exclamation-circle"
+              nzTheme="outline"
+              class="!text-red-500 !text-lg ml-1 flex flex-row justify-center items-center relative bottom-[0.04rem]"
+              [nz-tooltip]="tooltipTemplate"
+              [nzTooltipTitleContext]="{ field: 'address' }">
+            </span>
+          </div>
+        </th>
+        <th>
+          <div class="flex flex-row items-center justify-between">
+            <span>Sqft Price</span>
+            <span
+              *ngIf="isFieldErrorPresent('sqftPrice')"
+              nz-icon
+              nzType="exclamation-circle"
+              nzTheme="outline"
+              class="!text-red-500 !text-lg ml-1 flex flex-row justify-center items-center relative bottom-[0.04rem]"
+              [nz-tooltip]="tooltipTemplate"
+              [nzTooltipTitleContext]="{ field: 'sqftPrice' }">
+            </span>
+          </div>
+        </th>
+        <th>
+          <div class="flex flex-row items-center justify-between">
+            <span>Sqft</span>
+            <span
+              *ngIf="isFieldErrorPresent('sqft')"
+              nz-icon
+              nzType="exclamation-circle"
+              nzTheme="outline"
+              class="!text-red-500 !text-lg ml-1 flex flex-row justify-center items-center relative bottom-[0.04rem]"
+              [nz-tooltip]="tooltipTemplate"
+              [nzTooltipTitleContext]="{ field: 'sqft' }">
+            </span>
+          </div>
+        </th>
+        <th>
+          <div class="flex flex-row items-center justify-between">
+            <span>Amount</span>
+            <span
+              *ngIf="isFieldErrorPresent('amount')"
+              nz-icon
+              nzType="exclamation-circle"
+              nzTheme="outline"
+              class="!text-red-500 !text-lg ml-1 flex flex-row justify-center items-center relative bottom-[0.04rem]"
+              [nz-tooltip]="tooltipTemplate"
+              [nzTooltipTitleContext]="{ field: 'amount' }">
+            </span>
+          </div>
+        </th>
+        <th>
+          <div class="flex flex-row items-center justify-between">
+            <span>Paid</span>
+            <span
+              *ngIf="isFieldErrorPresent('isPaid')"
+              nz-icon
+              nzType="exclamation-circle"
+              nzTheme="outline"
+              class="!text-red-500 !text-lg ml-1 flex flex-row justify-center items-center relative bottom-[0.04rem]"
+              [nz-tooltip]="tooltipTemplate"
+              [nzTooltipTitleContext]="{ field: 'isPaid' }">
+            </span>
+          </div>
+        </th>
+        <th class="w-[10rem]">
+          <div class="flex flex-row items-center justify-between">
+            <span>Date</span>
+            <span
+              *ngIf="isFieldErrorPresent('date')"
+              nz-icon
+              nzType="exclamation-circle"
+              nzTheme="outline"
+              class="!text-red-500 !text-lg ml-1 flex flex-row justify-center items-center relative bottom-[0.04rem]"
+              [nz-tooltip]="tooltipTemplate"
+              [nzTooltipTitleContext]="{ field: 'date' }">
+            </span>
+          </div>
+        </th>
+        <th class="w-[8rem]">
+          <div class="flex flex-row items-center justify-between">
+            <span>Type</span>
+            <span
+              *ngIf="isFieldErrorPresent('type')"
+              nz-icon
+              nzType="exclamation-circle"
+              nzTheme="outline"
+              class="!text-red-500 !text-lg ml-1 flex flex-row justify-center items-center relative bottom-[0.04rem]"
+              [nz-tooltip]="tooltipTemplate"
+              [nzTooltipTitleContext]="{ field: 'type' }">
+            </span>
+          </div>
+        </th>
         <th>Action</th>
       </tr>
     </thead>
     <tbody>
       <tr
-        *ngFor="let data of editRowTable.data; index as i"
+        *ngFor="let data of rowForms; index as i"
         class="editable-row"
-        (click)="stopEdit(); startEdit(data.id)"
+        (click)="stopEdit(); startEdit(i); $event.stopPropagation()"
         (blur)="stopEdit()">
         <td>
           <div
-            [hidden]="editId === data.id"
-            (click)="startEdit(data.id); $event.stopPropagation()">
-            {{ getEmployeeLabelById(data?.employeeId || '') }}
+            [hidden]="editIndex === i"
+            (click)="startEdit(i); $event.stopPropagation()">
+            {{ getEmployeeLabelById(data?.value.employeeId || '') }}
           </div>
           <nz-select
             class="w-[8rem]"
             (click)="$event.stopPropagation()"
-            [hidden]="editId !== data.id"
+            [hidden]="editIndex !== i"
             [nzOptions]="employeeList"
-            [(ngModel)]="data.employeeId" />
+            [formControl]="getFormControl(rowForms[i], 'employeeId')" />
         </td>
         <td>
-          <div [hidden]="editId === data.id" (click)="startEdit(data.id)">
-            {{ data.address }}
+          <div
+            [hidden]="editIndex === i"
+            (click)="startEdit(i); $event.stopPropagation()">
+            {{ data.value.address }}
           </div>
           <input
             aria-label="Address"
             (click)="$event.stopPropagation()"
-            [hidden]="editId !== data.id"
+            [hidden]="editIndex !== i"
             nz-input
-            [(ngModel)]="data.address" />
+            [formControl]="getFormControl(rowForms[i], 'address')" />
         </td>
         <td>
-          <div [hidden]="editId === data.id" (click)="startEdit(data.id)">
-            {{ data.sqftPrice | currency }}
+          <div
+            [hidden]="editIndex === i"
+            (click)="startEdit(i); $event.stopPropagation()">
+            {{ data.value.sqftPrice | currency }}
           </div>
           <input
             aria-label="Sqft Price"
             (click)="$event.stopPropagation()"
-            [hidden]="editId !== data.id"
+            [hidden]="editIndex !== i"
             nz-input
             type="number"
-            [(ngModel)]="data.sqftPrice"
+            [formControl]="getFormControl(rowForms[i], 'sqftPrice')"
             (ngModelChange)="handleSqftCostCalc(i)" />
         </td>
         <td>
-          <div [hidden]="editId === data.id" (click)="startEdit(data.id)">
-            {{ data.sqft | number }}
+          <div
+            [hidden]="editIndex === i"
+            (click)="startEdit(i); $event.stopPropagation()">
+            {{ data.value.sqft | number }}
           </div>
           <input
             aria-label="Sqft"
             (click)="$event.stopPropagation()"
-            [hidden]="editId !== data.id"
+            [hidden]="editIndex !== i"
             nz-input
             type="number"
-            [(ngModel)]="data.sqft"
+            [formControl]="getFormControl(rowForms[i], 'sqft')"
             (ngModelChange)="handleSqftCostCalc(i)" />
         </td>
         <td>
-          <div [hidden]="editId === data.id" (click)="startEdit(data.id)">
-            {{ data.amount | currency }}
+          <div
+            [hidden]="editIndex === i"
+            (click)="startEdit(i); $event.stopPropagation()">
+            {{ data.value.amount | currency }}
           </div>
           <input
             aria-label="Amount"
             (click)="$event.stopPropagation()"
-            [hidden]="editId !== data.id"
+            [hidden]="editIndex !== i"
             nz-input
             type="number"
-            [(ngModel)]="data.amount" />
+            [formControl]="getFormControl(rowForms[i], 'amount')" />
         </td>
         <td>
           <div
             class="flex flex-col items-center justify-center"
-            [hidden]="editId === data.id"
-            (click)="startEdit(data.id)">
+            [hidden]="editIndex === i"
+            (click)="startEdit(i); $event.stopPropagation()">
             <input
               aria-label="Is Paid?"
               type="checkbox"
-              [checked]="data.isPaid"
+              [checked]="data.value.isPaid"
               disabled />
           </div>
           <div
             class="flex flex-col items-center justify-center"
-            (click)="startEdit(data.id)">
+            (click)="startEdit(i); $event.stopPropagation()">
             <input
               aria-label="Is Paid?"
               (click)="$event.stopPropagation()"
-              [hidden]="editId !== data.id"
+              [hidden]="editIndex !== i"
               type="checkbox"
-              [(ngModel)]="data.isPaid" />
+              [formControl]="getFormControl(rowForms[i], 'isPaid')" />
           </div>
         </td>
         <td class="editible-cell">
-          <div [hidden]="editId === data.id" (click)="startEdit(data.id)">
-            {{ data.date }}
+          <div
+            [hidden]="editIndex === i"
+            (click)="startEdit(i); $event.stopPropagation()">
+            {{ data.value.date }}
           </div>
           <nz-date-picker
             (click)="$event.stopPropagation()"
-            [hidden]="editId !== data.id"
+            [hidden]="editIndex !== i"
             nzFormat="MM/dd/yyyy"
-            [(ngModel)]="data.date" />
+            [formControl]="getFormControl(rowForms[i], 'date')" />
         </td>
         <td class="w-[6rem]">
-          <div [hidden]="editId === data.id" (click)="startEdit(data.id)">
-            {{ data.type }}
+          <div
+            [hidden]="editIndex === i"
+            (click)="startEdit(i); $event.stopPropagation()">
+            {{ data.value.type }}
           </div>
           <nz-select
             class="w-[6rem]"
             (click)="$event.stopPropagation()"
-            [hidden]="editId !== data.id"
+            [hidden]="editIndex !== i"
             [nzOptions]="typeOptions"
-            [(ngModel)]="data.type" />
+            [formControl]="getFormControl(rowForms[i], 'type')" />
         </td>
         <td class="flex flex-col items-center justify-center">
           <button
@@ -142,7 +260,7 @@
             nz-button
             nz-popconfirm
             nzPopconfirmTitle="Are you sure?"
-            (nzOnConfirm)="deleteItem(data.id)">
+            (nzOnConfirm)="deleteItem(i)">
             <span
               class="items-center !text-red-400 justify-center h-[1.4rem]"
               nz-icon
@@ -158,6 +276,10 @@
   <div
     class="fixed bottom-[5rem] w-full flex flex-col justify-center items-center">
     <button
+      [disabled]="
+        (rowForms.length > 0 && !rowForms[rowForms.length - 1].valid) ||
+        isDisabled
+      "
       nz-button
       (click)="requestAddItem()"
       nzType="primary"
@@ -167,3 +289,13 @@
     </button>
   </div>
 </div>
+
+<ng-template #tooltipTemplate let-field="field">
+  <div
+    class="flex flex-col items-center bg-white border border-red-400 rounded-lg p-2 shadow-lg">
+    <span class="text-red-500 font-semibold text-sm">Error</span>
+    <span class="text-gray-700 text-xs mt-1">
+      {{ getErrorMessageForField(field) }}
+    </span>
+  </div>
+</ng-template>

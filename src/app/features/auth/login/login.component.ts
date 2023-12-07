@@ -45,7 +45,6 @@ export class LoginComponent {
           .pipe(take(1))
           .subscribe({
             next: async res => {
-              console.log('res', res);
               const { user, session } = res;
               sessionStorage.setItem('session', JSON.stringify(session));
               sessionStorage.setItem('isAuthenticated', 'true');
@@ -80,13 +79,11 @@ export class LoginComponent {
   }
 
   handlePasswordResetSubmit(email: string) {
-    console.log('password reset fn triggered');
     this.auth
       .resetPassword(email)
       .pipe(take(1))
       .subscribe({
-        next: res => {
-          console.log('passwordResetTriggered', res);
+        next: () => {
           this.modal.closeAll();
         },
         error: err => {

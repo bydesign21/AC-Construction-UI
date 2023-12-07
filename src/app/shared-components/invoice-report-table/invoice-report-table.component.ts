@@ -6,10 +6,7 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import { Invoice } from '../invoice-item-list/invoice-item-list.component';
-
-export interface InvoiceReport extends Invoice { }
-
+import { InvoiceReport } from '../../features/dashboard/invoices-container/invoices-model/model';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-invoice-report-table',

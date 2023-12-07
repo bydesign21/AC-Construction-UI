@@ -1,0 +1,82 @@
+<div
+  class="shadow overflow-scroll sm:rounded-lg p-4 border border-gray-900 bg-white h-full invoice-report-table">
+  <nz-table
+    [nzPageSize]="8"
+    #nzTable
+    [nzData]="listOfData"
+    [nzPaginationPosition]="'bottom'"
+    [nzShowPagination]="listOfData.length > 0"
+    [nzTableLayout]="'fixed'">
+    <thead>
+      <tr
+        class="px-6 flex-row py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+        <th
+          *ngFor="let th of tableHeaders"
+          nzCustomFilter
+          [nzSortFn]="th?.sortFn"
+          [nzShowFilter]="true"
+          class="!font-bold">
+          {{ th.label }}
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of nzTable.data; index as i">
+        <td class="italic">{{ data.checkNumber }}</td>
+        <td>{{ data.date | date: 'MM/dd/yyyy' }}</td>
+        <td>{{ data.description }}</td>
+        <td>
+          {{ data.total | currency }}
+        </td>
+        <td *ngIf="isActionRowVisible">
+          <div class="flex flex-row gap-2 justify-center">
+            <button
+              title="View Item"
+              (click)="handleViewItem(data)"
+              nz-button
+              class="!rounded-lg items-center justify-center flex flex-col">
+              <div>
+                <span
+                  class="items-center justify-center h-[1.4rem]"
+                  nz-icon
+                  [nzType]="'eye'"
+                  nzTheme="outline"></span>
+                <span class="sr-only">View</span>
+              </div>
+            </button>
+            <button
+              (click)="handlePrintItem(data)"
+              nz-button
+              title="Print Item"
+              class="!rounded-lg items-center justify-center flex flex-col">
+              <div>
+                <span
+                  class="items-center justify-center h-[1.4rem]"
+                  nz-icon
+                  [nzType]="'printer'"
+                  nzTheme="outline"></span>
+                <span class="sr-only">Print</span>
+              </div>
+            </button>
+            <button
+              nz-button
+              title="Delete Item"
+              class="!rounded-lg items-center justify-center flex flex-col"
+              nz-popconfirm
+              nzPopconfirmTitle="Are you sure?"
+              (nzOnConfirm)="handleDeleteItem(i)">
+              <div>
+                <span
+                  class="items-center !text-red-400 justify-center h-[1.4rem]"
+                  nz-icon
+                  [nzType]="'delete'"
+                  nzTheme="outline"></span>
+                <span class="sr-only">Delete</span>
+              </div>
+            </button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+</div>

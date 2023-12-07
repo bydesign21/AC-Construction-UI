@@ -44,7 +44,6 @@ export class SecondaryNavigationBarComponent implements OnInit, OnDestroy {
     combineLatest([navigationLinks$, mobileMenuState$, navigationVisibility])
       .pipe(takeUntil(this.destroy$))
       .subscribe(([links, menuState, visibility]) => {
-        console.log(links, menuState);
         this.isMobileMenuOpen = menuState;
         this.isMenuVisible = visibility;
         this.items = links;
@@ -54,7 +53,6 @@ export class SecondaryNavigationBarComponent implements OnInit, OnDestroy {
     window.addEventListener('resize', () => {
       this.isMobileViewPort = window.innerWidth <= 640;
       this.cd.detectChanges();
-      console.log('resize', this.isMobileViewPort);
     });
   }
 

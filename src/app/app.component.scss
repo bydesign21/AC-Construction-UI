@@ -3,4 +3,8 @@
     background: black !important;
     opacity: 0.85 !important;
   }
+
+  .ant-tooltip-inner {
+    @apply rounded-lg p-0;
+  }
 }

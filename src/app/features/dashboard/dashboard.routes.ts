@@ -4,6 +4,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { AuthGuardService } from '../auth/auth.guard';
 import { WeeklyReportsContainerComponent } from './weekly-reports-container/weekly-reports-container.component';
 import { InvoicesContainerComponent } from './invoices-container/invoices-container.component';
+import { ChecksContainerComponent } from './checks-container/checks-container.component';
 
 export const routes: Routes = [
   {
@@ -21,6 +22,11 @@ export const routes: Routes = [
       {
         path: 'invoices',
         component: InvoicesContainerComponent,
+        pathMatch: 'full',
+      },
+      {
+        path: 'checks',
+        component: ChecksContainerComponent,
         pathMatch: 'full',
       },
     ],
