@@ -1,7 +1,7 @@
 <div
   class="shadow overflow-scroll sm:rounded-lg p-4 border border-gray-900 bg-white h-[80dvh] weekly-report-table">
   <nz-table
-    [nzPageSize]="5"
+    [nzPageSize]="limit"
     #nzTable
     [nzData]="listOfData"
     [nzPaginationPosition]="'bottom'"
@@ -24,7 +24,9 @@
       <tr *ngFor="let data of nzTable.data; index as i">
         <td class="italic">{{ data.date }}</td>
         <td>{{ data.revenue | currency }}</td>
-        <td class="text-red-400 font-bold">-{{ data.total | currency }}</td>
+        <td class="text-red-400 font-bold">
+          {{ data.totalExpenses | currency }}
+        </td>
         <td
           [class]="
             data.profit > 0

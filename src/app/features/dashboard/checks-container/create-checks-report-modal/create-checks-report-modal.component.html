@@ -1,10 +1,33 @@
 <div class="flex flex-col mt-[1rem] min-w-full overflow-hidden">
   <div class="overflow-auto max-h-[80dvh]">
     <div class="flex flex-row gap-4 mx-2 items-center justify-between">
-      <app-date-range-picker
-        [label]="'Select Date Range'"
-        [isRequired]="true"
-        (changed)="handleDateChanged($event)"></app-date-range-picker>
+      <div class="flex flex-row gap-4 justify-around items-center">
+        <app-date-range-picker
+          [label]="'Select Date Range'"
+          [isRequired]="true"
+          (changed)="handleDateChanged($event)"></app-date-range-picker>
+        <!-- create client nz-select -->
+        <div>
+          <nz-form-label
+            class="!text-left [&>*]:!text-lg"
+            [nzNoColon]="true"
+            [nzRequired]="false">
+            Select Employee
+          </nz-form-label>
+          <nz-select
+            class="w-full"
+            nzShowSearch
+            nzAllowClear
+            nzPlaceHolder="Select Employee"
+            [(ngModel)]="selectedEmployee"
+            (ngModelChange)="handleEmployeeSelected($event)">
+            <nz-option
+              *ngFor="let client of employeeList"
+              [nzLabel]="client.name"
+              [nzValue]="client.id"></nz-option>
+          </nz-select>
+        </div>
+      </div>
       <div class="flex flex-row gap-2">
         <button
           nz-button

@@ -19,7 +19,7 @@ import {
 } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { TableFormService } from '../table-form.service';
-import { InvoiceItem } from '../../features/dashboard/invoices-container/invoices-model/model';
+import { CheckLineItem } from '../../features/dashboard/checks-container/check-model/model';
 
 @Component({
   selector: 'app-check-item-list',
@@ -28,9 +28,9 @@ import { InvoiceItem } from '../../features/dashboard/invoices-container/invoice
 })
 export class CheckItemListComponent implements OnInit, OnChanges, OnDestroy {
   @ViewChild('table') table!: ElementRef;
-  @Input() items: InvoiceItem[] = [];
-  @Output() changed: EventEmitter<InvoiceItem[]> = new EventEmitter<
-    InvoiceItem[]
+  @Input() items: CheckLineItem[] = [];
+  @Output() changed: EventEmitter<CheckLineItem[]> = new EventEmitter<
+    CheckLineItem[]
   >();
   @Output() itemDeleted: EventEmitter<number> = new EventEmitter<number>();
   @Output() addItemRequest: EventEmitter<void> = new EventEmitter<void>();
@@ -47,7 +47,7 @@ export class CheckItemListComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  constructor(private ts: TableFormService) {}
+  constructor(private ts: TableFormService) { }
 
   editIndex: number | null = null;
 
@@ -83,17 +83,16 @@ export class CheckItemListComponent implements OnInit, OnChanges, OnDestroy {
     this.rowForms = this.items.map(item => this.createRowForm(item));
   }
 
-  createRowForm(item: InvoiceItem): FormGroup {
+  createRowForm(item: CheckLineItem): FormGroup {
     const formConfig = {
-      planId: { defaultValue: item.planId },
-      address: { defaultValue: item.address, validators: Validators.required },
-      quantity: {
-        defaultValue: item.quantity,
-        validators: [Validators.required, Validators.min(1)],
+      description: {
+        defaultValue: item?.description || null,
+        Validators: Validators.required,
       },
-      rate: { defaultValue: item.rate, validators: Validators.required },
-      total: { defaultValue: item.total, validators: Validators.required },
-      discount: { defaultValue: item.discount },
+      total: {
+        defaultValue: item?.total || null,
+        validators: Validators.required,
+      },
     };
 
     const form = this.ts.createRowForm(item, formConfig);
@@ -177,8 +176,4 @@ export class CheckItemListComponent implements OnInit, OnChanges, OnDestroy {
     this.addItemRequest.emit();
     this.initializeRowForms();
   }
-
-  // handleCalculateRowTotal() {
-
-  // }
 }

@@ -18,13 +18,13 @@
           <div class="flex flex-row items-center justify-between">
             <span>Employee</span>
             <span
-              *ngIf="isFieldErrorPresent('employeeId')"
+              *ngIf="isFieldErrorPresent('employeeName')"
               nz-icon
               nzType="exclamation-circle"
               nzTheme="outline"
               class="!text-red-500 !text-lg ml-1 flex flex-row justify-center items-center relative bottom-[0.04rem]"
               [nz-tooltip]="tooltipTemplate"
-              [nzTooltipTitleContext]="{ field: 'employeeId' }">
+              [nzTooltipTitleContext]="{ field: 'employeeName' }">
             </span>
           </div>
         </th>
@@ -139,14 +139,14 @@
           <div
             [hidden]="editIndex === i"
             (click)="startEdit(i); $event.stopPropagation()">
-            {{ getEmployeeLabelById(data?.value.employeeId || '') }}
+            {{ data.value?.employeeName }}
           </div>
           <nz-select
             class="w-[8rem]"
             (click)="$event.stopPropagation()"
             [hidden]="editIndex !== i"
             [nzOptions]="employeeList"
-            [formControl]="getFormControl(rowForms[i], 'employeeId')" />
+            [formControl]="getFormControl(rowForms[i], 'employeeName')" />
         </td>
         <td>
           <div
@@ -231,7 +231,7 @@
           <div
             [hidden]="editIndex === i"
             (click)="startEdit(i); $event.stopPropagation()">
-            {{ data.value.date }}
+            {{ data.value.date | date: 'MM/dd/yyyy' }}
           </div>
           <nz-date-picker
             (click)="$event.stopPropagation()"
@@ -243,14 +243,14 @@
           <div
             [hidden]="editIndex === i"
             (click)="startEdit(i); $event.stopPropagation()">
-            {{ data.value.type }}
+            {{ data.value.expenseType }}
           </div>
           <nz-select
             class="w-[6rem]"
             (click)="$event.stopPropagation()"
             [hidden]="editIndex !== i"
             [nzOptions]="typeOptions"
-            [formControl]="getFormControl(rowForms[i], 'type')" />
+            [formControl]="getFormControl(rowForms[i], 'expenseType')" />
         </td>
         <td class="flex flex-col items-center justify-center">
           <button

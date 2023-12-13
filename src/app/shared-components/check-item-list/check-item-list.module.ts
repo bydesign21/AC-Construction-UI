@@ -10,6 +10,7 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { TableFormService } from '../table-form.service';
+import { CurrencyMaskModule } from 'ng2-currency-mask';
 import { CheckItemListComponent } from './check-item-list.component';
 
 @NgModule({
@@ -26,8 +27,9 @@ import { CheckItemListComponent } from './check-item-list.component';
     NzIconModule,
     ReactiveFormsModule,
     NzToolTipModule,
+    CurrencyMaskModule,
   ],
   providers: [TableFormService],
   exports: [CheckItemListComponent],
 })
-export class InvoiceItemListModule {}
+export class CheckItemListModule {}

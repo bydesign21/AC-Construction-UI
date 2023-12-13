@@ -7,7 +7,7 @@ import {
   Output,
 } from '@angular/core';
 import { SharedUtilsService } from '../../../../shared-components/shared-utils.service';
-import { CheckReport } from '../check-model/model';
+import { CheckReport, Employee } from '../check-model/model';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -18,12 +18,21 @@ import { CheckReport } from '../check-model/model';
 })
 export class CreateChecksReportModalComponent {
   @Input() checks: CheckReport[] = [];
+  @Input() employeeList: Employee[] = [];
   @Output() dateRangeChanged: EventEmitter<string> = new EventEmitter<string>();
+  @Output() employeeSelected: EventEmitter<Employee> =
+    new EventEmitter<Employee>();
+  selectedEmployee: Employee | undefined;
 
   constructor(
     private cd: ChangeDetectorRef,
     private utils: SharedUtilsService
   ) {}
+
+  handleEmployeeSelected(employee: Employee) {
+    this.employeeSelected.emit(employee);
+    this.cd.detectChanges();
+  }
 
   handleDateChanged(dateRange: Date[]) {
     const rangeString = this.utils.formatDateRange(dateRange);

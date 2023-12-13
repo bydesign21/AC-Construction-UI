@@ -1,4 +1,4 @@
-import { LOCALE_ID, NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { AppContainerComponent } from './app-container/app-container.component';
 import { RouterModule, provideRouter } from '@angular/router';
@@ -70,6 +70,7 @@ import { CreateEmployeeFormComponent } from './checks-container/employee-modal/c
 import { ChecksReportTableModule } from '../../shared-components/checks-report-table/checks-report-table.module';
 import { EmployeeListTableModule } from '../../shared-components/employee-list-table/employee-list-table.module';
 import { WeeklyReportsService } from './weekly-reports-container/weekly-reports-services/weekly-reports.service';
+import { CheckItemListModule } from '../../shared-components/check-item-list/check-item-list.module';
 
 const icons = [
   SettingOutline,
@@ -147,6 +148,7 @@ const icons = [
     NzToolTipModule,
     ChecksReportTableModule,
     EmployeeListTableModule,
+    CheckItemListModule,
   ],
   providers: [
     provideRouter(routes),

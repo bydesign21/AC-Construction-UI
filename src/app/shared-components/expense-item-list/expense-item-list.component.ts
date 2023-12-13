@@ -57,7 +57,7 @@ export class ExpenseItemListComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  constructor(private ts: TableFormService) {}
+  constructor(private ts: TableFormService) { }
 
   rowForms: FormGroup[] = [];
   editIndex: number | null = null;
@@ -72,6 +72,7 @@ export class ExpenseItemListComponent implements OnInit, OnChanges, OnDestroy {
   ];
 
   ngOnInit(): void {
+    console.log('items', this.items);
     if (!this.items.length) this.requestAddItem();
     this.initializeRowForms();
     this.recalculateIsValidAndEmit();
@@ -114,8 +115,8 @@ export class ExpenseItemListComponent implements OnInit, OnChanges, OnDestroy {
 
   createRowForm(item: ExpenseItem): FormGroup {
     const formConfig = {
-      employeeId: {
-        defaultValue: item.employeeId,
+      employeeName: {
+        defaultValue: item.employeeName,
         validators: [Validators.required],
       },
       address: {
@@ -131,9 +132,12 @@ export class ExpenseItemListComponent implements OnInit, OnChanges, OnDestroy {
         validators: [Validators.required, Validators.min(0)],
       },
       amount: { defaultValue: item.amount, validators: [Validators.required] },
-      isPaid: { defaultValue: item.isPaid },
+      isPaid: { defaultValue: Boolean(item.isPaid) },
       date: { defaultValue: item.date, validators: [Validators.required] },
-      type: { defaultValue: item.type, validators: [Validators.required] },
+      expenseType: {
+        defaultValue: item.expenseType,
+        validators: [Validators.required],
+      },
     };
 
     const form = this.ts.createRowForm(item, formConfig);
@@ -241,10 +245,5 @@ export class ExpenseItemListComponent implements OnInit, OnChanges, OnDestroy {
     item?.get('amount')?.patchValue(total());
     this.rowForms[index] = item;
     this.emitValidItems();
-  }
-
-  getEmployeeLabelById(id: string): string {
-    const employee = this.employeeList.find(e => e.value === id);
-    return employee ? employee.label : '';
   }
 }

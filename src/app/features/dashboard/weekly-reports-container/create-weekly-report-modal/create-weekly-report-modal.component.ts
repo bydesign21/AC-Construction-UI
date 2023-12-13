@@ -29,7 +29,7 @@ export class CreateWeeklyReportModalComponent implements OnInit {
     private modal: NzModalRef,
     @Inject(NZ_MODAL_DATA)
     public data?: { report: WeeklyReportDataEmission; isEditMode: boolean }
-  ) {}
+  ) { }
   isInputRowValid$ = new BehaviorSubject<boolean>(false);
   isInputRowTouched$ = new BehaviorSubject<boolean>(false);
   isExpenseListTouched$ = new BehaviorSubject<boolean>(false);
@@ -69,22 +69,18 @@ export class CreateWeeklyReportModalComponent implements OnInit {
   }
 
   handleInputRowValidity(isValid: boolean) {
-    console.log('inputRowValidity', isValid);
     this.isInputRowValid$.next(isValid);
   }
 
   handleInputRowTouched(isTouched: boolean) {
-    console.log('inputRowTouched', isTouched);
     this.isInputRowTouched$.next(isTouched);
   }
 
   handleExpenseListTouched(isTouched: boolean) {
-    console.log('expenseItemListTouched', isTouched);
     this.isExpenseListTouched$.next(isTouched);
   }
 
   handleExpenseListValidity(isValid: boolean) {
-    console.log('expenseItemListValidity', isValid);
     this.isExpenseListValid$.next(isValid);
   }
 
@@ -116,7 +112,7 @@ export class CreateWeeklyReportModalComponent implements OnInit {
       framing: this.framingCost,
       misc: this.miscCost,
       decking: this.deckingCost,
-      total: this.totalExpenses,
+      totalExpenses: this.totalExpenses,
       date: this.expenses.formatDateRange(this.date),
     };
     this.modal.destroy(reportData);
@@ -154,11 +150,11 @@ export class CreateWeeklyReportModalComponent implements OnInit {
 
     const newItemTemplate: ExpenseItem = {
       id: generateId(),
-      employeeId: '',
+      employeeName: '',
       address: '',
       isPaid: false,
       date: new Date().toLocaleDateString(),
-      type: ExpenseTypes.MISC,
+      expenseType: ExpenseTypes.MISC,
     };
 
     this.expenseList = [...this.expenseList, newItemTemplate];

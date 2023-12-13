@@ -16,6 +16,7 @@ import { WeeklyReport } from '../weekly-reports-model/model';
 })
 export class WeeklyReportsTableComponent {
   @Input() listOfData: WeeklyReport[] = [];
+  @Input() limit: number = 10;
   @Output() viewItem: EventEmitter<any> = new EventEmitter<any>();
   @Output() printItem: EventEmitter<any> = new EventEmitter<any>();
   @Output() deleteItem: EventEmitter<number> = new EventEmitter<number>();
@@ -36,7 +37,7 @@ export class WeeklyReportsTableComponent {
     {
       label: 'Expenses',
       sortFn: (a: WeeklyReport, b: WeeklyReport) =>
-        a.total.toString().localeCompare(b.total.toString()),
+        a.totalExpenses.toString().localeCompare(b.totalExpenses.toString()),
     },
     {
       label: 'Net Profit',

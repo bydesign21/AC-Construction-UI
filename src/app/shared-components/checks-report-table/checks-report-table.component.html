@@ -22,9 +22,8 @@
     </thead>
     <tbody>
       <tr *ngFor="let data of nzTable.data; index as i">
-        <td class="italic">{{ data.checkNumber }}</td>
+        <td class="italic">{{ data.id }}</td>
         <td>{{ data.date | date: 'MM/dd/yyyy' }}</td>
-        <td>{{ data.description }}</td>
         <td>
           {{ data.total | currency }}
         </td>

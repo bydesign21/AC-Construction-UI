@@ -10,7 +10,7 @@ import {
   providedIn: 'root',
 })
 export class ExpensesService {
-  constructor(private utils: SharedUtilsService) {}
+  constructor(private utils: SharedUtilsService) { }
 
   calculateTotals(params: {
     expenseList: ExpenseItem[];
@@ -28,7 +28,7 @@ export class ExpensesService {
     };
     params.expenseList.forEach(expense => {
       expenses.total += expense.amount || 0;
-      switch (expense.type) {
+      switch (expense.expenseType) {
         case ExpenseTypes.DECKING:
           expenses.decking += expense?.amount || 0;
           break;

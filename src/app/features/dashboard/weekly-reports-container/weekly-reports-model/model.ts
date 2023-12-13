@@ -8,7 +8,7 @@ export interface WeeklyReportDataEmission {
   framing: number;
   misc: number;
   decking: number;
-  total: number;
+  totalExpenses: number;
   date: string;
 }
 
@@ -23,14 +23,14 @@ export type ExpenseType = `${ExpenseTypes}`;
 
 export interface ExpenseItem {
   id: string;
-  employeeId?: string;
+  employeeName?: string;
   address: string;
   sqftPrice?: number;
   sqft?: number;
   amount?: number;
   isPaid?: boolean;
   date?: string;
-  type: ExpenseType;
+  expenseType: ExpenseType;
 }
 
 export interface SelectOption {
@@ -58,7 +58,7 @@ export interface WeeklyReport {
   id?: string;
   date: string;
   revenue: number;
-  total: number;
+  totalExpenses: number;
   profit: number;
   profitSplit: number;
   payroll: number;

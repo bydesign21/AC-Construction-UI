@@ -9,7 +9,7 @@ export class WeeklyReportsService {
   constructor(private sb: SupabaseService) { }
 
   getWeeklyReports(): Observable<any[]> {
-    return from(this.sb.client.from('accountsreceivable').select('*')).pipe(
+    return from(this.sb.client.from('weekly_reports').select('*')).pipe(
       map(res => res.data || [])
     );
   }

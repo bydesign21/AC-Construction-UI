@@ -5,6 +5,7 @@ import {
   Inject,
   Input,
   OnInit,
+  ViewChild,
 } from '@angular/core';
 import { NZ_MODAL_DATA, NzModalRef } from 'ng-zorro-antd/modal';
 import { BehaviorSubject } from 'rxjs';
@@ -14,10 +15,7 @@ import {
   CheckReport,
   Employee,
 } from '../check-model/model';
-
-export const generateId = () => {
-  return Math.random().toString(36).substr(2, 9);
-};
+import { CheckItemListComponent } from '../../../../shared-components/check-item-list/check-item-list.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -27,10 +25,12 @@ export const generateId = () => {
   styleUrl: './create-check-modal.component.scss',
 })
 export class CreateCheckModalComponent implements OnInit {
+  @ViewChild('checkItemListComponent')
+  checkItemListComponentRef?: CheckItemListComponent;
   @Input() employeeList: Employee[] = [];
   @Input() check?: CheckReport;
   isValid$ = new BehaviorSubject<boolean>(false);
-  selectedEmployee$: BehaviorSubject<string> = new BehaviorSubject('');
+  selectedName$: BehaviorSubject<string> = new BehaviorSubject('');
   checkItemList: CheckLineItem[] = [];
   checkId?: string;
 
@@ -39,14 +39,14 @@ export class CreateCheckModalComponent implements OnInit {
     private modal: NzModalRef,
     @Inject(NZ_MODAL_DATA)
     public data?: { employeeList: Employee[]; check?: Check }
-  ) {}
+  ) { }
 
   get selectedEmployee() {
-    return this.selectedEmployee$.getValue();
+    return this.selectedName$.getValue();
   }
 
   set selectedEmployee(employeeId: string) {
-    this.selectedEmployee$.next(employeeId);
+    this.selectedName$.next(employeeId);
   }
 
   ngOnInit(): void {
@@ -56,18 +56,15 @@ export class CreateCheckModalComponent implements OnInit {
     }
     if (this.check) {
       this.checkId = this.check.id;
-      this.selectedEmployee$.next(this.check.employeeId);
+      this.selectedName$.next(this.check.name);
       this.checkItemList = this.check.lineItems;
-    } else {
-      this.checkId = generateId();
     }
   }
 
   handleAddLineItem() {
     const newItemTemplate: CheckLineItem = {
-      checkId: this?.checkId,
-      amount: 0,
-      description: '',
+      total: null,
+      description: null,
     };
 
     this.checkItemList = [...this.checkItemList, newItemTemplate];
@@ -75,7 +72,7 @@ export class CreateCheckModalComponent implements OnInit {
   }
 
   handleEmployeeChanged(employeeId: string) {
-    this.selectedEmployee$.next(employeeId);
+    this.selectedName$.next(employeeId);
   }
 
   handleDeleteLineItem(index: number) {
@@ -84,19 +81,27 @@ export class CreateCheckModalComponent implements OnInit {
   }
 
   emitAndCloseModal() {
+    this.checkItemListComponentRef?.stopEdit();
     const check: Check = {
-      id: this.checkId,
-      employeeId: this.selectedEmployee$.getValue() || '',
+      id: this.checkId || '',
+      name: this.selectedName$.getValue() || '',
       date: new Date().toISOString(),
       lineItems: this.checkItemList,
-      total: 0,
-      isCharged: false,
+      total: this.calculateTotal(),
+      isPaid: false,
       isVoid: false,
-      checkNumber: '',
-      description: '',
     };
 
     this.modal.destroy(check);
+  }
+
+  calculateTotal() {
+    console.log(this.checkItemList, 'items');
+    let total = 0;
+    for (const item of this.checkItemList) {
+      total += item?.total || 0;
+    }
+    return total;
   }
 
   onOk(): void {
@@ -105,6 +110,7 @@ export class CreateCheckModalComponent implements OnInit {
 
   handleLineItemsChanged(items: CheckLineItem[]) {
     this.checkItemList = items;
+    console.log(this.calculateTotal());
     this.cd.detectChanges();
   }
 

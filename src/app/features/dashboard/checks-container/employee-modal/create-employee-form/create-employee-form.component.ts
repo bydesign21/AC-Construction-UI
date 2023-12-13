@@ -85,6 +85,7 @@ export class CreateEmployeeFormComponent implements OnInit, OnDestroy {
           value: this.data?.employee?.hourlyRate || null,
           disabled: !this.isEditMode,
         },
+        [Validators.required],
       ],
     });
 

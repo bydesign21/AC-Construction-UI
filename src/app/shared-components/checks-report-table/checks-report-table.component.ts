@@ -28,16 +28,11 @@ export class ChecksReportTableComponent implements OnInit {
     {
       label: 'Check #',
       sortFn: (a: CheckReport, b: CheckReport) =>
-        a.checkNumber.localeCompare(b.checkNumber),
+        a.id.localeCompare(b.id),
     },
     {
       label: 'Date',
       sortFn: (a: CheckReport, b: CheckReport) => a.date.localeCompare(b.date),
-    },
-    {
-      label: 'Memo',
-      sortFn: (a: CheckReport, b: CheckReport) =>
-        a.description.localeCompare(b.description),
     },
     {
       label: 'Amount',

@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  OnInit,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
@@ -12,6 +13,7 @@ import { CreateChecksReportModalComponent } from './create-checks-report-modal/c
 import { EmployeeModalComponent } from './employee-modal/employee-modal.component';
 import { CreateCheckModalComponent } from './create-check-modal/create-check-modal.component';
 import { DeleteWeeklyReportModalComponent } from '../weekly-reports-container/delete-weekly-report-modal/delete-weekly-report-modal.component';
+import { Check, CheckReport, Employee } from './check-model/model';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -20,7 +22,7 @@ import { DeleteWeeklyReportModalComponent } from '../weekly-reports-container/de
   templateUrl: './checks-container.component.html',
   styleUrl: './checks-container.component.scss',
 })
-export class ChecksContainerComponent {
+export class ChecksContainerComponent implements OnInit {
   @ViewChild('CreateChecksReportModalTemplate')
   createChecksReportModalRef!: TemplateRef<CreateChecksReportModalComponent>;
   @ViewChild('EmployeeManagementModalTemplate')
@@ -29,10 +31,28 @@ export class ChecksContainerComponent {
     private navigation: SecondaryNavigationBarService,
     private cd: ChangeDetectorRef,
     private modal: NzModalService
-  ) {}
-  checks: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
-  reportChecks$: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
-  employeeList$: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
+  ) { }
+  checks: BehaviorSubject<Check[]> = new BehaviorSubject<Check[]>([]);
+  reportChecks$: BehaviorSubject<CheckReport[]> = new BehaviorSubject<
+    CheckReport[]
+  >([]);
+  employeeList$: BehaviorSubject<Employee[]> = new BehaviorSubject<Employee[]>([
+    {
+      id: '1',
+      name: 'John Doe',
+      address: '1234 Main St',
+      city: 'New York',
+      state: 'NY',
+      zipCode: '12345',
+      phone: '1234567890',
+      email: '',
+      socialSecurityNumber: '123456789',
+      employeeIdentificationNumber: '',
+      jobTitle: 'Construction Worker',
+      hourlyRate: 15,
+      isContractor: false,
+    },
+  ]);
 
   ngOnInit(): void {
     this.navigation.setNavigationLinks([
@@ -64,7 +84,7 @@ export class ChecksContainerComponent {
       nzOkText: 'Update',
       nzCancelText: 'Cancel',
       nzContent: CreateCheckModalComponent,
-      nzData: { clientList: this.employeeList$.getValue(), check: item },
+      nzData: { employeeList: this.employeeList$.getValue(), check: item },
       nzWidth: '100dvw',
       nzBodyStyle: { height: '85dvh' },
       nzStyle: { top: '1rem', margin: '1rem' },
@@ -77,11 +97,11 @@ export class ChecksContainerComponent {
 
     if (
       modal.componentInstance?.isValid$ &&
-      modal.componentInstance?.selectedEmployee$
+      modal.componentInstance?.selectedName$
     ) {
       combineLatest([
         modal.componentInstance.isValid$,
-        modal.componentInstance.selectedEmployee$,
+        modal.componentInstance.selectedName$,
       ])
         .pipe(takeUntil(modal.afterClose))
         .subscribe(([isValid, selectedClient]) => {
@@ -156,7 +176,7 @@ export class ChecksContainerComponent {
       nzOkText: 'Create',
       nzCancelText: 'Cancel',
       nzContent: CreateCheckModalComponent,
-      nzData: { emplolyeeList: this.employeeList$.getValue() },
+      nzData: { employeeList: this.employeeList$.getValue() },
       nzWidth: '100dvw',
       nzBodyStyle: { height: '85dvh' },
       nzStyle: { top: '1rem', margin: '1rem' },
@@ -177,11 +197,11 @@ export class ChecksContainerComponent {
 
     if (
       modal.componentInstance?.isValid$ &&
-      modal.componentInstance?.selectedEmployee$
+      modal.componentInstance?.selectedName$
     ) {
       combineLatest([
         modal.componentInstance.isValid$,
-        modal.componentInstance.selectedEmployee$,
+        modal.componentInstance.selectedName$,
       ])
         .pipe(takeUntil(modal.afterClose))
         .subscribe(([isValid, selectedClient]) => {
