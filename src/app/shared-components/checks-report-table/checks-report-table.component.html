@@ -1,11 +1,9 @@
 <div
-  *ngIf="listOfData.length !== 0"
   class="shadow overflow-scroll sm:rounded-lg p-4 border border-gray-900 bg-white h-full check-report-table">
   <nz-table
     [nzPageSize]="limit"
     #nzTable
     [nzLoading]="loading$ | async"
-    [nzLoadingIndicator]="loadingIndicator"
     [nzData]="listOfData"
     [nzPaginationPosition]="'bottom'"
     [nzShowPagination]="listOfData.length > 0"

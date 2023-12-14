@@ -13,7 +13,7 @@ import { CreateChecksReportModalComponent } from './create-checks-report-modal/c
 import { EmployeeModalComponent } from './employee-modal/employee-modal.component';
 import { CreateCheckModalComponent } from './create-check-modal/create-check-modal.component';
 import { DeleteWeeklyReportModalComponent } from '../weekly-reports-container/delete-weekly-report-modal/delete-weekly-report-modal.component';
-import { Check, CheckReport, Employee } from './check-model/model';
+import { Check, Employee } from './check-model/model';
 import { ChecksService } from './checks-services/checks.service';
 
 @Component({
@@ -94,7 +94,7 @@ export class ChecksContainerComponent implements OnInit {
 
   // Checks container
 
-  handleViewItem(item: any) {
+  handleViewItem(item: Check) {
     const modal = this.modal.create({
       nzTitle: 'View Check',
       nzOkText: 'Update',
@@ -126,7 +126,7 @@ export class ChecksContainerComponent implements OnInit {
         });
     }
 
-    modal.afterClose.pipe(take(1)).subscribe((check: any) => {
+    modal.afterClose.pipe(take(1)).subscribe((check: Check) => {
       if (check) {
         // TODO: make api call to update check in backend
         const checks = this.checks$.getValue();
@@ -140,7 +140,7 @@ export class ChecksContainerComponent implements OnInit {
     });
   }
 
-  handlePrintItem(item: any) {
+  handlePrintItem(item: Check) {
     console.log('item printed', item);
   }
 
@@ -205,7 +205,7 @@ export class ChecksContainerComponent implements OnInit {
       },
     });
 
-    modal.afterClose.pipe(take(1)).subscribe((check: any) => {
+    modal.afterClose.pipe(take(1)).subscribe((check: Check) => {
       if (check) {
         // TODO: make api call to create check in backend
         this.checks$.next([...this.checks$.getValue(), check]);
@@ -242,8 +242,8 @@ export class ChecksContainerComponent implements OnInit {
     });
   }
 
-  handleEmployeeCreated(client: any) {
-    this.employeeList$.next([...this.employeeList$.getValue(), client]);
+  handleEmployeeCreated(employee: Employee) {
+    this.employeeList$.next([...this.employeeList$.getValue(), employee]);
     // TODO: make api call to create client in backend
   }
 
@@ -253,7 +253,7 @@ export class ChecksContainerComponent implements OnInit {
     // and set client list to result
   }
 
-  handleEmployeeEdited(employee: any) {
+  handleEmployeeEdited(employee: Employee) {
     const employeeList = this.employeeList$.getValue();
 
     const employeeIndex = employeeList.findIndex(e => {

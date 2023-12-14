@@ -3,7 +3,6 @@ import {
   ChangeDetectorRef,
   Component,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../auth.service';
 import { take } from 'rxjs';
@@ -39,7 +38,7 @@ export class PasswordResetComponent {
         .updatePassword(email, password)
         .pipe(take(1))
         .subscribe({
-          next: async res => {
+          next: async () => {
             this.message.success('Password successfully updated');
             await this.router.navigate(['auth', 'login'], { replaceUrl: true });
             this.cd.detectChanges();
