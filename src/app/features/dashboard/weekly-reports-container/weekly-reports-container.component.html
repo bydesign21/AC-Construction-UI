@@ -18,7 +18,8 @@
   </div>
   <div class="flex flex-col gap-4">
     <app-weekly-reports-table
-      [listOfData]="(reports | async) || []"
+      [loading$]="loading$"
+      [listOfData]="(reports$ | async) || []"
       (deleteItem)="handleDeleteItem($event)"
       (printItem)="handlePrintItem($event)"
       (viewItem)="handleViewItem($event)"></app-weekly-reports-table>

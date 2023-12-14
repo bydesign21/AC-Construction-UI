@@ -13,6 +13,7 @@ import { ExpensesService } from './expenses.service';
 import { SharedUtilsService } from '../shared-utils.service';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { TableFormService } from '../table-form.service';
+import { NzAutocompleteModule } from 'ng-zorro-antd/auto-complete';
 
 @NgModule({
   declarations: [ExpenseItemListComponent],
@@ -28,6 +29,7 @@ import { TableFormService } from '../table-form.service';
     NzIconModule,
     NzToolTipModule,
     ReactiveFormsModule,
+    NzAutocompleteModule,
   ],
   exports: [ExpenseItemListComponent],
   providers: [ExpensesService, SharedUtilsService, TableFormService],

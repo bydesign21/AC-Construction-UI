@@ -6,6 +6,7 @@ import {
   Output,
 } from '@angular/core';
 import { WeeklyReport } from '../weekly-reports-model/model';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -15,8 +16,9 @@ import { WeeklyReport } from '../weekly-reports-model/model';
   styleUrl: './weekly-reports-table.component.scss',
 })
 export class WeeklyReportsTableComponent {
+  @Input() loading$ = new BehaviorSubject<boolean>(true);
   @Input() listOfData: WeeklyReport[] = [];
-  @Input() limit: number = 10;
+  @Input() limit: number = 8;
   @Output() viewItem: EventEmitter<any> = new EventEmitter<any>();
   @Output() printItem: EventEmitter<any> = new EventEmitter<any>();
   @Output() deleteItem: EventEmitter<number> = new EventEmitter<number>();

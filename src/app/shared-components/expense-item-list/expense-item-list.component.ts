@@ -57,7 +57,7 @@ export class ExpenseItemListComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  constructor(private ts: TableFormService) { }
+  constructor(private ts: TableFormService) {}
 
   rowForms: FormGroup[] = [];
   editIndex: number | null = null;
@@ -114,6 +114,7 @@ export class ExpenseItemListComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   createRowForm(item: ExpenseItem): FormGroup {
+    const isMiscType = item.expenseType === ExpenseTypes.MISC;
     const formConfig = {
       employeeName: {
         defaultValue: item.employeeName,
@@ -121,15 +122,15 @@ export class ExpenseItemListComponent implements OnInit, OnChanges, OnDestroy {
       },
       address: {
         defaultValue: item.address,
-        validators: [Validators.required],
+        validators: isMiscType ? [] : [Validators.required],
       },
       sqftPrice: {
         defaultValue: item.sqftPrice,
-        validators: [Validators.required, Validators.min(0)],
+        validators: isMiscType ? [] : [Validators.required, Validators.min(0)],
       },
       sqft: {
         defaultValue: item.sqft,
-        validators: [Validators.required, Validators.min(0)],
+        validators: isMiscType ? [] : [Validators.required, Validators.min(0)],
       },
       amount: { defaultValue: item.amount, validators: [Validators.required] },
       isPaid: { defaultValue: Boolean(item.isPaid) },
@@ -141,6 +142,14 @@ export class ExpenseItemListComponent implements OnInit, OnChanges, OnDestroy {
     };
 
     const form = this.ts.createRowForm(item, formConfig);
+
+    // Listen for changes in expenseType and update validators
+    form
+      .get('expenseType')
+      ?.valueChanges.pipe(takeUntil(this.destroy$))
+      .subscribe(expenseType => {
+        this.updateValidators(form, expenseType);
+      });
 
     form.valueChanges.pipe(takeUntil(this.destroy$)).subscribe(() => {
       this.updateFieldErrors(form, this.items.indexOf(item));
@@ -163,6 +172,26 @@ export class ExpenseItemListComponent implements OnInit, OnChanges, OnDestroy {
       });
 
     return form;
+  }
+
+  updateValidators(form: FormGroup, expenseType: ExpenseTypes): void {
+    const isMiscType = expenseType === ExpenseTypes.MISC;
+    form
+      .get('sqftPrice')
+      ?.setValidators(
+        isMiscType ? [] : [Validators.required, Validators.min(0)]
+      );
+    form
+      .get('sqft')
+      ?.setValidators(
+        isMiscType ? [] : [Validators.required, Validators.min(0)]
+      );
+    form.get('address')?.setValidators(isMiscType ? [] : [Validators.required]);
+
+    // Update validity
+    form.get('sqftPrice')?.updateValueAndValidity();
+    form.get('sqft')?.updateValueAndValidity();
+    form.get('address')?.updateValueAndValidity();
   }
 
   updateFieldErrors(form: FormGroup, rowIndex: number): void {

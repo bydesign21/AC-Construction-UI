@@ -48,8 +48,9 @@
   </div>
   <div class="flex flex-col gap-4">
     <app-checks-report-table
+      [loading$]="loading$"
       [isActionRowVisible]="true"
-      [listOfData]="(checks | async) || []"
+      [listOfData]="(checks$ | async) || []"
       (deleteItem)="handleDeleteItem($event)"
       (printItem)="handlePrintItem($event)"
       (viewItem)="handleViewItem($event)">

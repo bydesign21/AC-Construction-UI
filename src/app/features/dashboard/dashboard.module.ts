@@ -26,6 +26,8 @@ import {
   BarChartOutline,
   EditOutline,
   ExclamationCircleOutline,
+  LoadingOutline,
+  FileSearchOutline,
 } from '@ant-design/icons-angular/icons';
 import { AuthService } from '../auth/auth.service';
 import { NzMessageModule } from 'ng-zorro-antd/message';
@@ -71,6 +73,8 @@ import { ChecksReportTableModule } from '../../shared-components/checks-report-t
 import { EmployeeListTableModule } from '../../shared-components/employee-list-table/employee-list-table.module';
 import { WeeklyReportsService } from './weekly-reports-container/weekly-reports-services/weekly-reports.service';
 import { CheckItemListModule } from '../../shared-components/check-item-list/check-item-list.module';
+import { ChecksService } from './checks-container/checks-services/checks.service';
+import { NzAutocompleteModule } from 'ng-zorro-antd/auto-complete';
 
 const icons = [
   SettingOutline,
@@ -92,6 +96,8 @@ const icons = [
   BarChartOutline,
   EditOutline,
   ExclamationCircleOutline,
+  LoadingOutline,
+  FileSearchOutline,
 ];
 
 @NgModule({
@@ -149,6 +155,7 @@ const icons = [
     ChecksReportTableModule,
     EmployeeListTableModule,
     CheckItemListModule,
+    NzAutocompleteModule,
   ],
   providers: [
     provideRouter(routes),
@@ -156,6 +163,7 @@ const icons = [
     CurrencyPipe,
     ExpensesService,
     WeeklyReportsService,
+    ChecksService,
   ],
   exports: [
     DashboardComponent,

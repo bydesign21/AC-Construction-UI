@@ -29,7 +29,7 @@ export class CreateWeeklyReportModalComponent implements OnInit {
     private modal: NzModalRef,
     @Inject(NZ_MODAL_DATA)
     public data?: { report: WeeklyReportDataEmission; isEditMode: boolean }
-  ) { }
+  ) {}
   isInputRowValid$ = new BehaviorSubject<boolean>(false);
   isInputRowTouched$ = new BehaviorSubject<boolean>(false);
   isExpenseListTouched$ = new BehaviorSubject<boolean>(false);

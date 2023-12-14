@@ -32,14 +32,14 @@ export class CreateCheckModalComponent implements OnInit {
   isValid$ = new BehaviorSubject<boolean>(false);
   selectedName$: BehaviorSubject<string> = new BehaviorSubject('');
   checkItemList: CheckLineItem[] = [];
-  checkId?: string;
+  checkNumber?: string;
 
   constructor(
     private cd: ChangeDetectorRef,
     private modal: NzModalRef,
     @Inject(NZ_MODAL_DATA)
     public data?: { employeeList: Employee[]; check?: Check }
-  ) { }
+  ) {}
 
   get selectedEmployee() {
     return this.selectedName$.getValue();
@@ -51,12 +51,13 @@ export class CreateCheckModalComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.data) {
-      this.employeeList = this.data.employeeList;
-      this.check = this.data.check;
+      this.employeeList = this.data?.employeeList;
+      this.check = this.data?.check;
     }
     if (this.check) {
-      this.checkId = this.check.id;
+      this.checkNumber = this.check.checkNumber;
       this.selectedName$.next(this.check.name);
+      console.log('checkName', this.check.name);
       this.checkItemList = this.check.lineItems;
     }
   }
@@ -83,7 +84,7 @@ export class CreateCheckModalComponent implements OnInit {
   emitAndCloseModal() {
     this.checkItemListComponentRef?.stopEdit();
     const check: Check = {
-      id: this.checkId || '',
+      checkNumber: this.checkNumber || '',
       name: this.selectedName$.getValue() || '',
       date: new Date().toISOString(),
       lineItems: this.checkItemList,

@@ -10,7 +10,7 @@
     [nzTableLayout]="'fixed'"
     [nzPageSize]="8"
     [nzPaginationPosition]="'bottom'"
-    [nzShowPagination]="items!.length > 8"
+    [nzShowPagination]="false"
     [nzData]="items || []">
     <thead>
       <tr>
@@ -23,7 +23,7 @@
               nzType="exclamation-circle"
               nzTheme="outline"
               class="!text-red-500 !text-lg ml-1 flex flex-row justify-center items-center relative bottom-[0.04rem]"
-              [nz-tooltip]="tooltipTemplate"
+              [nz-tooltip]="errorTooltipTemplate"
               [nzTooltipTitleContext]="{ field: 'employeeName' }">
             </span>
           </div>
@@ -37,7 +37,7 @@
               nzType="exclamation-circle"
               nzTheme="outline"
               class="!text-red-500 !text-lg ml-1 flex flex-row justify-center items-center relative bottom-[0.04rem]"
-              [nz-tooltip]="tooltipTemplate"
+              [nz-tooltip]="errorTooltipTemplate"
               [nzTooltipTitleContext]="{ field: 'address' }">
             </span>
           </div>
@@ -51,7 +51,7 @@
               nzType="exclamation-circle"
               nzTheme="outline"
               class="!text-red-500 !text-lg ml-1 flex flex-row justify-center items-center relative bottom-[0.04rem]"
-              [nz-tooltip]="tooltipTemplate"
+              [nz-tooltip]="errorTooltipTemplate"
               [nzTooltipTitleContext]="{ field: 'sqftPrice' }">
             </span>
           </div>
@@ -65,7 +65,7 @@
               nzType="exclamation-circle"
               nzTheme="outline"
               class="!text-red-500 !text-lg ml-1 flex flex-row justify-center items-center relative bottom-[0.04rem]"
-              [nz-tooltip]="tooltipTemplate"
+              [nz-tooltip]="errorTooltipTemplate"
               [nzTooltipTitleContext]="{ field: 'sqft' }">
             </span>
           </div>
@@ -79,7 +79,7 @@
               nzType="exclamation-circle"
               nzTheme="outline"
               class="!text-red-500 !text-lg ml-1 flex flex-row justify-center items-center relative bottom-[0.04rem]"
-              [nz-tooltip]="tooltipTemplate"
+              [nz-tooltip]="errorTooltipTemplate"
               [nzTooltipTitleContext]="{ field: 'amount' }">
             </span>
           </div>
@@ -93,7 +93,7 @@
               nzType="exclamation-circle"
               nzTheme="outline"
               class="!text-red-500 !text-lg ml-1 flex flex-row justify-center items-center relative bottom-[0.04rem]"
-              [nz-tooltip]="tooltipTemplate"
+              [nz-tooltip]="errorTooltipTemplate"
               [nzTooltipTitleContext]="{ field: 'isPaid' }">
             </span>
           </div>
@@ -107,7 +107,7 @@
               nzType="exclamation-circle"
               nzTheme="outline"
               class="!text-red-500 !text-lg ml-1 flex flex-row justify-center items-center relative bottom-[0.04rem]"
-              [nz-tooltip]="tooltipTemplate"
+              [nz-tooltip]="errorTooltipTemplate"
               [nzTooltipTitleContext]="{ field: 'date' }">
             </span>
           </div>
@@ -121,7 +121,7 @@
               nzType="exclamation-circle"
               nzTheme="outline"
               class="!text-red-500 !text-lg ml-1 flex flex-row justify-center items-center relative bottom-[0.04rem]"
-              [nz-tooltip]="tooltipTemplate"
+              [nz-tooltip]="errorTooltipTemplate"
               [nzTooltipTitleContext]="{ field: 'type' }">
             </span>
           </div>
@@ -135,18 +135,41 @@
         class="editable-row"
         (click)="stopEdit(); startEdit(i); $event.stopPropagation()"
         (blur)="stopEdit()">
-        <td>
+        <td class="max-w-[10rem]">
           <div
+            class="max-w-[10rem] truncate"
             [hidden]="editIndex === i"
             (click)="startEdit(i); $event.stopPropagation()">
-            {{ data.value?.employeeName }}
+            <span
+              class="truncate"
+              [nz-tooltip]="
+                data.value?.employeeName?.length > 15
+                  ? infoTooltipTemplate
+                  : null
+              "
+              [nzTooltipArrowPointAtCenter]="false"
+              [nzTooltipTitleContext]="{ data: data.value?.employeeName }"
+              >{{ data.value?.employeeName }}</span
+            >
           </div>
-          <nz-select
-            class="w-[8rem]"
-            (click)="$event.stopPropagation()"
+          <input
+            aria-label="Employee Name"
+            nz-input
             [hidden]="editIndex !== i"
-            [nzOptions]="employeeList"
-            [formControl]="getFormControl(rowForms[i], 'employeeName')" />
+            class="w-[8rem]"
+            [nzAutocomplete]="employeeNameAutoComplete"
+            [formControl]="getFormControl(rowForms[i], 'employeeName')"
+            (click)="$event.stopPropagation()" />
+
+          <nz-autocomplete #employeeNameAutoComplete>
+            <nz-auto-option
+              *ngFor="let option of employeeList"
+              [nzValue]="option.label"
+              [nzLabel]="option.label">
+              <span>{{ option.label }}</span>
+            </nz-auto-option>
+          </nz-autocomplete>
+          <!-- TODO: Append autocomplete to input on open -->
         </td>
         <td>
           <div
@@ -250,7 +273,12 @@
             (click)="$event.stopPropagation()"
             [hidden]="editIndex !== i"
             [nzOptions]="typeOptions"
-            [formControl]="getFormControl(rowForms[i], 'expenseType')" />
+            [formControl]="getFormControl(rowForms[i], 'expenseType')">
+            <nz-option
+              *ngFor="let option of typeOptions"
+              [nzLabel]="option.label"
+              [nzValue]="option.label"></nz-option>
+          </nz-select>
         </td>
         <td class="flex flex-col items-center justify-center">
           <button
@@ -290,12 +318,21 @@
   </div>
 </div>
 
-<ng-template #tooltipTemplate let-field="field">
+<ng-template #errorTooltipTemplate let-field="field">
   <div
     class="flex flex-col items-center bg-white border border-red-400 rounded-lg p-2 shadow-lg">
     <span class="text-red-500 font-semibold text-sm">Error</span>
     <span class="text-gray-700 text-xs mt-1">
       {{ getErrorMessageForField(field) }}
+    </span>
+  </div>
+</ng-template>
+
+<ng-template #infoTooltipTemplate let-data="data">
+  <div
+    class="flex flex-col items-center bg-white border border-gray-400 rounded-lg p-2 shadow-lg">
+    <span class="text-gray-700 text-xs mt-1">
+      {{ data }}
     </span>
   </div>
 </ng-template>

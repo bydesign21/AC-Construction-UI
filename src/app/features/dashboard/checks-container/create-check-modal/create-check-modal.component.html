@@ -9,19 +9,23 @@
           Employee
         </nz-form-label>
         <div class="w-[12rem]">
-          <nz-select
-            class="w-full"
-            nzShowSearch
-            nzAllowClear
-            nzPlaceHolder="Select Employee"
+          <input
+            type="text"
+            nz-input
+            [nzAutocomplete]="employeeAuto"
             [(ngModel)]="selectedEmployee"
-            (ngModelChange)="handleEmployeeChanged($event)">
-            <nz-option
+            (ngModelChange)="handleEmployeeChanged($event)"
+            placeholder="Select or type an employee name" />
+
+          <nz-autocomplete #employeeAuto>
+            <nz-auto-option
               *ngFor="let employee of employeeList"
-              [nzLabel]="employee.name"
-              [nzValue]="employee.id">
-            </nz-option>
-          </nz-select>
+              [nzValue]="employee.name"
+              [nzLabel]="employee.name">
+              <span>{{ employee.name }}</span>
+            </nz-auto-option>
+          </nz-autocomplete>
+          <!-- TODO: Append autocomplete dropdown to input on open -->
         </div>
       </div>
       <div class="flex flex-row gap-2">

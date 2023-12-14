@@ -7,13 +7,14 @@ import {
   ViewChild,
 } from '@angular/core';
 import { NzModalService } from 'ng-zorro-antd/modal';
-import { BehaviorSubject, combineLatest, take, takeUntil } from 'rxjs';
+import { BehaviorSubject, Subject, combineLatest, take, takeUntil } from 'rxjs';
 import { SecondaryNavigationBarService } from '../../../shared-components/secondary-navigation-bar/secondary-navigation-bar.service';
 import { CreateChecksReportModalComponent } from './create-checks-report-modal/create-checks-report-modal.component';
 import { EmployeeModalComponent } from './employee-modal/employee-modal.component';
 import { CreateCheckModalComponent } from './create-check-modal/create-check-modal.component';
 import { DeleteWeeklyReportModalComponent } from '../weekly-reports-container/delete-weekly-report-modal/delete-weekly-report-modal.component';
 import { Check, CheckReport, Employee } from './check-model/model';
+import { ChecksService } from './checks-services/checks.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -30,12 +31,12 @@ export class ChecksContainerComponent implements OnInit {
   constructor(
     private navigation: SecondaryNavigationBarService,
     private cd: ChangeDetectorRef,
-    private modal: NzModalService
-  ) { }
-  checks: BehaviorSubject<Check[]> = new BehaviorSubject<Check[]>([]);
-  reportChecks$: BehaviorSubject<CheckReport[]> = new BehaviorSubject<
-    CheckReport[]
-  >([]);
+    private modal: NzModalService,
+    private checks: ChecksService
+  ) {}
+  checks$: BehaviorSubject<Check[]> = new BehaviorSubject<Check[]>([]);
+  reportChecks$: BehaviorSubject<Check[]> = new BehaviorSubject<Check[]>([]);
+  loading$ = new BehaviorSubject<boolean>(false);
   employeeList$: BehaviorSubject<Employee[]> = new BehaviorSubject<Employee[]>([
     {
       id: '1',
@@ -53,6 +54,20 @@ export class ChecksContainerComponent implements OnInit {
       isContractor: false,
     },
   ]);
+  destroy$ = new Subject<void>();
+
+  loadData() {
+    this.loading$.next(true);
+    this.checks
+      .getChecks()
+      .pipe(take(1), takeUntil(this.destroy$))
+      .subscribe(checks => {
+        console.log('checks', checks);
+        this.checks$.next(checks);
+        this.cd.detectChanges();
+        this.loading$.next(false);
+      });
+  }
 
   ngOnInit(): void {
     this.navigation.setNavigationLinks([
@@ -72,6 +87,7 @@ export class ChecksContainerComponent implements OnInit {
         routerUrl: 'payroll-reports',
       },
     ]);
+    this.loadData();
     this.navigation.setNavigationVisibility(true);
     this.cd.detectChanges();
   }
@@ -80,7 +96,7 @@ export class ChecksContainerComponent implements OnInit {
 
   handleViewItem(item: any) {
     const modal = this.modal.create({
-      nzTitle: 'View check',
+      nzTitle: 'View Check',
       nzOkText: 'Update',
       nzCancelText: 'Cancel',
       nzContent: CreateCheckModalComponent,
@@ -113,10 +129,12 @@ export class ChecksContainerComponent implements OnInit {
     modal.afterClose.pipe(take(1)).subscribe((check: any) => {
       if (check) {
         // TODO: make api call to update check in backend
-        const checks = this.checks.getValue();
-        const checkIndex = checks.findIndex(i => i.id === check.id);
+        const checks = this.checks$.getValue();
+        const checkIndex = checks.findIndex(
+          i => i.checkNumber === check.checkNumber
+        );
         checks[checkIndex] = check;
-        this.checks.next([...checks]);
+        this.checks$.next([...checks]);
         this.cd.detectChanges();
       }
     });
@@ -128,9 +146,9 @@ export class ChecksContainerComponent implements OnInit {
 
   handleDeleteItem(index: number) {
     const deleteItem = (index: number) => {
-      const checks = this.checks.getValue();
+      const checks = this.checks$.getValue();
       checks.splice(index, 1);
-      this.checks.next([...checks]);
+      this.checks$.next([...checks]);
     };
 
     // TODO: make api call to delete check in backend
@@ -190,7 +208,7 @@ export class ChecksContainerComponent implements OnInit {
     modal.afterClose.pipe(take(1)).subscribe((check: any) => {
       if (check) {
         // TODO: make api call to create check in backend
-        this.checks.next([...this.checks.getValue(), check]);
+        this.checks$.next([...this.checks$.getValue(), check]);
         this.cd.detectChanges();
       }
     });

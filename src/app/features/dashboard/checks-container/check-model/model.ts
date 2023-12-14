@@ -1,7 +1,7 @@
-export interface CheckReport extends Check { }
+export interface CheckReport extends Check {}
 
 export interface Check {
-  id: string;
+  checkNumber: string;
   date: string;
   name: string;
   isVoid: boolean;

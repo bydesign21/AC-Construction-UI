@@ -1,8 +1,11 @@
 <div
-  class="shadow overflow-scroll sm:rounded-lg p-4 border border-gray-900 bg-white h-full invoice-report-table">
+  *ngIf="listOfData.length !== 0"
+  class="shadow overflow-scroll sm:rounded-lg p-4 border border-gray-900 bg-white h-full check-report-table">
   <nz-table
-    [nzPageSize]="8"
+    [nzPageSize]="limit"
     #nzTable
+    [nzLoading]="loading$ | async"
+    [nzLoadingIndicator]="loadingIndicator"
     [nzData]="listOfData"
     [nzPaginationPosition]="'bottom'"
     [nzShowPagination]="listOfData.length > 0"
@@ -22,7 +25,7 @@
     </thead>
     <tbody>
       <tr *ngFor="let data of nzTable.data; index as i">
-        <td class="italic">{{ data.id }}</td>
+        <td class="italic">{{ data.checkNumber }}</td>
         <td>{{ data.date | date: 'MM/dd/yyyy' }}</td>
         <td>
           {{ data.total | currency }}
@@ -79,3 +82,27 @@
     </tbody>
   </nz-table>
 </div>
+
+<ng-template #loadingIndicator>
+  <div class="flex relative top-[25dvh] flex-col items-center justify-center">
+    <nz-spin [nzIndicator]="indicator" nzSize="large"></nz-spin>
+  </div>
+</ng-template>
+
+<ng-template #indicator>
+  <span class="!text-[4rem]"
+    ><i nz-icon nzTheme="outline" nzType="loading"></i
+  ></span>
+</ng-template>
+
+<ng-template #noResult>
+  <!-- create beautiful UI empty state with icon and text -->
+  <div class="flex flex-col items-center justify-center">
+    <span
+      class="!text-[4rem] items-center justify-center h-[1.4rem]"
+      nz-icon
+      [nzType]="'file-search'"
+      nzTheme="outline"></span>
+    <span class="!text-xl">No Results</span>
+  </div>
+</ng-template>

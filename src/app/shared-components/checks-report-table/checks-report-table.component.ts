@@ -7,6 +7,7 @@ import {
   Output,
 } from '@angular/core';
 import { CheckReport } from '../../features/dashboard/checks-container/check-model/model';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -16,6 +17,8 @@ import { CheckReport } from '../../features/dashboard/checks-container/check-mod
   styleUrl: './checks-report-table.component.scss',
 })
 export class ChecksReportTableComponent implements OnInit {
+  @Input() limit: number = 10;
+  @Input() loading$: BehaviorSubject<boolean> = new BehaviorSubject(true);
   @Input() listOfData: CheckReport[] = [];
   @Input() isActionRowVisible: boolean = false;
   @Output() viewItem: EventEmitter<CheckReport> =
@@ -28,7 +31,7 @@ export class ChecksReportTableComponent implements OnInit {
     {
       label: 'Check #',
       sortFn: (a: CheckReport, b: CheckReport) =>
-        a.id.localeCompare(b.id),
+        a.checkNumber.localeCompare(b.checkNumber),
     },
     {
       label: 'Date',

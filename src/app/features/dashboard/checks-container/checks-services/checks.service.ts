@@ -5,15 +5,15 @@ import { Observable, from, map } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
-export class WeeklyReportsService {
+export class ChecksService {
   constructor(private sb: SupabaseService) {}
 
-  getWeeklyReports(): Observable<any[]> {
+  getChecks(): Observable<any[]> {
     return from(
       this.sb.client
-        .from('weekly_reports')
+        .from('checks')
         .select('*')
-        .order('id', { ascending: false })
+        .order('date', { ascending: false, nullsFirst: false })
     ).pipe(map(res => res.data || []));
   }
 }

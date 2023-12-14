@@ -28,10 +28,11 @@ export class WeeklyReportsContainerComponent implements OnInit {
     private cd: ChangeDetectorRef,
     private modal: NzModalService,
     private data: WeeklyReportsService
-  ) { }
-  reports: BehaviorSubject<WeeklyReport[]> = new BehaviorSubject<
+  ) {}
+  reports$: BehaviorSubject<WeeklyReport[]> = new BehaviorSubject<
     WeeklyReport[]
   >([]);
+  loading$ = new BehaviorSubject<boolean>(false);
 
   ngOnInit(): void {
     this.navigation.setNavigationLinks([
@@ -57,9 +58,11 @@ export class WeeklyReportsContainerComponent implements OnInit {
   }
 
   loadData() {
+    this.loading$.next(true);
     this.data.getWeeklyReports().subscribe(reports => {
-      this.reports.next(reports as any);
+      this.reports$.next(reports as any);
       console.log('reports', reports);
+      this.loading$.next(false);
       this.cd.detectChanges();
     });
   }
@@ -110,7 +113,7 @@ export class WeeklyReportsContainerComponent implements OnInit {
       .pipe(take(1))
       .subscribe((report: WeeklyReportDataEmission) => {
         if (report) {
-          const reports = this.reports.getValue();
+          const reports = this.reports$.getValue();
           const reportIndex = reports.findIndex(
             report => report.id === item.id
           );
@@ -119,7 +122,7 @@ export class WeeklyReportsContainerComponent implements OnInit {
             return;
           }
           reports[reportIndex] = report;
-          this.reports.next([...reports]);
+          this.reports$.next([...reports]);
           this.cd.detectChanges();
         }
       });
@@ -131,9 +134,9 @@ export class WeeklyReportsContainerComponent implements OnInit {
 
   handleDeleteItem(index: number) {
     const deleteItem = (index: number) => {
-      const reports = this.reports.getValue();
+      const reports = this.reports$.getValue();
       reports.splice(index, 1);
-      this.reports.next([...reports]);
+      this.reports$.next([...reports]);
     };
     this.modal.create({
       nzOkDanger: true,
@@ -180,7 +183,7 @@ export class WeeklyReportsContainerComponent implements OnInit {
       .pipe(take(1))
       .subscribe((report: WeeklyReportDataEmission) => {
         if (report) {
-          this.reports.next([...this.reports.getValue(), report]);
+          this.reports$.next([...this.reports$.getValue(), report]);
           this.cd.detectChanges();
         }
       });
