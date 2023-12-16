@@ -1,27 +1,36 @@
 <div class="flex flex-col mt-[2rem] min-w-full overflow-hidden">
   <div class="flex flex-row items-center justify-between">
     <h1 class="text-2xl">Weekly Reports</h1>
-    <button
-      (click)="handleCreateReport()"
-      title="Create Report"
-      nz-button
-      class="ml-4 items-center flex mb-[0.5em] !rounded-lg">
-      <span
-        >Create Report
+    <div class="flex flex-row gap-4 items-end mb-2">
+      <app-date-range-picker
+        (changed)="handleDateRangeChange($event)"></app-date-range-picker>
+      <button
+        (click)="handleCreateReport()"
+        title="Create Report"
+        nz-button
+        class="items-center flex !rounded-lg">
         <span
-          class="items-center flex relative bottom-[0.15rem]"
-          nz-icon
-          [nzTheme]="'outline'"
-          nzType="plus-circle"></span
-      ></span>
-    </button>
+          >Create Report
+          <span
+            class="items-center flex relative"
+            nz-icon
+            [nzTheme]="'outline'"
+            nzType="plus-circle"></span
+        ></span>
+      </button>
+    </div>
   </div>
   <div class="flex flex-col gap-4">
     <app-weekly-reports-table
+      [totalRecords]="totalRecords"
+      [limit]="limit"
       [loading$]="loading$"
+      [currentPage]="currentPage"
       [listOfData]="(reports$ | async) || []"
       (deleteItem)="handleDeleteItem($event)"
       (printItem)="handlePrintItem($event)"
-      (viewItem)="handleViewItem($event)"></app-weekly-reports-table>
+      (pageChange)="onPageChange($event)"
+      (viewItem)="handleViewItem($event)">
+    </app-weekly-reports-table>
   </div>
 </div>

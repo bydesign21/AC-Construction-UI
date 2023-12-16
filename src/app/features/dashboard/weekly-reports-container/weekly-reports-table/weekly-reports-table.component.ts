@@ -18,16 +18,17 @@ import { BehaviorSubject } from 'rxjs';
 export class WeeklyReportsTableComponent {
   @Input() loading$ = new BehaviorSubject<boolean>(true);
   @Input() listOfData: WeeklyReport[] = [];
-  @Input() limit: number = 8;
+  @Input() limit: number = 10;
+  @Input() totalRecords: number = 0;
+  @Input() currentPage!: number;
   @Output() viewItem: EventEmitter<any> = new EventEmitter<any>();
   @Output() printItem: EventEmitter<any> = new EventEmitter<any>();
   @Output() deleteItem: EventEmitter<number> = new EventEmitter<number>();
+  @Output() pageChange: EventEmitter<number> = new EventEmitter<number>();
+
   visible = false;
   sortDateRangeFn = (a: WeeklyReport, b: WeeklyReport) => {
-    return (
-      this.parseStartDate(a.date).getTime() -
-      this.parseStartDate(b.date).getTime()
-    );
+    return a.date[1].getTime() - b.date[1].getTime();
   };
   tableHeaders: any = [
     { label: 'Date Range', sortFn: this.sortDateRangeFn },
@@ -54,8 +55,8 @@ export class WeeklyReportsTableComponent {
     { label: 'Actions' },
   ];
 
-  parseStartDate(dateRange: string): Date {
-    const startDateString = dateRange.split(' - ')[0];
+  parseEndDate(dateRange: string): Date {
+    const startDateString = dateRange.split(' - ')[1];
     return new Date(startDateString);
   }
 
@@ -69,5 +70,11 @@ export class WeeklyReportsTableComponent {
 
   handlePrintItem(item: WeeklyReport) {
     this.printItem.emit(item);
+  }
+
+  handlePageChange(page: number) {
+    if (page !== this.currentPage) {
+      this.pageChange.emit(page);
+    }
   }
 }

@@ -75,6 +75,9 @@ import { WeeklyReportsService } from './weekly-reports-container/weekly-reports-
 import { CheckItemListModule } from '../../shared-components/check-item-list/check-item-list.module';
 import { ChecksService } from './checks-container/checks-services/checks.service';
 import { NzAutocompleteModule } from 'ng-zorro-antd/auto-complete';
+import { NzPaginationModule } from 'ng-zorro-antd/pagination';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { CreateWeeklyReportAnalysisModalComponent } from './weekly-reports-container/create-weekly-report-analysis-modal/create-weekly-report-analysis-modal.component';
 
 const icons = [
   SettingOutline,
@@ -120,6 +123,7 @@ const icons = [
     CreateChecksReportModalComponent,
     EmployeeModalComponent,
     CreateEmployeeFormComponent,
+    CreateWeeklyReportAnalysisModalComponent,
   ],
   imports: [
     CommonModule,
@@ -156,6 +160,8 @@ const icons = [
     EmployeeListTableModule,
     CheckItemListModule,
     NzAutocompleteModule,
+    NzPaginationModule,
+    NzSpinModule,
   ],
   providers: [
     provideRouter(routes),
@@ -182,6 +188,7 @@ const icons = [
     CreateCheckModalComponent,
     CreateChecksReportModalComponent,
     EmployeeModalComponent,
+    CreateWeeklyReportAnalysisModalComponent,
   ],
 })
 export class DashboardModule {}

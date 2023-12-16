@@ -54,9 +54,7 @@ export class CreateWeeklyReportModalComponent implements OnInit {
       this.expenseList = this.data.report.expenseList;
       this.payroll = this.data.report.payroll;
       this.revenue = this.data.report.revenue;
-      this.date = this.data.report.date
-        .split(' - ')
-        .map(date => new Date(date));
+      this.date = this.data.report.date;
       this.calculateTotals();
     }
   }
@@ -113,7 +111,7 @@ export class CreateWeeklyReportModalComponent implements OnInit {
       misc: this.miscCost,
       decking: this.deckingCost,
       totalExpenses: this.totalExpenses,
-      date: this.expenses.formatDateRange(this.date),
+      date: this.date,
     };
     this.modal.destroy(reportData);
   }

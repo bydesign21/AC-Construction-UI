@@ -4,13 +4,11 @@
   #table
   class="flex flex-col justify-center items-center min-h-full min-w-full overflow-hidden">
   <nz-table
-    class="min-w-full overflow-hidden"
+    class="min-w-full overflow-hidden mb-[5rem]"
     #editRowTable
     nzBordered
     [nzTableLayout]="'fixed'"
-    [nzPageSize]="8"
-    [nzPaginationPosition]="'bottom'"
-    [nzShowPagination]="items!.length > 8"
+    [nzShowPagination]="false"
     [nzData]="items || []">
     <thead>
       <tr>

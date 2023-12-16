@@ -7,7 +7,14 @@ import {
   ViewChild,
 } from '@angular/core';
 import { NzModalService } from 'ng-zorro-antd/modal';
-import { BehaviorSubject, Subject, combineLatest, take, takeUntil } from 'rxjs';
+import {
+  BehaviorSubject,
+  Subject,
+  combineLatest,
+  take,
+  takeUntil,
+  tap,
+} from 'rxjs';
 import { SecondaryNavigationBarService } from '../../../shared-components/secondary-navigation-bar/secondary-navigation-bar.service';
 import { CreateChecksReportModalComponent } from './create-checks-report-modal/create-checks-report-modal.component';
 import { EmployeeModalComponent } from './employee-modal/employee-modal.component';
@@ -15,6 +22,7 @@ import { CreateCheckModalComponent } from './create-check-modal/create-check-mod
 import { DeleteWeeklyReportModalComponent } from '../weekly-reports-container/delete-weekly-report-modal/delete-weekly-report-modal.component';
 import { Check, Employee } from './check-model/model';
 import { ChecksService } from './checks-services/checks.service';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -32,8 +40,16 @@ export class ChecksContainerComponent implements OnInit {
     private navigation: SecondaryNavigationBarService,
     private cd: ChangeDetectorRef,
     private modal: NzModalService,
-    private checks: ChecksService
-  ) {}
+    private checks: ChecksService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        console.log('NavigationEnd:', event);
+      }
+    });
+  }
   checks$: BehaviorSubject<Check[]> = new BehaviorSubject<Check[]>([]);
   reportChecks$: BehaviorSubject<Check[]> = new BehaviorSubject<Check[]>([]);
   loading$ = new BehaviorSubject<boolean>(false);
@@ -55,21 +71,41 @@ export class ChecksContainerComponent implements OnInit {
     },
   ]);
   destroy$ = new Subject<void>();
+  currentPage: number = 1;
+  totalRecords = 0;
 
-  loadData() {
-    this.loading$.next(true);
+  loadData(page: number = 1): void {
+    const limit = 10;
     this.checks
-      .getChecks()
-      .pipe(take(1), takeUntil(this.destroy$))
-      .subscribe(checks => {
-        console.log('checks', checks);
-        this.checks$.next(checks);
-        this.cd.detectChanges();
+      .getChecks(page, limit)
+      .pipe(
+        take(1),
+        takeUntil(this.destroy$),
+        tap(() => this.loading$.next(true))
+      )
+      .subscribe(response => {
+        this.checks$.next(response.data);
+        this.totalRecords = response.count;
         this.loading$.next(false);
+        this.cd.detectChanges();
       });
   }
 
+  onPageChange(newPage: number): void {
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { page: newPage },
+      queryParamsHandling: 'merge',
+    });
+  }
+
   ngOnInit(): void {
+    this.route.queryParams.pipe(takeUntil(this.destroy$)).subscribe(params => {
+      const newPage = Number(params?.page) || 1;
+      this.currentPage = newPage;
+      this.loadData(this.currentPage);
+    });
+
     this.navigation.setNavigationLinks([
       { label: 'Dashboard', iconUrl: 'home', routerUrl: 'dashboard' },
       {
@@ -79,15 +115,12 @@ export class ChecksContainerComponent implements OnInit {
       },
       { label: 'Invoices', iconUrl: 'profile', routerUrl: 'invoices' },
       { label: 'Checks', iconUrl: 'mail', routerUrl: 'checks' },
-      { label: 'Bank', iconUrl: 'bank', routerUrl: 'bank' },
-      { label: 'Taxes', iconUrl: 'stock', routerUrl: 'taxes' },
       {
         label: 'Payroll Reports',
         iconUrl: 'bar-chart',
         routerUrl: 'payroll-reports',
       },
     ]);
-    this.loadData();
     this.navigation.setNavigationVisibility(true);
     this.cd.detectChanges();
   }

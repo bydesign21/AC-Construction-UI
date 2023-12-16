@@ -2,18 +2,20 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  OnDestroy,
   OnInit,
 } from '@angular/core';
 import { SecondaryNavigationBarService } from '../../../shared-components/secondary-navigation-bar/secondary-navigation-bar.service';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { DeleteWeeklyReportModalComponent } from './delete-weekly-report-modal/delete-weekly-report-modal.component';
 import { CreateWeeklyReportModalComponent } from './create-weekly-report-modal/create-weekly-report-modal.component';
-import { BehaviorSubject, combineLatest, take, takeUntil } from 'rxjs';
+import { BehaviorSubject, Subject, combineLatest, take, takeUntil } from 'rxjs';
 import {
   WeeklyReport,
   WeeklyReportDataEmission,
 } from './weekly-reports-model/model';
 import { WeeklyReportsService } from './weekly-reports-services/weekly-reports.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -22,19 +24,32 @@ import { WeeklyReportsService } from './weekly-reports-services/weekly-reports.s
   templateUrl: './weekly-reports-container.component.html',
   styleUrl: './weekly-reports-container.component.scss',
 })
-export class WeeklyReportsContainerComponent implements OnInit {
+export class WeeklyReportsContainerComponent implements OnInit, OnDestroy {
   constructor(
     private navigation: SecondaryNavigationBarService,
     private cd: ChangeDetectorRef,
     private modal: NzModalService,
-    private data: WeeklyReportsService
+    private data: WeeklyReportsService,
+    private route: ActivatedRoute,
+    private router: Router
   ) {}
   reports$: BehaviorSubject<WeeklyReport[]> = new BehaviorSubject<
     WeeklyReport[]
   >([]);
   loading$ = new BehaviorSubject<boolean>(false);
+  destroy$ = new Subject();
+  currentPage = 1;
+  totalRecords = 0;
+  limit = 10;
+  dateRange: Date[] = [];
 
   ngOnInit(): void {
+    this.route.queryParams.pipe(takeUntil(this.destroy$)).subscribe(params => {
+      const newPage = Number(params?.page) || 1;
+      this.currentPage = newPage;
+      this.loadData(this.currentPage);
+    });
+
     this.navigation.setNavigationLinks([
       { label: 'Dashboard', iconUrl: 'home', routerUrl: 'dashboard' },
       {
@@ -44,8 +59,6 @@ export class WeeklyReportsContainerComponent implements OnInit {
       },
       { label: 'Invoices', iconUrl: 'profile', routerUrl: 'invoices' },
       { label: 'Checks', iconUrl: 'mail', routerUrl: 'checks' },
-      { label: 'Bank', iconUrl: 'bank', routerUrl: 'bank' },
-      { label: 'Taxes', iconUrl: 'stock', routerUrl: 'taxes' },
       {
         label: 'Payroll Reports',
         iconUrl: 'bar-chart',
@@ -57,13 +70,38 @@ export class WeeklyReportsContainerComponent implements OnInit {
     this.cd.detectChanges();
   }
 
-  loadData() {
+  ngOnDestroy(): void {
+    this.destroy$.next(true);
+    this.destroy$.complete();
+    this.destroy$.unsubscribe();
+  }
+
+  handleDateRangeChange(dateRange: Date[]) {
+    this.dateRange = dateRange;
+    this.currentPage = 1;
+    this.loadData();
+  }
+
+  loadData(page: number = 1) {
     this.loading$.next(true);
-    this.data.getWeeklyReports().subscribe(reports => {
-      this.reports$.next(reports as any);
-      console.log('reports', reports);
-      this.loading$.next(false);
-      this.cd.detectChanges();
+    this.data
+      .getWeeklyReports(page, this.limit, this.dateRange)
+      .pipe(take(1))
+      .subscribe(reports => {
+        this.reports$.next(reports.data);
+        this.totalRecords = reports.count;
+        this.currentPage = page;
+        console.log('reports', reports);
+        this.loading$.next(false);
+        this.cd.detectChanges();
+      });
+  }
+
+  onPageChange(newPage: number): void {
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { page: newPage },
+      queryParamsHandling: 'merge',
     });
   }
 

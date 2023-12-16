@@ -21,11 +21,14 @@ export class ChecksReportTableComponent implements OnInit {
   @Input() loading$: BehaviorSubject<boolean> = new BehaviorSubject(true);
   @Input() listOfData: CheckReport[] = [];
   @Input() isActionRowVisible: boolean = false;
+  @Input() totalRecords: number = 0;
+  @Input() currentPage!: number;
   @Output() viewItem: EventEmitter<CheckReport> =
     new EventEmitter<CheckReport>();
   @Output() printItem: EventEmitter<CheckReport> =
     new EventEmitter<CheckReport>();
   @Output() deleteItem: EventEmitter<number> = new EventEmitter<number>();
+  @Output() pageChange: EventEmitter<number> = new EventEmitter<number>();
 
   tableHeaders: any[] = [
     {
@@ -58,5 +61,11 @@ export class ChecksReportTableComponent implements OnInit {
 
   handlePrintItem(item: CheckReport) {
     this.printItem.emit(item);
+  }
+
+  handlePageChange(page: number) {
+    if (page !== this.currentPage) {
+      this.pageChange.emit(page);
+    }
   }
 }

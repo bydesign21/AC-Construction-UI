@@ -9,7 +9,7 @@ export interface WeeklyReportDataEmission {
   misc: number;
   decking: number;
   totalExpenses: number;
-  date: string;
+  date: Date[];
 }
 
 export enum ExpenseTypes {
@@ -56,7 +56,6 @@ export interface WeeklyReportInputRowProps {
 
 export interface WeeklyReport {
   id?: string;
-  date: string;
   revenue: number;
   totalExpenses: number;
   profit: number;
@@ -65,5 +64,5 @@ export interface WeeklyReport {
   moulding: number;
   framing: number;
   misc: number;
-  decking: number;
+  date: Date[];
 }

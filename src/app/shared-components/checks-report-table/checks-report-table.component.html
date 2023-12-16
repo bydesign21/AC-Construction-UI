@@ -5,8 +5,8 @@
     #nzTable
     [nzLoading]="loading$ | async"
     [nzData]="listOfData"
-    [nzPaginationPosition]="'bottom'"
-    [nzShowPagination]="listOfData.length > 0"
+    [nzLoadingIndicator]="loadingIndicator"
+    [nzShowPagination]="false"
     [nzTableLayout]="'fixed'">
     <thead>
       <tr
@@ -79,6 +79,16 @@
       </tr>
     </tbody>
   </nz-table>
+  <div class="flex flex-row w-full justify-end">
+    <div *ngIf="totalRecords > 0">
+      <nz-pagination
+        [nzPageIndex]="currentPage"
+        [nzTotal]="totalRecords"
+        [nzPageSize]="limit"
+        (nzPageIndexChange)="handlePageChange($event)">
+      </nz-pagination>
+    </div>
+  </div>
 </div>
 
 <ng-template #loadingIndicator>

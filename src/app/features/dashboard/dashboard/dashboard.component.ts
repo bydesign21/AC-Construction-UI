@@ -29,8 +29,6 @@ export class DashboardComponent implements OnInit {
       },
       { label: 'Invoices', iconUrl: 'profile', routerUrl: 'invoices' },
       { label: 'Checks', iconUrl: 'mail', routerUrl: 'checks' },
-      { label: 'Bank', iconUrl: 'bank', routerUrl: 'bank' },
-      { label: 'Taxes', iconUrl: 'stock', routerUrl: 'taxes' },
       {
         label: 'Payroll Reports',
         iconUrl: 'bar-chart',

@@ -10,6 +10,7 @@ import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { NzPaginationModule } from 'ng-zorro-antd/pagination';
 
 @NgModule({
   declarations: [ChecksReportTableComponent],
@@ -24,6 +25,7 @@ import { NzSpinModule } from 'ng-zorro-antd/spin';
     NzPopconfirmModule,
     NzIconModule,
     NzSpinModule,
+    NzPaginationModule,
   ],
   exports: [ChecksReportTableComponent],
 })

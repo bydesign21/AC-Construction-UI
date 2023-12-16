@@ -49,6 +49,9 @@
   <div class="flex flex-col gap-4">
     <app-checks-report-table
       [loading$]="loading$"
+      [currentPage]="currentPage"
+      [totalRecords]="totalRecords"
+      (pageChange)="onPageChange($event)"
       [isActionRowVisible]="true"
       [listOfData]="(checks$ | async) || []"
       (deleteItem)="handleDeleteItem($event)"
