@@ -27,7 +27,6 @@ export class InvoicesContainerComponent {
   @ViewChild('ClientManagementModalTemplate')
   clientManagementModalRef!: TemplateRef<ClientsModalComponent>;
   constructor(
-    private navigation: SecondaryNavigationBarService,
     private cd: ChangeDetectorRef,
     private modal: NzModalService
   ) {}
@@ -63,116 +62,6 @@ export class InvoicesContainerComponent {
       email: 'loganvasquez@gmail.com',
     },
     {
-      id: '1',
-      name: 'Client 1',
-      address: '123 Main St',
-      city: 'City',
-      state: 'State',
-      zipCode: '12345',
-      phone: '1234567890',
-      email: 'loganvasquez@gmail.com',
-    },
-    {
-      id: '2',
-      name: 'Client 1',
-      address: '123 Main St',
-      city: 'City',
-      state: 'State',
-      zipCode: '12345',
-      phone: '1234567890',
-      email: 'loganvasquez@gmail.com',
-    },
-    {
-      id: '3',
-      name: 'Client 1',
-      address: '123 Main St',
-      city: 'City',
-      state: 'State',
-      zipCode: '12345',
-      phone: '1234567890',
-      email: 'loganvasquez@gmail.com',
-    },
-    {
-      id: '4',
-      name: 'Client 1',
-      address: '123 Main St',
-      city: 'City',
-      state: 'State',
-      zipCode: '12345',
-      phone: '1234567890',
-      email: 'loganvasquez@gmail.com',
-    },
-    {
-      id: '5',
-      name: 'Client 1',
-      address: '123 Main St',
-      city: 'City',
-      state: 'State',
-      zipCode: '12345',
-      phone: '1234567890',
-      email: 'loganvasquez@gmail.com',
-    },
-    {
-      id: '6',
-      name: 'Client 1',
-      address: '123 Main St',
-      city: 'City',
-      state: 'State',
-      zipCode: '12345',
-      phone: '1234567890',
-      email: 'loganvasquez@gmail.com',
-    },
-    {
-      id: '7',
-      name: 'Client 1',
-      address: '123 Main St',
-      city: 'City',
-      state: 'State',
-      zipCode: '12345',
-      phone: '1234567890',
-      email: 'loganvasquez@gmail.com',
-    },
-    {
-      id: '8',
-      name: 'Client 1',
-      address: '123 Main St',
-      city: 'City',
-      state: 'State',
-      zipCode: '12345',
-      phone: '1234567890',
-      email: 'loganvasquez@gmail.com',
-    },
-    {
-      id: '9',
-      name: 'Client 1',
-      address: '123 Main St',
-      city: 'City',
-      state: 'State',
-      zipCode: '12345',
-      phone: '1234567890',
-      email: 'loganvasquez@gmail.com',
-    },
-    {
-      id: '10',
-      name: 'Client 1',
-      address: '123 Main St',
-      city: 'City',
-      state: 'State',
-      zipCode: '12345',
-      phone: '1234567890',
-      email: 'loganvasquez@gmail.com',
-    },
-    {
-      id: '11',
-      name: 'Client 1',
-      address: '123 Main St',
-      city: 'City',
-      state: 'State',
-      zipCode: '12345',
-      phone: '1234567890',
-      email: 'loganvasquez@gmail.com',
-    },
-    {
       id: '12',
       name: 'Client 1',
       address: '123 Main St',
@@ -183,28 +72,6 @@ export class InvoicesContainerComponent {
       email: 'loganvasquez@gmail.com',
     },
   ]);
-
-  ngOnInit(): void {
-    this.navigation.setNavigationLinks([
-      { label: 'Dashboard', iconUrl: 'home', routerUrl: 'dashboard' },
-      {
-        label: 'Weekly Reports',
-        iconUrl: 'project',
-        routerUrl: 'weekly-reports',
-      },
-      { label: 'Invoices', iconUrl: 'profile', routerUrl: 'invoices' },
-      { label: 'Checks', iconUrl: 'mail', routerUrl: 'checks' },
-      { label: 'Bank', iconUrl: 'bank', routerUrl: 'bank' },
-      { label: 'Taxes', iconUrl: 'stock', routerUrl: 'taxes' },
-      {
-        label: 'Payroll Reports',
-        iconUrl: 'bar-chart',
-        routerUrl: 'payroll-reports',
-      },
-    ]);
-    this.navigation.setNavigationVisibility(true);
-    this.cd.detectChanges();
-  }
 
   // Invoices container
 

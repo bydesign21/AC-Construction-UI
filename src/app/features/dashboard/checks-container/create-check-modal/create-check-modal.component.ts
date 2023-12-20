@@ -5,19 +5,19 @@ import {
   Inject,
   Input,
   OnInit,
+  TemplateRef,
+  ViewChild,
 } from '@angular/core';
 import { NZ_MODAL_DATA, NzModalRef } from 'ng-zorro-antd/modal';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable, debounceTime } from 'rxjs';
 import {
   Check,
   CheckLineItem,
   CheckReport,
   Employee,
 } from '../check-model/model';
-
-export const generateId = () => {
-  return Math.random().toString(36).substr(2, 9);
-};
+import { CheckItemListComponent } from '../../../../shared-components/check-item-list/check-item-list.component';
+import { ChecksService } from '../checks-services/checks.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -27,55 +27,71 @@ export const generateId = () => {
   styleUrl: './create-check-modal.component.scss',
 })
 export class CreateCheckModalComponent implements OnInit {
-  @Input() employeeList: Employee[] = [];
+  @ViewChild('checkItemListComponent')
+  checkItemListComponentRef?: CheckItemListComponent;
+  @ViewChild('modalFooter') modalFooter!: TemplateRef<any>;
   @Input() check?: CheckReport;
   isValid$ = new BehaviorSubject<boolean>(false);
-  selectedEmployee$: BehaviorSubject<string> = new BehaviorSubject('');
+  employeeList$: Observable<Employee[]> = this.checks.getEmployees();
+  searchTerm$ = new BehaviorSubject<string>('');
   checkItemList: CheckLineItem[] = [];
-  checkId?: string;
+  checkNumber?: string;
+  searchTermInternal: string = '';
 
   constructor(
     private cd: ChangeDetectorRef,
     private modal: NzModalRef,
+    private checks: ChecksService,
     @Inject(NZ_MODAL_DATA)
-    public data?: { employeeList: Employee[]; check?: Check }
+    public data?: { check?: Check }
   ) {}
 
   get selectedEmployee() {
-    return this.selectedEmployee$.getValue();
+    return this.searchTerm$.getValue();
   }
 
   set selectedEmployee(employeeId: string) {
-    this.selectedEmployee$.next(employeeId);
+    this.searchTerm$.next(employeeId);
   }
 
   ngOnInit(): void {
     if (this.data) {
-      this.employeeList = this.data.employeeList;
-      this.check = this.data.check;
+      this.check = this.data?.check;
     }
     if (this.check) {
-      this.checkId = this.check.id;
-      this.selectedEmployee$.next(this.check.employeeId);
+      this.checkNumber = this.check.checkNumber;
+      this.searchTerm$.next(this.check.name);
+      this.searchTermInternal = this.check.name;
+      console.log('checkName', this.check.name);
       this.checkItemList = this.check.lineItems;
-    } else {
-      this.checkId = generateId();
     }
+
+    this.searchTerm$.pipe(debounceTime(300)).subscribe(term => {
+      this.employeeList$ = this.checks.getEmployeesBySearchTerm(term);
+    });
+  }
+
+  isFormValid(): boolean {
+    return this.isValid$.getValue();
+  }
+
+  onCancel() {
+    this.modal.destroy();
   }
 
   handleAddLineItem() {
     const newItemTemplate: CheckLineItem = {
-      checkId: this?.checkId,
-      amount: 0,
-      description: '',
+      total: null,
+      description: null,
     };
 
     this.checkItemList = [...this.checkItemList, newItemTemplate];
     this.cd.detectChanges();
   }
 
-  handleEmployeeChanged(employeeId: string) {
-    this.selectedEmployee$.next(employeeId);
+  handleSearchTermChanged(term: string) {
+    this.searchTermInternal = term;
+    this.searchTerm$.next(term);
   }
 
   handleDeleteLineItem(index: number) {
@@ -83,28 +99,33 @@ export class CreateCheckModalComponent implements OnInit {
     this.cd.detectChanges();
   }
 
-  emitAndCloseModal() {
+  submitForm() {
+    this.checkItemListComponentRef?.stopEdit();
     const check: Check = {
-      id: this.checkId,
-      employeeId: this.selectedEmployee$.getValue() || '',
+      checkNumber: this.checkNumber || undefined,
+      name: this.searchTerm$.getValue() || '',
       date: new Date().toISOString(),
       lineItems: this.checkItemList,
-      total: 0,
-      isCharged: false,
+      total: this.calculateTotal(),
+      isPaid: false,
       isVoid: false,
-      checkNumber: '',
-      description: '',
     };
 
     this.modal.destroy(check);
   }
 
-  onOk(): void {
-    this.emitAndCloseModal();
+  calculateTotal() {
+    console.log(this.checkItemList, 'items');
+    let total = 0;
+    for (const item of this.checkItemList) {
+      total += item?.total || 0;
+    }
+    return total;
   }
 
   handleLineItemsChanged(items: CheckLineItem[]) {
     this.checkItemList = items;
+    console.log(this.calculateTotal());
     this.cd.detectChanges();
   }
 

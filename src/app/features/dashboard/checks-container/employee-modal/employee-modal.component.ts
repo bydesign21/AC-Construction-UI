@@ -1,17 +1,23 @@
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
-  EventEmitter,
-  Input,
   OnDestroy,
   OnInit,
-  Output,
 } from '@angular/core';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 import { CreateEmployeeFormComponent } from './create-employee-form/create-employee-form.component';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import { Subject, debounceTime, takeUntil } from 'rxjs';
+import {
+  BehaviorSubject,
+  Observable,
+  Subject,
+  debounceTime,
+  takeUntil,
+  tap,
+} from 'rxjs';
 import { Employee } from '../check-model/model';
+import { ChecksService } from '../checks-services/checks.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -21,28 +27,33 @@ import { Employee } from '../check-model/model';
   styleUrl: './employee-modal.component.scss',
 })
 export class EmployeeModalComponent implements OnInit, OnDestroy {
-  @Input() employeeList: Employee[] = [];
-  @Output() employeeCreated: EventEmitter<Employee> =
-    new EventEmitter<Employee>();
-  @Output() employeeDeleted: EventEmitter<number> = new EventEmitter<number>();
-  @Output() employeeEdited: EventEmitter<Employee> =
-    new EventEmitter<Employee>();
-  @Output() employeeSearched: EventEmitter<string> = new EventEmitter<string>();
   createEmployeeModalRef!: NzModalRef<CreateEmployeeFormComponent, any>;
   searchTerm$ = new Subject<string>();
-  searchTerm: string = '';
+  employeeList$: Observable<Employee[]> = this.checks.getEmployees();
   destroy$ = new Subject<void>();
+  loading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  searchTermInternal = '';
 
   constructor(
     private modal: NzModalService,
-    private message: NzMessageService
+    private message: NzMessageService,
+    private checks: ChecksService,
+    private cd: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
     this.searchTerm$
-      .pipe(takeUntil(this.destroy$), debounceTime(300))
+      .pipe(
+        takeUntil(this.destroy$),
+        debounceTime(500),
+        tap(() => this.loading$.next(true))
+      )
       .subscribe(term => {
-        this.employeeSearched.emit(term);
+        console.log('searchTerm', term);
+        this.searchTermInternal = term;
+        this.employeeList$ = this.checks.getEmployeesBySearchTerm(term);
+        this.loading$.next(false);
+        this.cd.detectChanges();
       });
   }
 
@@ -72,7 +83,7 @@ export class EmployeeModalComponent implements OnInit, OnDestroy {
         });
       });
 
-    this.searchTerm = '';
+    this.searchTerm$.next('');
   }
 
   handleViewEmployeeClicked(employee: Employee) {
@@ -94,8 +105,6 @@ export class EmployeeModalComponent implements OnInit, OnDestroy {
           nzOkDisabled: isDisabled,
         });
       });
-
-    this.searchTerm = '';
   }
 
   handleCreateEmployeeModalOk() {
@@ -123,23 +132,33 @@ export class EmployeeModalComponent implements OnInit, OnDestroy {
   }
 
   handleEmployeeCreated(employee: Employee) {
-    this.employeeCreated.emit(employee);
+    // TODO: Add employee in db
+    // TODO: Add employee in employee list
   }
 
   handleEmployeeDeleted(employeeIndex: number) {
-    this.employeeDeleted.emit(employeeIndex);
+    // TODO: Delete employee in db
+    // TODO: Delete employee in employee list
   }
 
   handleEmployeeEdited(employee: Employee) {
-    this.employeeEdited.emit(employee);
+    // TODO: Edit employee in db
+    // TODO: Edit employee in employee list
   }
 
   handleEmployeeSearch(searchTerm: string) {
-    this.searchTerm$.next(searchTerm);
+    console.log('searchTerm Changed', searchTerm);
+    this.searchTermInternal = searchTerm.trim();
+    if (this.searchTermInternal.length > 0) {
+      this.searchTerm$.next(this.searchTermInternal);
+    } else {
+      this.employeeList$ = this.checks.getEmployees();
+    }
   }
 
   handleDeleteItem(itemIndex: number) {
-    this.employeeDeleted.emit(itemIndex);
+    // TODO: Delete item in db
+    // TODO: Delete item in item list
   }
 
   handlePrintItem(item: Employee) {

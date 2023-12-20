@@ -8,8 +8,8 @@ export interface WeeklyReportDataEmission {
   framing: number;
   misc: number;
   decking: number;
-  total: number;
-  date: string;
+  totalExpenses: number;
+  date: Date[];
 }
 
 export enum ExpenseTypes {
@@ -23,14 +23,14 @@ export type ExpenseType = `${ExpenseTypes}`;
 
 export interface ExpenseItem {
   id: string;
-  employeeId?: string;
+  employeeName?: string;
   address: string;
   sqftPrice?: number;
   sqft?: number;
   amount?: number;
   isPaid?: boolean;
   date?: string;
-  type: ExpenseType;
+  expenseType: ExpenseType;
 }
 
 export interface SelectOption {
@@ -56,14 +56,13 @@ export interface WeeklyReportInputRowProps {
 
 export interface WeeklyReport {
   id?: string;
-  date: string;
   revenue: number;
-  total: number;
+  totalExpenses: number;
   profit: number;
   profitSplit: number;
   payroll: number;
   moulding: number;
   framing: number;
   misc: number;
-  decking: number;
+  date: Date[];
 }

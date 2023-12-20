@@ -1,20 +1,32 @@
 <div class="flex flex-col mt-[1rem] min-w-full overflow-hidden">
   <div class="overflow-auto max-h-[80dvh]">
     <div class="flex flex-row gap-4 mx-2 items-center justify-between">
-      <div class="w-[12rem]">
-        <!-- create client nz-select -->
-        <nz-select
-          class="w-full"
-          nzShowSearch
-          nzAllowClear
-          nzPlaceHolder="Select Employee"
-          [(ngModel)]="selectedEmployee"
-          (ngModelChange)="handleEmployeeChanged($event)">
-          <nz-option
-            *ngFor="let client of employeeList"
-            [nzLabel]="client.name"
-            [nzValue]="client.id"></nz-option>
-        </nz-select>
+      <div>
+        <nz-form-label
+          class="!text-left [&>*]:!text-lg"
+          [nzNoColon]="true"
+          [nzRequired]="true">
+          Employee
+        </nz-form-label>
+        <div class="w-[12rem]">
+          <input
+            type="text"
+            nz-input
+            [nzAutocomplete]="employeeAuto"
+            [(ngModel)]="searchTermInternal"
+            (ngModelChange)="handleSearchTermChanged($event)"
+            placeholder="Select or type an employee name" />
+
+          <nz-autocomplete #employeeAuto>
+            <nz-auto-option
+              *ngFor="let employee of employeeList$ | async"
+              [nzValue]="employee.name"
+              [nzLabel]="employee.name">
+              <span>{{ employee.name }}</span>
+            </nz-auto-option>
+          </nz-autocomplete>
+          <!-- TODO: Append autocomplete dropdown to input on open -->
+        </div>
       </div>
       <div class="flex flex-row gap-2">
         <button
@@ -58,12 +70,24 @@
         </button>
       </div>
     </div>
-    <!-- <app-invoice-item-list
+    <app-check-item-list
+      #checkItemListComponent
       [items]="checkItemList"
       (addItemRequest)="handleAddLineItem()"
       (itemDeleted)="handleDeleteLineItem($event)"
       (changed)="handleLineItemsChanged($event)"
       (isValid)="handleIsValid($event)"
-      class="[&>*]:mt-4"></app-invoice-item-list> -->
+      class="[&>*]:mt-4"></app-check-item-list>
   </div>
 </div>
+
+<ng-template #modalFooter>
+  <button nz-button nzType="default" (click)="onCancel()">Cancel</button>
+  <button
+    nz-button
+    nzType="primary"
+    [disabled]="!isFormValid()"
+    (click)="submitForm()">
+    {{ data?.check || check ? 'Update' : 'Create' }}
+  </button>
+</ng-template>

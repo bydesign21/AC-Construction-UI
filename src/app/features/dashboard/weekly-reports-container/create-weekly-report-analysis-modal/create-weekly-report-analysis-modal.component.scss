@@ -1,0 +1,8 @@
+::ng-deep {
+  .ant-table-content > table {
+    @apply w-full min-h-[40.5rem];
+  }
+  nz-embed-empty {
+    @apply min-h-[40.5rem];
+  }
+}

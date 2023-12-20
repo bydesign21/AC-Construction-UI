@@ -2,18 +2,20 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  OnDestroy,
   OnInit,
 } from '@angular/core';
-import { SecondaryNavigationBarService } from '../../../shared-components/secondary-navigation-bar/secondary-navigation-bar.service';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { DeleteWeeklyReportModalComponent } from './delete-weekly-report-modal/delete-weekly-report-modal.component';
 import { CreateWeeklyReportModalComponent } from './create-weekly-report-modal/create-weekly-report-modal.component';
-import { BehaviorSubject, combineLatest, take, takeUntil } from 'rxjs';
+import { BehaviorSubject, Subject, take, takeUntil } from 'rxjs';
 import {
   WeeklyReport,
   WeeklyReportDataEmission,
 } from './weekly-reports-model/model';
 import { WeeklyReportsService } from './weekly-reports-services/weekly-reports.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { CreateWeeklyReportAnalysisModalComponent } from './create-weekly-report-analysis-modal/create-weekly-report-analysis-modal.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -22,45 +24,57 @@ import { WeeklyReportsService } from './weekly-reports-services/weekly-reports.s
   templateUrl: './weekly-reports-container.component.html',
   styleUrl: './weekly-reports-container.component.scss',
 })
-export class WeeklyReportsContainerComponent implements OnInit {
+export class WeeklyReportsContainerComponent implements OnInit, OnDestroy {
   constructor(
-    private navigation: SecondaryNavigationBarService,
     private cd: ChangeDetectorRef,
     private modal: NzModalService,
-    private data: WeeklyReportsService
-  ) { }
-  reports: BehaviorSubject<WeeklyReport[]> = new BehaviorSubject<
+    private data: WeeklyReportsService,
+    private route: ActivatedRoute,
+    private router: Router
+  ) {}
+  reports$: BehaviorSubject<WeeklyReport[]> = new BehaviorSubject<
     WeeklyReport[]
   >([]);
+  loading$ = new BehaviorSubject<boolean>(false);
+  destroy$ = new Subject();
+  currentPage = 1;
+  totalRecords = 0;
+  limit = 10;
 
   ngOnInit(): void {
-    this.navigation.setNavigationLinks([
-      { label: 'Dashboard', iconUrl: 'home', routerUrl: 'dashboard' },
-      {
-        label: 'Weekly Reports',
-        iconUrl: 'project',
-        routerUrl: 'weekly-reports',
-      },
-      { label: 'Invoices', iconUrl: 'profile', routerUrl: 'invoices' },
-      { label: 'Checks', iconUrl: 'mail', routerUrl: 'checks' },
-      { label: 'Bank', iconUrl: 'bank', routerUrl: 'bank' },
-      { label: 'Taxes', iconUrl: 'stock', routerUrl: 'taxes' },
-      {
-        label: 'Payroll Reports',
-        iconUrl: 'bar-chart',
-        routerUrl: 'payroll-reports',
-      },
-    ]);
-    this.navigation.setNavigationVisibility(true);
-    this.loadData();
-    this.cd.detectChanges();
+    this.route.queryParams.pipe(takeUntil(this.destroy$)).subscribe(params => {
+      const newPage = Number(params?.page) || 1;
+      this.currentPage = newPage;
+      this.loadData(this.currentPage);
+    });
   }
 
-  loadData() {
-    this.data.getWeeklyReports().subscribe(reports => {
-      this.reports.next(reports as any);
-      console.log('reports', reports);
-      this.cd.detectChanges();
+  ngOnDestroy(): void {
+    this.destroy$.next(true);
+    this.destroy$.complete();
+    this.destroy$.unsubscribe();
+  }
+
+  loadData(page: number = 1) {
+    this.loading$.next(true);
+    this.data
+      .getWeeklyReports(page, this.limit)
+      .pipe(take(1))
+      .subscribe(reports => {
+        this.reports$.next(reports.data);
+        this.totalRecords = reports.count;
+        this.currentPage = page;
+        console.log('reports', reports);
+        this.loading$.next(false);
+        this.cd.detectChanges();
+      });
+  }
+
+  onPageChange(newPage: number): void {
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { page: newPage },
+      queryParamsHandling: 'merge',
     });
   }
 
@@ -68,6 +82,7 @@ export class WeeklyReportsContainerComponent implements OnInit {
     const modal = this.modal.create({
       nzTitle: 'View Weekly Report',
       nzOkText: 'Update',
+      nzOkDisabled: true,
       nzCancelText: 'Cancel',
       nzContent: CreateWeeklyReportModalComponent,
       nzData: { report: item },
@@ -76,41 +91,22 @@ export class WeeklyReportsContainerComponent implements OnInit {
       nzStyle: { top: '1rem', margin: '1rem' },
       nzOnOk: componentInstance => {
         if (componentInstance instanceof CreateWeeklyReportModalComponent) {
-          componentInstance.onOk();
+          componentInstance.submitForm();
         }
       },
     });
 
-    if (modal.componentInstance) {
-      combineLatest([
-        modal.componentInstance?.isInputRowValid$,
-        modal.componentInstance?.isExpenseListValid$,
-        modal.componentInstance?.isInputRowTouched$,
-        modal.componentInstance?.isExpenseListTouched$,
-      ])
-        .pipe(takeUntil(modal.afterClose))
-        .subscribe(
-          ([
-            isInputRowValid,
-            isExpenseListValid,
-            isInputRowTouched,
-            isExpenseListTouched,
-          ]) => {
-            const isEitherFormInvalid = !isInputRowValid || !isExpenseListValid;
-            const isNeitherFormTouched =
-              !isInputRowTouched && !isExpenseListTouched;
-            modal.updateConfig({
-              nzOkDisabled: isEitherFormInvalid || isNeitherFormTouched,
-            });
-          }
-        );
-    }
+    modal.afterOpen.pipe(takeUntil(this.destroy$)).subscribe(() => {
+      modal.updateConfig({
+        nzFooter: modal.componentInstance?.modalFooter,
+      });
+    });
 
     modal.afterClose
       .pipe(take(1))
       .subscribe((report: WeeklyReportDataEmission) => {
         if (report) {
-          const reports = this.reports.getValue();
+          const reports = this.reports$.getValue();
           const reportIndex = reports.findIndex(
             report => report.id === item.id
           );
@@ -119,7 +115,7 @@ export class WeeklyReportsContainerComponent implements OnInit {
             return;
           }
           reports[reportIndex] = report;
-          this.reports.next([...reports]);
+          this.reports$.next([...reports]);
           this.cd.detectChanges();
         }
       });
@@ -131,9 +127,9 @@ export class WeeklyReportsContainerComponent implements OnInit {
 
   handleDeleteItem(index: number) {
     const deleteItem = (index: number) => {
-      const reports = this.reports.getValue();
+      const reports = this.reports$.getValue();
       reports.splice(index, 1);
-      this.reports.next([...reports]);
+      this.reports$.next([...reports]);
     };
     this.modal.create({
       nzOkDanger: true,
@@ -147,40 +143,41 @@ export class WeeklyReportsContainerComponent implements OnInit {
     });
   }
 
+  handleCreateAnalysisReport() {
+    this.modal.create({
+      nzTitle: 'Create Expenses Report',
+      nzContent: CreateWeeklyReportAnalysisModalComponent,
+      nzWidth: '100dvw',
+      nzBodyStyle: { height: '90dvh' },
+      nzStyle: { top: '1rem', margin: '1rem' },
+      nzFooter: null,
+    });
+  }
+
   handleCreateReport() {
-    const modal = this.modal.create({
+    const modalRef = this.modal.create({
       nzTitle: 'Create Weekly Report',
-      nzOkText: 'Create',
-      nzCancelText: 'Cancel',
       nzContent: CreateWeeklyReportModalComponent,
       nzWidth: '100dvw',
+      nzOkDisabled: true,
+      nzOkText: 'Create',
+      nzCancelText: 'Cancel',
       nzBodyStyle: { height: '85dvh' },
       nzStyle: { top: '1rem', margin: '1rem' },
-      nzOnOk: componentInstance => {
-        if (componentInstance instanceof CreateWeeklyReportModalComponent) {
-          componentInstance.onOk();
-        }
-      },
     });
 
-    if (modal.componentInstance) {
-      combineLatest([
-        modal.componentInstance?.isInputRowValid$,
-        modal.componentInstance?.isExpenseListValid$,
-      ])
-        .pipe(takeUntil(modal.afterClose))
-        .subscribe(([isInputRowValid, isExpenseListValid]) => {
-          modal.updateConfig({
-            nzOkDisabled: !isInputRowValid || !isExpenseListValid,
-          });
-        });
-    }
+    modalRef.afterOpen.pipe(takeUntil(this.destroy$)).subscribe(() => {
+      modalRef.updateConfig({
+        nzFooter: modalRef.componentInstance?.modalFooter,
+      });
+    });
 
-    modal.afterClose
-      .pipe(take(1))
+    modalRef.afterClose
+      .pipe(take(1), takeUntil(this.destroy$))
       .subscribe((report: WeeklyReportDataEmission) => {
         if (report) {
-          this.reports.next([...this.reports.getValue(), report]);
+          // TODO: Update report in db
+          this.reports$.next([...this.reports$.getValue(), report]);
           this.cd.detectChanges();
         }
       });

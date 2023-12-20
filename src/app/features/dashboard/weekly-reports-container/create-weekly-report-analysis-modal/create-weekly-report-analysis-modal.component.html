@@ -1,33 +1,10 @@
 <div class="flex flex-col mt-[1rem] min-w-full overflow-hidden">
   <div class="overflow-auto max-h-[80dvh]">
     <div class="flex flex-row gap-4 mx-2 items-center justify-between">
-      <div class="flex flex-row gap-4 justify-around items-center">
-        <app-date-range-picker
-          [label]="'Select Date Range'"
-          [isRequired]="true"
-          (changed)="handleDateChanged($event)"></app-date-range-picker>
-        <!-- create client nz-select -->
-        <div>
-          <nz-form-label
-            class="!text-left [&>*]:!text-lg"
-            [nzNoColon]="true"
-            [nzRequired]="false">
-            Select Employee
-          </nz-form-label>
-          <nz-select
-            class="w-full"
-            nzShowSearch
-            nzAllowClear
-            nzPlaceHolder="Select Employee"
-            [(ngModel)]="selectedEmployee"
-            (ngModelChange)="handleEmployeeSelected($event)">
-            <nz-option
-              *ngFor="let client of (employees$ | async) || []"
-              [nzLabel]="client.name"
-              [nzValue]="client.name"></nz-option>
-          </nz-select>
-        </div>
-      </div>
+      <app-date-range-picker
+        [label]="'Select Date Range'"
+        [isRequired]="true"
+        (changed)="handleDateChanged($event)"></app-date-range-picker>
       <div class="flex flex-row gap-2">
         <button
           nz-button
@@ -70,13 +47,13 @@
         </button>
       </div>
     </div>
-    <app-checks-report-table
-      [currentPage]="currentPage"
+    <app-weekly-reports-table
       [limit]="limit"
-      [loading$]="loading$"
+      (pageChange)="onPageChange($event)"
+      [currentPage]="currentPage"
       [totalRecords]="totalRecords"
-      (pageChange)="handlePageChange($event)"
-      [listOfData]="checks$ | async"
-      class="[&>*]:mt-8" />
+      [loading$]="loading$"
+      [listOfData]="(reports$ | async) || []"
+      class="[&>*]:mt-8 !min-h-full" />
   </div>
 </div>

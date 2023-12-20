@@ -72,6 +72,7 @@ export class ExpenseItemListComponent implements OnInit, OnChanges, OnDestroy {
   ];
 
   ngOnInit(): void {
+    console.log('items', this.items);
     if (!this.items.length) this.requestAddItem();
     this.initializeRowForms();
     this.recalculateIsValidAndEmit();
@@ -113,30 +114,42 @@ export class ExpenseItemListComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   createRowForm(item: ExpenseItem): FormGroup {
+    const isMiscType = item.expenseType === ExpenseTypes.MISC;
     const formConfig = {
-      employeeId: {
-        defaultValue: item.employeeId,
+      employeeName: {
+        defaultValue: item.employeeName,
         validators: [Validators.required],
       },
       address: {
         defaultValue: item.address,
-        validators: [Validators.required],
+        validators: isMiscType ? [] : [Validators.required],
       },
       sqftPrice: {
         defaultValue: item.sqftPrice,
-        validators: [Validators.required, Validators.min(0)],
+        validators: isMiscType ? [] : [Validators.required, Validators.min(0)],
       },
       sqft: {
         defaultValue: item.sqft,
-        validators: [Validators.required, Validators.min(0)],
+        validators: isMiscType ? [] : [Validators.required, Validators.min(0)],
       },
       amount: { defaultValue: item.amount, validators: [Validators.required] },
-      isPaid: { defaultValue: item.isPaid },
+      isPaid: { defaultValue: Boolean(item.isPaid) },
       date: { defaultValue: item.date, validators: [Validators.required] },
-      type: { defaultValue: item.type, validators: [Validators.required] },
+      expenseType: {
+        defaultValue: item.expenseType,
+        validators: [Validators.required],
+      },
     };
 
     const form = this.ts.createRowForm(item, formConfig);
+
+    // Listen for changes in expenseType and update validators
+    form
+      .get('expenseType')
+      ?.valueChanges.pipe(takeUntil(this.destroy$))
+      .subscribe(expenseType => {
+        this.updateValidators(form, expenseType);
+      });
 
     form.valueChanges.pipe(takeUntil(this.destroy$)).subscribe(() => {
       this.updateFieldErrors(form, this.items.indexOf(item));
@@ -159,6 +172,26 @@ export class ExpenseItemListComponent implements OnInit, OnChanges, OnDestroy {
       });
 
     return form;
+  }
+
+  updateValidators(form: FormGroup, expenseType: ExpenseTypes): void {
+    const isMiscType = expenseType === ExpenseTypes.MISC;
+    form
+      .get('sqftPrice')
+      ?.setValidators(
+        isMiscType ? [] : [Validators.required, Validators.min(0)]
+      );
+    form
+      .get('sqft')
+      ?.setValidators(
+        isMiscType ? [] : [Validators.required, Validators.min(0)]
+      );
+    form.get('address')?.setValidators(isMiscType ? [] : [Validators.required]);
+
+    // Update validity
+    form.get('sqftPrice')?.updateValueAndValidity();
+    form.get('sqft')?.updateValueAndValidity();
+    form.get('address')?.updateValueAndValidity();
   }
 
   updateFieldErrors(form: FormGroup, rowIndex: number): void {
@@ -241,10 +274,5 @@ export class ExpenseItemListComponent implements OnInit, OnChanges, OnDestroy {
     item?.get('amount')?.patchValue(total());
     this.rowForms[index] = item;
     this.emitValidItems();
-  }
-
-  getEmployeeLabelById(id: string): string {
-    const employee = this.employeeList.find(e => e.value === id);
-    return employee ? employee.label : '';
   }
 }

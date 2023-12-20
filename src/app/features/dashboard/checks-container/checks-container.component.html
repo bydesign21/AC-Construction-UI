@@ -48,8 +48,12 @@
   </div>
   <div class="flex flex-col gap-4">
     <app-checks-report-table
+      [loading$]="loading$"
+      [currentPage]="currentPage"
+      [totalRecords]="totalRecords"
+      (pageChange)="onPageChange($event)"
       [isActionRowVisible]="true"
-      [listOfData]="(checks | async) || []"
+      [listOfData]="(checks$ | async) || []"
       (deleteItem)="handleDeleteItem($event)"
       (printItem)="handlePrintItem($event)"
       (viewItem)="handleViewItem($event)">
@@ -58,18 +62,9 @@
 </div>
 
 <ng-template #CreateChecksReportModalTemplate>
-  <app-create-checks-report-modal
-    [checks]="(reportChecks$ | async) || []"
-    (dateRangeChanged)="
-      handleReportDateRangeChange($event)
-    "></app-create-checks-report-modal>
+  <app-create-checks-report-modal />
 </ng-template>
 
 <ng-template #EmployeeManagementModalTemplate>
-  <app-employee-modal
-    (employeeCreated)="handleEmployeeCreated($event)"
-    [employeeList]="(employeeList$ | async) || []"
-    (employeeSearched)="handleClientSearched($event)"
-    (employeeEdited)="handleEmployeeEdited($event)"
-    (employeeDeleted)="handleEmployeeDeleted($event)" />
+  <app-employee-modal />
 </ng-template>

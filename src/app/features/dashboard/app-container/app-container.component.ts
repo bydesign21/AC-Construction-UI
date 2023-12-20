@@ -1,9 +1,5 @@
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  OnInit,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { SecondaryNavigationBarService } from '../../../shared-components/secondary-navigation-bar/secondary-navigation-bar.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -12,4 +8,23 @@ import {
   templateUrl: './app-container.component.html',
   styleUrl: './app-container.component.scss',
 })
-export class AppContainerComponent {}
+export class AppContainerComponent implements OnInit {
+  constructor(private navigation: SecondaryNavigationBarService) {}
+  ngOnInit(): void {
+    this.navigation.setNavigationLinks([
+      { label: 'Dashboard', iconUrl: 'home', routerUrl: 'dashboard' },
+      {
+        label: 'Weekly Reports',
+        iconUrl: 'project',
+        routerUrl: 'weekly-reports',
+      },
+      { label: 'Invoices', iconUrl: 'profile', routerUrl: 'invoices' },
+      { label: 'Checks', iconUrl: 'mail', routerUrl: 'checks' },
+      {
+        label: 'Payroll Reports',
+        iconUrl: 'bar-chart',
+        routerUrl: 'payroll-reports',
+      },
+    ]);
+  }
+}

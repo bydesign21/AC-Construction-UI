@@ -1,13 +1,11 @@
 export interface CheckReport extends Check {}
 
 export interface Check {
-  id?: string;
+  checkNumber?: string;
   date: string;
-  checkNumber: string;
-  description: string;
-  employeeId: string;
+  name: string;
   isVoid: boolean;
-  isCharged: boolean;
+  isPaid: boolean;
   lineItems: CheckLineItem[];
   total: number;
   discount?: number;
@@ -15,10 +13,8 @@ export interface Check {
 }
 
 export interface CheckLineItem {
-  id?: string;
-  checkId?: string;
-  amount: number;
-  description: string;
+  total: number | null;
+  description: string | null;
 }
 
 export interface Employee {
@@ -34,4 +30,5 @@ export interface Employee {
   jobTitle: string;
   hourlyRate: number;
   isContractor: boolean;
+  employeeIdentificationNumber?: string;
 }

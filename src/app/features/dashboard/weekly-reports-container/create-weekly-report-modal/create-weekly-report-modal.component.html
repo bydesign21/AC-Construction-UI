@@ -18,7 +18,8 @@
           nzTheme="outline"></span>
       </button>
     </div>
-    <div class="flex flex-row gap-4 lg:items-center items-start justify-evenly">
+    <div
+      class="flex flex-row gap-4 lg:items-center items-start justify-between">
       <app-weekly-report-input-row
         [isDisabled]="!isEditMode"
         [dateRange]="date"
@@ -71,3 +72,14 @@
       class="m-4" />
   </div>
 </div>
+
+<ng-template #modalFooter>
+  <button nz-button nzType="default" (click)="onCancel()">Cancel</button>
+  <button
+    nz-button
+    nzType="primary"
+    [disabled]="!isFormValid()"
+    (click)="submitForm()">
+    {{ data?.report ? 'Update' : 'Create' }}
+  </button>
+</ng-template>

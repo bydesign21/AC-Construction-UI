@@ -1,4 +1,4 @@
-import { LOCALE_ID, NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { AppContainerComponent } from './app-container/app-container.component';
 import { RouterModule, provideRouter } from '@angular/router';
@@ -26,6 +26,8 @@ import {
   BarChartOutline,
   EditOutline,
   ExclamationCircleOutline,
+  LoadingOutline,
+  FileSearchOutline,
 } from '@ant-design/icons-angular/icons';
 import { AuthService } from '../auth/auth.service';
 import { NzMessageModule } from 'ng-zorro-antd/message';
@@ -70,6 +72,12 @@ import { CreateEmployeeFormComponent } from './checks-container/employee-modal/c
 import { ChecksReportTableModule } from '../../shared-components/checks-report-table/checks-report-table.module';
 import { EmployeeListTableModule } from '../../shared-components/employee-list-table/employee-list-table.module';
 import { WeeklyReportsService } from './weekly-reports-container/weekly-reports-services/weekly-reports.service';
+import { CheckItemListModule } from '../../shared-components/check-item-list/check-item-list.module';
+import { ChecksService } from './checks-container/checks-services/checks.service';
+import { NzAutocompleteModule } from 'ng-zorro-antd/auto-complete';
+import { NzPaginationModule } from 'ng-zorro-antd/pagination';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { CreateWeeklyReportAnalysisModalComponent } from './weekly-reports-container/create-weekly-report-analysis-modal/create-weekly-report-analysis-modal.component';
 
 const icons = [
   SettingOutline,
@@ -91,6 +99,8 @@ const icons = [
   BarChartOutline,
   EditOutline,
   ExclamationCircleOutline,
+  LoadingOutline,
+  FileSearchOutline,
 ];
 
 @NgModule({
@@ -113,6 +123,7 @@ const icons = [
     CreateChecksReportModalComponent,
     EmployeeModalComponent,
     CreateEmployeeFormComponent,
+    CreateWeeklyReportAnalysisModalComponent,
   ],
   imports: [
     CommonModule,
@@ -147,6 +158,10 @@ const icons = [
     NzToolTipModule,
     ChecksReportTableModule,
     EmployeeListTableModule,
+    CheckItemListModule,
+    NzAutocompleteModule,
+    NzPaginationModule,
+    NzSpinModule,
   ],
   providers: [
     provideRouter(routes),
@@ -154,6 +169,7 @@ const icons = [
     CurrencyPipe,
     ExpensesService,
     WeeklyReportsService,
+    ChecksService,
   ],
   exports: [
     DashboardComponent,
@@ -172,6 +188,7 @@ const icons = [
     CreateCheckModalComponent,
     CreateChecksReportModalComponent,
     EmployeeModalComponent,
+    CreateWeeklyReportAnalysisModalComponent,
   ],
 })
 export class DashboardModule {}

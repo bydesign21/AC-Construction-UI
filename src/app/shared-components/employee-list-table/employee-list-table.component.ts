@@ -7,6 +7,7 @@ import {
   Output,
 } from '@angular/core';
 import { Employee } from '../../features/dashboard/checks-container/check-model/model';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -21,6 +22,9 @@ export class EmployeeListTableComponent implements OnInit {
   @Output() viewItem: EventEmitter<Employee> = new EventEmitter<Employee>();
   @Output() printItem: EventEmitter<Employee> = new EventEmitter<Employee>();
   @Output() deleteItem: EventEmitter<number> = new EventEmitter<number>();
+  @Input() loading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(
+    false
+  );
 
   tableHeaders: any[] = [
     {

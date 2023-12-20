@@ -4,27 +4,15 @@
   #table
   class="flex flex-col justify-center items-center min-h-full min-w-full overflow-hidden">
   <nz-table
-    class="min-w-full overflow-hidden"
+    class="min-w-full overflow-hidden mb-[5rem]"
     #editRowTable
     nzBordered
     [nzTableLayout]="'fixed'"
-    [nzPageSize]="8"
-    [nzPaginationPosition]="'bottom'"
-    [nzShowPagination]="items!.length > 8"
+    [nzShowPagination]="false"
     [nzData]="items || []">
     <thead>
       <tr>
-        <th
-          *ngFor="
-            let field of [
-              'planId',
-              'address',
-              'quantity',
-              'rate',
-              'discount',
-              'total'
-            ]
-          ">
+        <th *ngFor="let field of ['description', 'total']">
           <div class="flex flex-row items-center justify-between">
             <span>{{ field | titlecase }}</span>
             <span
@@ -50,73 +38,26 @@
         (blur)="stopEdit()">
         <td>
           <div [hidden]="editIndex === i" (click)="startEdit(i)">
-            {{ data.value.planId }}
+            {{ data.value.description }}
           </div>
           <input
-            aria-label="Plan #"
+            aria-label="Description"
             (click)="$event.stopPropagation()"
             [hidden]="editIndex !== i"
             nz-input
-            [formControl]="getFormControl(rowForms[i], 'planId')" />
-        </td>
-        <td>
-          <div [hidden]="editIndex === i" (click)="startEdit(i)">
-            {{ data.value.address }}
-          </div>
-          <input
-            aria-label="Address"
-            (click)="$event.stopPropagation()"
-            [hidden]="editIndex !== i"
-            nz-input
-            type="text"
-            [formControl]="getFormControl(rowForms[i], 'address')" />
-        </td>
-        <td>
-          <div [hidden]="editIndex === i" (click)="startEdit(i)">
-            {{ data.value.quantity }}
-          </div>
-          <input
-            aria-label="Quantity"
-            (click)="$event.stopPropagation()"
-            [hidden]="editIndex !== i"
-            nz-input
-            type="number"
-            [formControl]="getFormControl(rowForms[i], 'quantity')" />
-        </td>
-        <td>
-          <div [hidden]="editIndex === i" (click)="startEdit(i)">
-            {{ data.value.rate | currency }}
-          </div>
-          <input
-            aria-label="Rate"
-            (click)="$event.stopPropagation()"
-            [hidden]="editIndex !== i"
-            nz-input
-            type="number"
-            [formControl]="getFormControl(rowForms[i], 'rate')" />
-        </td>
-        <td>
-          <div [hidden]="editIndex === i" (click)="startEdit(i)">
-            {{ data.value.discount | currency }}
-          </div>
-          <input
-            aria-label="Discount"
-            (click)="$event.stopPropagation()"
-            [hidden]="editIndex !== i"
-            nz-input
-            type="number"
-            [formControl]="getFormControl(rowForms[i], 'discount')" />
+            [formControl]="getFormControl(rowForms[i], 'description')" />
         </td>
         <td>
           <div [hidden]="editIndex === i" (click)="startEdit(i)">
             {{ data.value.total | currency }}
           </div>
           <input
+            class="!text-left"
+            currencyMask
             aria-label="Total"
             (click)="$event.stopPropagation()"
             [hidden]="editIndex !== i"
             nz-input
-            type="number"
             [formControl]="getFormControl(rowForms[i], 'total')" />
         </td>
 

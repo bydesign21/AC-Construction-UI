@@ -4,6 +4,8 @@ import {
   Component,
   Inject,
   OnInit,
+  TemplateRef,
+  ViewChild,
 } from '@angular/core';
 import { ExpensesService } from '../../../../shared-components/expense-item-list/expenses.service';
 import { NZ_MODAL_DATA, NzModalRef } from 'ng-zorro-antd/modal';
@@ -23,6 +25,8 @@ import {
   styleUrl: './create-weekly-report-modal.component.scss',
 })
 export class CreateWeeklyReportModalComponent implements OnInit {
+  @ViewChild('modalFooter') modalFooter!: TemplateRef<any>;
+
   constructor(
     private cd: ChangeDetectorRef,
     private expenses: ExpensesService,
@@ -54,9 +58,7 @@ export class CreateWeeklyReportModalComponent implements OnInit {
       this.expenseList = this.data.report.expenseList;
       this.payroll = this.data.report.payroll;
       this.revenue = this.data.report.revenue;
-      this.date = this.data.report.date
-        .split(' - ')
-        .map(date => new Date(date));
+      this.date = this.data.report.date;
       this.calculateTotals();
     }
   }
@@ -68,23 +70,23 @@ export class CreateWeeklyReportModalComponent implements OnInit {
     this.calculateTotals();
   }
 
+  onCancel() {
+    this.modal.destroy();
+  }
+
   handleInputRowValidity(isValid: boolean) {
-    console.log('inputRowValidity', isValid);
     this.isInputRowValid$.next(isValid);
   }
 
   handleInputRowTouched(isTouched: boolean) {
-    console.log('inputRowTouched', isTouched);
     this.isInputRowTouched$.next(isTouched);
   }
 
   handleExpenseListTouched(isTouched: boolean) {
-    console.log('expenseItemListTouched', isTouched);
     this.isExpenseListTouched$.next(isTouched);
   }
 
   handleExpenseListValidity(isValid: boolean) {
-    console.log('expenseItemListValidity', isValid);
     this.isExpenseListValid$.next(isValid);
   }
 
@@ -101,11 +103,16 @@ export class CreateWeeklyReportModalComponent implements OnInit {
     this.cd.detectChanges();
   }
 
-  onOk(): void {
-    this.emitAndCloseModal();
+  isFormValid(): boolean {
+    const isEitherFormInvalid =
+      !this.isInputRowValid$.getValue() || !this.isExpenseListValid$.getValue();
+    const isNeitherFormTouched =
+      !this.isInputRowTouched$.getValue() &&
+      !this.isExpenseListTouched$.getValue();
+    return !isEitherFormInvalid && !isNeitherFormTouched;
   }
 
-  emitAndCloseModal() {
+  submitForm() {
     const reportData: WeeklyReportDataEmission = {
       expenseList: this.expenseList,
       payroll: this.payroll || 0,
@@ -116,8 +123,8 @@ export class CreateWeeklyReportModalComponent implements OnInit {
       framing: this.framingCost,
       misc: this.miscCost,
       decking: this.deckingCost,
-      total: this.totalExpenses,
-      date: this.expenses.formatDateRange(this.date),
+      totalExpenses: this.totalExpenses,
+      date: this.date,
     };
     this.modal.destroy(reportData);
   }
@@ -154,11 +161,11 @@ export class CreateWeeklyReportModalComponent implements OnInit {
 
     const newItemTemplate: ExpenseItem = {
       id: generateId(),
-      employeeId: '',
+      employeeName: '',
       address: '',
       isPaid: false,
       date: new Date().toLocaleDateString(),
-      type: ExpenseTypes.MISC,
+      expenseType: ExpenseTypes.MISC,
     };
 
     this.expenseList = [...this.expenseList, newItemTemplate];
