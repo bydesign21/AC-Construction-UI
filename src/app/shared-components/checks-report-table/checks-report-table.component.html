@@ -62,9 +62,7 @@
               nz-button
               title="Delete Item"
               class="!rounded-lg items-center justify-center flex flex-col"
-              nz-popconfirm
-              nzPopconfirmTitle="Are you sure?"
-              (nzOnConfirm)="handleDeleteItem(i)">
+              (click)="handleDeleteItem(i)">
               <div>
                 <span
                   class="items-center !text-red-400 justify-center h-[1.4rem]"

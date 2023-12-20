@@ -2,8 +2,22 @@
   <div class="flex flex-row items-center justify-between">
     <h1 class="text-2xl">Weekly Reports</h1>
     <div class="flex flex-row gap-4 items-end mb-2">
-      <app-date-range-picker
-        (changed)="handleDateRangeChange($event)"></app-date-range-picker>
+      <!-- <app-date-range-picker
+        (changed)="handleDateRangeChange($event)"></app-date-range-picker> -->
+      <button
+        (click)="handleCreateAnalysisReport()"
+        title="Create Analysis Report"
+        nz-button
+        class="items-center flex !rounded-lg">
+        <span
+          >Create Analysis Report
+          <span
+            class="items-center flex relative"
+            nz-icon
+            [nzTheme]="'outline'"
+            nzType="project"></span
+        ></span>
+      </button>
       <button
         (click)="handleCreateReport()"
         title="Create Report"

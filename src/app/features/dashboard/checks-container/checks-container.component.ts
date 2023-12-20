@@ -53,23 +53,6 @@ export class ChecksContainerComponent implements OnInit {
   checks$: BehaviorSubject<Check[]> = new BehaviorSubject<Check[]>([]);
   reportChecks$: BehaviorSubject<Check[]> = new BehaviorSubject<Check[]>([]);
   loading$ = new BehaviorSubject<boolean>(false);
-  employeeList$: BehaviorSubject<Employee[]> = new BehaviorSubject<Employee[]>([
-    {
-      id: '1',
-      name: 'John Doe',
-      address: '1234 Main St',
-      city: 'New York',
-      state: 'NY',
-      zipCode: '12345',
-      phone: '1234567890',
-      email: '',
-      socialSecurityNumber: '123456789',
-      employeeIdentificationNumber: '',
-      jobTitle: 'Construction Worker',
-      hourlyRate: 15,
-      isContractor: false,
-    },
-  ]);
   destroy$ = new Subject<void>();
   currentPage: number = 1;
   totalRecords = 0;
@@ -105,23 +88,6 @@ export class ChecksContainerComponent implements OnInit {
       this.currentPage = newPage;
       this.loadData(this.currentPage);
     });
-
-    this.navigation.setNavigationLinks([
-      { label: 'Dashboard', iconUrl: 'home', routerUrl: 'dashboard' },
-      {
-        label: 'Weekly Reports',
-        iconUrl: 'project',
-        routerUrl: 'weekly-reports',
-      },
-      { label: 'Invoices', iconUrl: 'profile', routerUrl: 'invoices' },
-      { label: 'Checks', iconUrl: 'mail', routerUrl: 'checks' },
-      {
-        label: 'Payroll Reports',
-        iconUrl: 'bar-chart',
-        routerUrl: 'payroll-reports',
-      },
-    ]);
-    this.navigation.setNavigationVisibility(true);
     this.cd.detectChanges();
   }
 
@@ -131,33 +97,20 @@ export class ChecksContainerComponent implements OnInit {
     const modal = this.modal.create({
       nzTitle: 'View Check',
       nzOkText: 'Update',
+      nzOkDisabled: true,
       nzCancelText: 'Cancel',
       nzContent: CreateCheckModalComponent,
-      nzData: { employeeList: this.employeeList$.getValue(), check: item },
+      nzData: { check: item },
       nzWidth: '100dvw',
       nzBodyStyle: { height: '85dvh' },
       nzStyle: { top: '1rem', margin: '1rem' },
-      nzOnOk: componentInstance => {
-        if (componentInstance instanceof CreateCheckModalComponent) {
-          componentInstance.onOk();
-        }
-      },
     });
 
-    if (
-      modal.componentInstance?.isValid$ &&
-      modal.componentInstance?.selectedName$
-    ) {
-      combineLatest([
-        modal.componentInstance.isValid$,
-        modal.componentInstance.selectedName$,
-      ])
-        .pipe(takeUntil(modal.afterClose))
-        .subscribe(([isValid, selectedClient]) => {
-          const isOkActive = selectedClient && isValid;
-          modal.updateConfig({ nzOkDisabled: !isOkActive });
-        });
-    }
+    modal.afterOpen.pipe(takeUntil(this.destroy$)).subscribe(() => {
+      modal.updateConfig({
+        nzFooter: modal.componentInstance?.modalFooter,
+      });
+    });
 
     modal.afterClose.pipe(take(1)).subscribe((check: Check) => {
       if (check) {
@@ -226,16 +179,11 @@ export class ChecksContainerComponent implements OnInit {
       nzTitle: 'Create Check',
       nzOkText: 'Create',
       nzCancelText: 'Cancel',
+      nzOkDisabled: true,
       nzContent: CreateCheckModalComponent,
-      nzData: { employeeList: this.employeeList$.getValue() },
       nzWidth: '100dvw',
       nzBodyStyle: { height: '85dvh' },
       nzStyle: { top: '1rem', margin: '1rem' },
-      nzOnOk: componentInstance => {
-        if (componentInstance instanceof CreateCheckModalComponent) {
-          componentInstance.onOk();
-        }
-      },
     });
 
     modal.afterClose.pipe(take(1)).subscribe((check: Check) => {
@@ -246,20 +194,11 @@ export class ChecksContainerComponent implements OnInit {
       }
     });
 
-    if (
-      modal.componentInstance?.isValid$ &&
-      modal.componentInstance?.selectedName$
-    ) {
-      combineLatest([
-        modal.componentInstance.isValid$,
-        modal.componentInstance.selectedName$,
-      ])
-        .pipe(takeUntil(modal.afterClose))
-        .subscribe(([isValid, selectedClient]) => {
-          const isOkActive = selectedClient && isValid;
-          modal.updateConfig({ nzOkDisabled: !isOkActive });
-        });
-    }
+    modal.afterOpen.pipe(takeUntil(this.destroy$)).subscribe(() => {
+      modal.updateConfig({
+        nzFooter: modal.componentInstance?.modalFooter,
+      });
+    });
   }
 
   // Employee Management Modal
@@ -275,10 +214,10 @@ export class ChecksContainerComponent implements OnInit {
     });
   }
 
-  handleEmployeeCreated(employee: Employee) {
-    this.employeeList$.next([...this.employeeList$.getValue(), employee]);
-    // TODO: make api call to create client in backend
-  }
+  // handleEmployeeCreated(employee: Employee) {
+  //   // TODO: make api call to create client in backend
+
+  // }
 
   handleClientSearched(searchTerm: string) {
     console.log('search term', searchTerm);
@@ -286,23 +225,23 @@ export class ChecksContainerComponent implements OnInit {
     // and set client list to result
   }
 
-  handleEmployeeEdited(employee: Employee) {
-    const employeeList = this.employeeList$.getValue();
+  // handleEmployeeEdited(employee: Employee) {
+  //   const employeeList = this.employeeList$.getValue();
 
-    const employeeIndex = employeeList.findIndex(e => {
-      return e.id ? e.id === employee.id : null;
-    });
-    employeeList[employeeIndex] = employee;
-    this.employeeList$.next([...employeeList]);
-    // TODO: make api call to edit client in backend
-  }
+  //   const employeeIndex = employeeList.findIndex(e => {
+  //     return e.id ? e.id === employee.id : null;
+  //   });
+  //   employeeList[employeeIndex] = employee;
+  //   this.employeeList$.next([...employeeList]);
+  //   // TODO: make api call to edit client in backend
+  // }
 
-  handleEmployeeDeleted(employeeIndex: number) {
-    const employeeList = this.employeeList$
-      .getValue()
-      .filter((_, i) => i !== employeeIndex);
-    this.employeeList$.next([...employeeList]);
-    // TODO: make api call to delete employee in backend
-    // and update employee list
-  }
+  // handleEmployeeDeleted(employeeIndex: number) {
+  //   const employeeList = this.employeeList$
+  //     .getValue()
+  //     .filter((_, i) => i !== employeeIndex);
+  //   this.employeeList$.next([...employeeList]);
+  //   // TODO: make api call to delete employee in backend
+  //   // and update employee list
+  // }
 }

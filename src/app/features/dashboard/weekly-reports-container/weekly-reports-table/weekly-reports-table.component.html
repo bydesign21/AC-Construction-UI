@@ -107,13 +107,13 @@
 </div>
 
 <ng-template #loadingIndicator>
-  <div class="flex relative top-[25dvh] flex-col items-center justify-center">
+  <div class="flex relative top-[30dvh] flex-col items-center justify-center">
     <nz-spin [nzIndicator]="indicator" nzSize="large"></nz-spin>
   </div>
 </ng-template>
 
 <ng-template #indicator>
-  <span class="!text-[4rem]"
+  <span class="!text-[4rem] flex flex-col items-center justify-center"
     ><i nz-icon nzTheme="outline" nzType="loading"></i
   ></span>
 </ng-template>

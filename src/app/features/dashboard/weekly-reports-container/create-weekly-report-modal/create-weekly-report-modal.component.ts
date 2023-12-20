@@ -4,6 +4,8 @@ import {
   Component,
   Inject,
   OnInit,
+  TemplateRef,
+  ViewChild,
 } from '@angular/core';
 import { ExpensesService } from '../../../../shared-components/expense-item-list/expenses.service';
 import { NZ_MODAL_DATA, NzModalRef } from 'ng-zorro-antd/modal';
@@ -23,6 +25,8 @@ import {
   styleUrl: './create-weekly-report-modal.component.scss',
 })
 export class CreateWeeklyReportModalComponent implements OnInit {
+  @ViewChild('modalFooter') modalFooter!: TemplateRef<any>;
+
   constructor(
     private cd: ChangeDetectorRef,
     private expenses: ExpensesService,
@@ -66,6 +70,10 @@ export class CreateWeeklyReportModalComponent implements OnInit {
     this.calculateTotals();
   }
 
+  onCancel() {
+    this.modal.destroy();
+  }
+
   handleInputRowValidity(isValid: boolean) {
     this.isInputRowValid$.next(isValid);
   }
@@ -95,11 +103,16 @@ export class CreateWeeklyReportModalComponent implements OnInit {
     this.cd.detectChanges();
   }
 
-  onOk(): void {
-    this.emitAndCloseModal();
+  isFormValid(): boolean {
+    const isEitherFormInvalid =
+      !this.isInputRowValid$.getValue() || !this.isExpenseListValid$.getValue();
+    const isNeitherFormTouched =
+      !this.isInputRowTouched$.getValue() &&
+      !this.isExpenseListTouched$.getValue();
+    return !isEitherFormInvalid && !isNeitherFormTouched;
   }
 
-  emitAndCloseModal() {
+  submitForm() {
     const reportData: WeeklyReportDataEmission = {
       expenseList: this.expenseList,
       payroll: this.payroll || 0,

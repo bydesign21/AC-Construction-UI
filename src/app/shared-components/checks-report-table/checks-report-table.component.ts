@@ -65,6 +65,7 @@ export class ChecksReportTableComponent implements OnInit {
 
   handlePageChange(page: number) {
     if (page !== this.currentPage) {
+      console.log('page', page);
       this.pageChange.emit(page);
     }
   }

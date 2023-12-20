@@ -22,9 +22,9 @@
             [(ngModel)]="selectedEmployee"
             (ngModelChange)="handleEmployeeSelected($event)">
             <nz-option
-              *ngFor="let client of employeeList"
+              *ngFor="let client of (employees$ | async) || []"
               [nzLabel]="client.name"
-              [nzValue]="client.id"></nz-option>
+              [nzValue]="client.name"></nz-option>
           </nz-select>
         </div>
       </div>
@@ -70,6 +70,13 @@
         </button>
       </div>
     </div>
-    <app-checks-report-table [listOfData]="checks" class="[&>*]:mt-8" />
+    <app-checks-report-table
+      [currentPage]="currentPage"
+      [limit]="limit"
+      [loading$]="loading$"
+      [totalRecords]="totalRecords"
+      (pageChange)="handlePageChange($event)"
+      [listOfData]="checks$ | async"
+      class="[&>*]:mt-8" />
   </div>
 </div>

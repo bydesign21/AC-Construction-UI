@@ -4,10 +4,13 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnDestroy,
+  OnInit,
   Output,
 } from '@angular/core';
 import { WeeklyReport } from '../weekly-reports-model/model';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject, take, takeUntil } from 'rxjs';
+import { WeeklyReportsService } from '../weekly-reports-services/weekly-reports.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -16,23 +19,64 @@ import { BehaviorSubject } from 'rxjs';
   templateUrl: './create-weekly-report-analysis-modal.component.html',
   styleUrl: './create-weekly-report-analysis-modal.component.scss',
 })
-export class CreateWeeklyReportAnalysisModalComponent {
-  @Input() reports: WeeklyReport[] = [];
-  @Input() loading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(
-    false
-  );
-  @Input() currentPage = 1;
-  @Input() totalRecords = 0;
-  @Output()
-  dateRangeChanged: EventEmitter<Date[]> = new EventEmitter<Date[]>();
+export class CreateWeeklyReportAnalysisModalComponent
+  implements OnInit, OnDestroy
+{
+  reports$: BehaviorSubject<WeeklyReport[]> = new BehaviorSubject<
+    WeeklyReport[]
+  >([]);
+  loading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  limit = 8;
+  currentPage = 1;
+  totalRecords = 0;
+  dateRange: Date[] = [];
+  private destroy$ = new Subject();
 
-  constructor(private cd: ChangeDetectorRef) {}
+  @Output() closeEvent: EventEmitter<void> = new EventEmitter<void>();
+
+  constructor(
+    private weeklyReportsService: WeeklyReportsService,
+    private cd: ChangeDetectorRef
+  ) {}
+
+  ngOnInit(): void {
+    // this.loadData();
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next(true);
+    this.destroy$.complete();
+  }
 
   handleDateChanged(dateRange: Date[]) {
     if (!dateRange || dateRange.length < 2) {
       return;
     }
-    this.dateRangeChanged.emit(dateRange);
-    this.cd.detectChanges();
+    this.dateRange = dateRange;
+    this.currentPage = 1;
+    this.loadData();
+  }
+
+  onPageChange(page: number) {
+    this.currentPage = page;
+    this.loadData();
+  }
+
+  private loadData(page: number = this.currentPage) {
+    this.loading$.next(true);
+    this.weeklyReportsService
+      .getWeeklyReports(page, this.limit, this.dateRange)
+      .pipe(take(1), takeUntil(this.destroy$))
+      .subscribe(reports => {
+        this.reports$.next(reports.data);
+        this.totalRecords = reports.count;
+        this.currentPage = page;
+        this.loading$.next(false);
+        this.cd.detectChanges();
+      });
+  }
+
+  handleClose() {
+    this.closeEvent.emit();
   }
 }

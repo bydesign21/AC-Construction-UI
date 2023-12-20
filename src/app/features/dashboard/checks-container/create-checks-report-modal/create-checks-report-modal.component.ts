@@ -2,12 +2,18 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  EventEmitter,
-  Input,
-  Output,
+  OnInit,
 } from '@angular/core';
-import { SharedUtilsService } from '../../../../shared-components/shared-utils.service';
-import { CheckReport, Employee } from '../check-model/model';
+import { Employee } from '../check-model/model';
+import { ChecksService } from '../checks-services/checks.service';
+import {
+  BehaviorSubject,
+  Observable,
+  Subject,
+  take,
+  takeUntil,
+  tap,
+} from 'rxjs';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -17,26 +23,70 @@ import { CheckReport, Employee } from '../check-model/model';
   styleUrl: './create-checks-report-modal.component.scss',
 })
 export class CreateChecksReportModalComponent {
-  @Input() checks: CheckReport[] = [];
-  @Input() employeeList: Employee[] = [];
-  @Output() dateRangeChanged: EventEmitter<string> = new EventEmitter<string>();
-  @Output() employeeSelected: EventEmitter<Employee> =
-    new EventEmitter<Employee>();
-  selectedEmployee: Employee | undefined;
+  selectedEmployee: Employee['name'] | undefined = undefined;
+  dateRange: Date[] = [];
+  employees$: Observable<Employee[]> = this.checks.getEmployees();
+  checks$: BehaviorSubject<any> = new BehaviorSubject([]);
+  totalRecords = 0;
+  currentPage = 1;
+  limit = 10;
+  loading$ = new BehaviorSubject<boolean>(false);
+  destroy$ = new Subject();
 
   constructor(
     private cd: ChangeDetectorRef,
-    private utils: SharedUtilsService
+    private checks: ChecksService
   ) {}
 
-  handleEmployeeSelected(employee: Employee) {
-    this.employeeSelected.emit(employee);
+  loadData(page: number = 1): void {
+    this.checks
+      .getChecks(
+        page,
+        this.limit,
+        this.dateRange[0],
+        this.dateRange[1],
+        this.selectedEmployee
+      )
+      .pipe(
+        take(1),
+        takeUntil(this.destroy$),
+        tap(() => this.loading$.next(true))
+      )
+      .subscribe(response => {
+        console.log(
+          this.limit,
+          this.dateRange[0],
+          this.dateRange[1],
+          this.selectedEmployee
+        );
+        this.checks$.next(response.data);
+        this.totalRecords = response.count;
+        this.loading$.next(false);
+        this.cd.detectChanges();
+      });
+  }
+
+  handlePageChange(page: any) {
+    this.currentPage = page;
+    this.loadData(this.currentPage);
+  }
+
+  handleEmployeeSelected(employee: string) {
+    this.currentPage = 1;
+    console.log('employee', employee);
+    this.selectedEmployee = employee;
+    this.loadData(this.currentPage);
     this.cd.detectChanges();
   }
 
   handleDateChanged(dateRange: Date[]) {
-    const rangeString = this.utils.formatDateRange(dateRange);
-    this.dateRangeChanged.emit(rangeString);
+    if (!dateRange || dateRange.length < 2) {
+      this.dateRange = [];
+    } else {
+      this.dateRange = dateRange;
+    }
+    this.currentPage = 1;
+    this.loadData(this.currentPage);
     this.cd.detectChanges();
   }
 }

@@ -5,6 +5,7 @@ import {
   Inject,
   Input,
   OnInit,
+  TemplateRef,
   ViewChild,
 } from '@angular/core';
 import { NZ_MODAL_DATA, NzModalRef } from 'ng-zorro-antd/modal';
@@ -27,6 +28,7 @@ import { CheckItemListComponent } from '../../../../shared-components/check-item
 export class CreateCheckModalComponent implements OnInit {
   @ViewChild('checkItemListComponent')
   checkItemListComponentRef?: CheckItemListComponent;
+  @ViewChild('modalFooter') modalFooter!: TemplateRef<any>;
   @Input() employeeList: Employee[] = [];
   @Input() check?: CheckReport;
   isValid$ = new BehaviorSubject<boolean>(false);
@@ -38,7 +40,7 @@ export class CreateCheckModalComponent implements OnInit {
     private cd: ChangeDetectorRef,
     private modal: NzModalRef,
     @Inject(NZ_MODAL_DATA)
-    public data?: { employeeList: Employee[]; check?: Check }
+    public data?: { check?: Check }
   ) {}
 
   get selectedEmployee() {
@@ -51,7 +53,6 @@ export class CreateCheckModalComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.data) {
-      this.employeeList = this.data?.employeeList;
       this.check = this.data?.check;
     }
     if (this.check) {
@@ -60,6 +61,14 @@ export class CreateCheckModalComponent implements OnInit {
       console.log('checkName', this.check.name);
       this.checkItemList = this.check.lineItems;
     }
+  }
+
+  isFormValid(): boolean {
+    return this.isValid$.getValue();
+  }
+
+  onCancel() {
+    this.modal.destroy();
   }
 
   handleAddLineItem() {
@@ -81,7 +90,7 @@ export class CreateCheckModalComponent implements OnInit {
     this.cd.detectChanges();
   }
 
-  emitAndCloseModal() {
+  submitForm() {
     this.checkItemListComponentRef?.stopEdit();
     const check: Check = {
       checkNumber: this.checkNumber || '',
@@ -103,10 +112,6 @@ export class CreateCheckModalComponent implements OnInit {
       total += item?.total || 0;
     }
     return total;
-  }
-
-  onOk(): void {
-    this.emitAndCloseModal();
   }
 
   handleLineItemsChanged(items: CheckLineItem[]) {

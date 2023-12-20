@@ -72,3 +72,14 @@
       class="m-4" />
   </div>
 </div>
+
+<ng-template #modalFooter>
+  <button nz-button nzType="default" (click)="onCancel()">Cancel</button>
+  <button
+    nz-button
+    nzType="primary"
+    [disabled]="!isFormValid()"
+    (click)="submitForm()">
+    {{ data?.report ? 'Update' : 'Create' }}
+  </button>
+</ng-template>

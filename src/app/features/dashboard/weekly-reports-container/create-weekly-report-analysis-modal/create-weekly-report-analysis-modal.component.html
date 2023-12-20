@@ -48,10 +48,12 @@
       </div>
     </div>
     <app-weekly-reports-table
+      [limit]="limit"
+      (pageChange)="onPageChange($event)"
       [currentPage]="currentPage"
       [totalRecords]="totalRecords"
       [loading$]="loading$"
-      [listOfData]="reports"
+      [listOfData]="(reports$ | async) || []"
       class="[&>*]:mt-8 !min-h-full" />
   </div>
 </div>

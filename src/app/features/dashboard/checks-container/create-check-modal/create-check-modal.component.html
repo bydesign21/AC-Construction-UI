@@ -80,3 +80,14 @@
       class="[&>*]:mt-4"></app-check-item-list>
   </div>
 </div>
+
+<ng-template #modalFooter>
+  <button nz-button nzType="default" (click)="onCancel()">Cancel</button>
+  <button
+    nz-button
+    nzType="primary"
+    [disabled]="!isFormValid()"
+    (click)="submitForm()">
+    {{ data?.check || check ? 'Update' : 'Create' }}
+  </button>
+</ng-template>

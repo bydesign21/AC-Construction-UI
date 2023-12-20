@@ -13,7 +13,7 @@
             nz-input
             placeholder="Search Employees"
             aria-label="search"
-            [(ngModel)]="searchTerm"
+            [(ngModel)]="searchTermInternal"
             (ngModelChange)="handleEmployeeSearch($event)" />
         </div>
       </div>
@@ -35,7 +35,7 @@
       </div>
     </div>
     <app-employee-list-table
-      [listOfData]="employeeList"
+      [listOfData]="(employeeList$ | async) || []"
       (deleteItem)="handleDeleteItem($event)"
       (printItem)="handlePrintItem($event)"
       (viewItem)="handleViewEmployeeClicked($event)"
