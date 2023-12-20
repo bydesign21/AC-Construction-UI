@@ -8,7 +8,14 @@ import {
 import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 import { CreateEmployeeFormComponent } from './create-employee-form/create-employee-form.component';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import { Observable, Subject, debounceTime, takeUntil } from 'rxjs';
+import {
+  BehaviorSubject,
+  Observable,
+  Subject,
+  debounceTime,
+  takeUntil,
+  tap,
+} from 'rxjs';
 import { Employee } from '../check-model/model';
 import { ChecksService } from '../checks-services/checks.service';
 
@@ -24,6 +31,7 @@ export class EmployeeModalComponent implements OnInit, OnDestroy {
   searchTerm$ = new Subject<string>();
   employeeList$: Observable<Employee[]> = this.checks.getEmployees();
   destroy$ = new Subject<void>();
+  loading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   searchTermInternal = '';
 
   constructor(
@@ -35,11 +43,16 @@ export class EmployeeModalComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.searchTerm$
-      .pipe(takeUntil(this.destroy$), debounceTime(300))
+      .pipe(
+        takeUntil(this.destroy$),
+        debounceTime(500),
+        tap(() => this.loading$.next(true))
+      )
       .subscribe(term => {
         console.log('searchTerm', term);
         this.searchTermInternal = term;
         this.employeeList$ = this.checks.getEmployeesBySearchTerm(term);
+        this.loading$.next(false);
         this.cd.detectChanges();
       });
   }

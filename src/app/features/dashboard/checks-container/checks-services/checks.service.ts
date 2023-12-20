@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { SupabaseService } from '../../../auth/supabase.service';
 import { Observable, from, map } from 'rxjs';
+import { Check } from '../check-model/model';
 
 @Injectable({
   providedIn: 'root',
@@ -77,5 +78,24 @@ export class ChecksService {
         return res.data || [];
       })
     );
+  }
+
+  deleteCheck(checkNumber: string): Observable<any> {
+    return from(this.sb.client.from('checks').delete().match({ checkNumber }));
+  }
+
+  updateCheck(check: Check): Observable<any> {
+    return from(
+      this.sb.client
+        .from('checks')
+        .update(check)
+        .match({ checkNumber: check.checkNumber })
+    );
+  }
+
+  putCheck(check: Check): Observable<Check> {
+    return from(this.sb.client.from('checks').insert(check).select()).pipe(
+      map(res => res?.data?.[0])
+    ) as unknown as Observable<Check>;
   }
 }

@@ -62,7 +62,7 @@
               nz-button
               title="Delete Item"
               class="!rounded-lg items-center justify-center flex flex-col"
-              (click)="handleDeleteItem(i)">
+              (click)="handleDeleteItem(data?.checkNumber || '')">
               <div>
                 <span
                   class="items-center !text-red-400 justify-center h-[1.4rem]"

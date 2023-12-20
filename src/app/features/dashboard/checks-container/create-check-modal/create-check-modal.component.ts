@@ -9,7 +9,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { NZ_MODAL_DATA, NzModalRef } from 'ng-zorro-antd/modal';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable, debounceTime } from 'rxjs';
 import {
   Check,
   CheckLineItem,
@@ -17,6 +17,7 @@ import {
   Employee,
 } from '../check-model/model';
 import { CheckItemListComponent } from '../../../../shared-components/check-item-list/check-item-list.component';
+import { ChecksService } from '../checks-services/checks.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -29,26 +30,28 @@ export class CreateCheckModalComponent implements OnInit {
   @ViewChild('checkItemListComponent')
   checkItemListComponentRef?: CheckItemListComponent;
   @ViewChild('modalFooter') modalFooter!: TemplateRef<any>;
-  @Input() employeeList: Employee[] = [];
   @Input() check?: CheckReport;
   isValid$ = new BehaviorSubject<boolean>(false);
-  selectedName$: BehaviorSubject<string> = new BehaviorSubject('');
+  employeeList$: Observable<Employee[]> = this.checks.getEmployees();
+  searchTerm$ = new BehaviorSubject<string>('');
   checkItemList: CheckLineItem[] = [];
   checkNumber?: string;
+  searchTermInternal: string = '';
 
   constructor(
     private cd: ChangeDetectorRef,
     private modal: NzModalRef,
+    private checks: ChecksService,
     @Inject(NZ_MODAL_DATA)
     public data?: { check?: Check }
   ) {}
 
   get selectedEmployee() {
-    return this.selectedName$.getValue();
+    return this.searchTerm$.getValue();
   }
 
   set selectedEmployee(employeeId: string) {
-    this.selectedName$.next(employeeId);
+    this.searchTerm$.next(employeeId);
   }
 
   ngOnInit(): void {
@@ -57,10 +60,15 @@ export class CreateCheckModalComponent implements OnInit {
     }
     if (this.check) {
       this.checkNumber = this.check.checkNumber;
-      this.selectedName$.next(this.check.name);
+      this.searchTerm$.next(this.check.name);
+      this.searchTermInternal = this.check.name;
       console.log('checkName', this.check.name);
       this.checkItemList = this.check.lineItems;
     }
+
+    this.searchTerm$.pipe(debounceTime(300)).subscribe(term => {
+      this.employeeList$ = this.checks.getEmployeesBySearchTerm(term);
+    });
   }
 
   isFormValid(): boolean {
@@ -81,8 +89,9 @@ export class CreateCheckModalComponent implements OnInit {
     this.cd.detectChanges();
   }
 
-  handleEmployeeChanged(employeeId: string) {
-    this.selectedName$.next(employeeId);
+  handleSearchTermChanged(term: string) {
+    this.searchTermInternal = term;
+    this.searchTerm$.next(term);
   }
 
   handleDeleteLineItem(index: number) {
@@ -93,8 +102,8 @@ export class CreateCheckModalComponent implements OnInit {
   submitForm() {
     this.checkItemListComponentRef?.stopEdit();
     const check: Check = {
-      checkNumber: this.checkNumber || '',
-      name: this.selectedName$.getValue() || '',
+      checkNumber: this.checkNumber || undefined,
+      name: this.searchTerm$.getValue() || '',
       date: new Date().toISOString(),
       lineItems: this.checkItemList,
       total: this.calculateTotal(),

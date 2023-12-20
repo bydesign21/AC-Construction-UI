@@ -6,7 +6,7 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import { CheckReport } from '../../features/dashboard/checks-container/check-model/model';
+import { Check } from '../../features/dashboard/checks-container/check-model/model';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
@@ -19,30 +19,30 @@ import { BehaviorSubject } from 'rxjs';
 export class ChecksReportTableComponent implements OnInit {
   @Input() limit: number = 10;
   @Input() loading$: BehaviorSubject<boolean> = new BehaviorSubject(true);
-  @Input() listOfData: CheckReport[] = [];
+  @Input() listOfData: Check[] = [];
   @Input() isActionRowVisible: boolean = false;
   @Input() totalRecords: number = 0;
   @Input() currentPage!: number;
-  @Output() viewItem: EventEmitter<CheckReport> =
-    new EventEmitter<CheckReport>();
-  @Output() printItem: EventEmitter<CheckReport> =
-    new EventEmitter<CheckReport>();
-  @Output() deleteItem: EventEmitter<number> = new EventEmitter<number>();
+  @Output() viewItem: EventEmitter<Check> = new EventEmitter<Check>();
+  @Output() printItem: EventEmitter<Check> = new EventEmitter<Check>();
+  @Output() deleteItem: EventEmitter<string> = new EventEmitter<string>();
   @Output() pageChange: EventEmitter<number> = new EventEmitter<number>();
 
   tableHeaders: any[] = [
     {
       label: 'Check #',
-      sortFn: (a: CheckReport, b: CheckReport) =>
-        a.checkNumber.localeCompare(b.checkNumber),
+      sortFn: (a: Check, b: Check) =>
+        a?.checkNumber
+          ?.toString()
+          .localeCompare(b?.checkNumber?.toString() || ''),
     },
     {
       label: 'Date',
-      sortFn: (a: CheckReport, b: CheckReport) => a.date.localeCompare(b.date),
+      sortFn: (a: Check, b: Check) => a.date.localeCompare(b.date),
     },
     {
       label: 'Amount',
-      sortFn: (a: CheckReport, b: CheckReport) =>
+      sortFn: (a: Check, b: Check) =>
         a.total.toString().localeCompare(b.total.toString()),
     },
   ];
@@ -51,15 +51,15 @@ export class ChecksReportTableComponent implements OnInit {
     if (this.isActionRowVisible) this.tableHeaders.push({ label: 'Actions' });
   }
 
-  handleDeleteItem(index: number) {
-    this.deleteItem.emit(index);
+  handleDeleteItem(checkNumber: string) {
+    this.deleteItem.emit(checkNumber);
   }
 
-  handleViewItem(item: CheckReport) {
+  handleViewItem(item: Check) {
     this.viewItem.emit(item);
   }
 
-  handlePrintItem(item: CheckReport) {
+  handlePrintItem(item: Check) {
     this.printItem.emit(item);
   }
 

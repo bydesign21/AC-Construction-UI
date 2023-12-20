@@ -144,7 +144,7 @@ export class WeeklyReportsContainerComponent implements OnInit, OnDestroy {
   }
 
   handleCreateAnalysisReport() {
-    const modal = this.modal.create({
+    this.modal.create({
       nzTitle: 'Create Expenses Report',
       nzContent: CreateWeeklyReportAnalysisModalComponent,
       nzWidth: '100dvw',

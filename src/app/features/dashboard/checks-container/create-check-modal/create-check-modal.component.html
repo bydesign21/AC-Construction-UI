@@ -13,13 +13,13 @@
             type="text"
             nz-input
             [nzAutocomplete]="employeeAuto"
-            [(ngModel)]="selectedEmployee"
-            (ngModelChange)="handleEmployeeChanged($event)"
+            [(ngModel)]="searchTermInternal"
+            (ngModelChange)="handleSearchTermChanged($event)"
             placeholder="Select or type an employee name" />
 
           <nz-autocomplete #employeeAuto>
             <nz-auto-option
-              *ngFor="let employee of employeeList"
+              *ngFor="let employee of employeeList$ | async"
               [nzValue]="employee.name"
               [nzLabel]="employee.name">
               <span>{{ employee.name }}</span>

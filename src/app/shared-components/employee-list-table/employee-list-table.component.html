@@ -3,6 +3,7 @@
   <nz-table
     [nzPageSize]="8"
     #nzTable
+    [nzLoading]="loading$ | async"
     [nzData]="listOfData"
     [nzPaginationPosition]="'bottom'"
     [nzShowPagination]="listOfData.length > 0"

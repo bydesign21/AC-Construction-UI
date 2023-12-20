@@ -3,7 +3,6 @@ import {
   ChangeDetectorRef,
   Component,
   EventEmitter,
-  Input,
   OnDestroy,
   OnInit,
   Output,
@@ -19,9 +18,7 @@ import { WeeklyReportsService } from '../weekly-reports-services/weekly-reports.
   templateUrl: './create-weekly-report-analysis-modal.component.html',
   styleUrl: './create-weekly-report-analysis-modal.component.scss',
 })
-export class CreateWeeklyReportAnalysisModalComponent
-  implements OnInit, OnDestroy
-{
+export class CreateWeeklyReportAnalysisModalComponent implements OnDestroy {
   reports$: BehaviorSubject<WeeklyReport[]> = new BehaviorSubject<
     WeeklyReport[]
   >([]);
@@ -38,10 +35,6 @@ export class CreateWeeklyReportAnalysisModalComponent
     private weeklyReportsService: WeeklyReportsService,
     private cd: ChangeDetectorRef
   ) {}
-
-  ngOnInit(): void {
-    // this.loadData();
-  }
 
   ngOnDestroy(): void {
     this.destroy$.next(true);

@@ -2,7 +2,6 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  OnInit,
 } from '@angular/core';
 import { Employee } from '../check-model/model';
 import { ChecksService } from '../checks-services/checks.service';
