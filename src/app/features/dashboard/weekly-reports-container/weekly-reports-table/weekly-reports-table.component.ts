@@ -3,6 +3,7 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnInit,
   Output,
 } from '@angular/core';
 import { WeeklyReport } from '../weekly-reports-model/model';
@@ -15,10 +16,11 @@ import { BehaviorSubject } from 'rxjs';
   templateUrl: './weekly-reports-table.component.html',
   styleUrl: './weekly-reports-table.component.scss',
 })
-export class WeeklyReportsTableComponent {
+export class WeeklyReportsTableComponent implements OnInit {
   @Input() loading$ = new BehaviorSubject<boolean>(true);
   @Input() listOfData: WeeklyReport[] = [];
   @Input() limit: number = 10;
+  @Input() isActionRowVisible: boolean = true;
   @Input() totalRecords: number = 0;
   @Input() currentPage!: number;
   @Output() viewItem: EventEmitter<any> = new EventEmitter<any>();
@@ -52,8 +54,11 @@ export class WeeklyReportsTableComponent {
       sortFn: (a: WeeklyReport, b: WeeklyReport) =>
         a.profitSplit.toString().localeCompare(b.profitSplit.toString()),
     },
-    { label: 'Actions' },
   ];
+
+  ngOnInit(): void {
+    if (this.isActionRowVisible) this.tableHeaders.push({ label: 'Actions' });
+  }
 
   parseEndDate(dateRange: string): Date {
     const startDateString = dateRange.split(' - ')[1];

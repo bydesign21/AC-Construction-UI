@@ -47,7 +47,7 @@
           ">
           {{ data.profitSplit | currency }}
         </td>
-        <td>
+        <td *ngIf="isActionRowVisible">
           <div class="flex flex-row gap-2 justify-center">
             <button
               title="View Item"

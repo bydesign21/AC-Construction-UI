@@ -48,6 +48,7 @@
       </div>
     </div>
     <app-weekly-reports-table
+      [isActionRowVisible]="false"
       [limit]="limit"
       (pageChange)="onPageChange($event)"
       [currentPage]="currentPage"
