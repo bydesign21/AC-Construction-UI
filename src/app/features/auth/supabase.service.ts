@@ -2,6 +2,11 @@ import { Injectable } from '@angular/core';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { environment } from '../../../environments/environment';
 
+export type SupabaseClientDBResponse<T> = {
+  data: T[];
+  error?: Error;
+  count: number;
+};
 @Injectable({
   providedIn: 'root',
 })

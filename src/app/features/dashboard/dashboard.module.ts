@@ -78,6 +78,7 @@ import { NzAutocompleteModule } from 'ng-zorro-antd/auto-complete';
 import { NzPaginationModule } from 'ng-zorro-antd/pagination';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { CreateWeeklyReportAnalysisModalComponent } from './weekly-reports-container/create-weekly-report-analysis-modal/create-weekly-report-analysis-modal.component';
+import { InvoicesService } from './invoices-container/invoice-service/invoices.service';
 
 const icons = [
   SettingOutline,
@@ -170,6 +171,7 @@ const icons = [
     ExpensesService,
     WeeklyReportsService,
     ChecksService,
+    InvoicesService,
   ],
   exports: [
     DashboardComponent,

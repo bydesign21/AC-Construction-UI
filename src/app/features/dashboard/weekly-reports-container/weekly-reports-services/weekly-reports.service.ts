@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { SupabaseService } from '../../../auth/supabase.service';
 import { Observable, from, map, tap } from 'rxjs';
+import { WeeklyReport } from '../weekly-reports-model/model';
 
 @Injectable({
   providedIn: 'root',
@@ -62,5 +63,21 @@ export class WeeklyReportsService {
         return { data: transformedData, count: res.count || 0 };
       })
     );
+  }
+
+  putWeeklyReport(weeklyReport: WeeklyReport): Observable<any> {
+    return from(
+      this.sb.client.from('weekly_reports').insert(weeklyReport).select()
+    ).pipe(map(res => res?.data?.[0]));
+  }
+
+  updateWeeklyReport(weeklyReport: WeeklyReport): Observable<any> {
+    return from(
+      this.sb.client
+        .from('weekly_reports')
+        .update(weeklyReport)
+        .eq('id', weeklyReport.id)
+        .select()
+    ).pipe(map(res => res?.data?.[0]));
   }
 }

@@ -13,7 +13,7 @@ import { BehaviorSubject } from 'rxjs';
 import {
   ExpenseItem,
   ExpenseTypes,
-  WeeklyReportDataEmission,
+  WeeklyReport,
   WeeklyReportInputRowProps,
 } from '../weekly-reports-model/model';
 
@@ -32,7 +32,7 @@ export class CreateWeeklyReportModalComponent implements OnInit {
     private expenses: ExpensesService,
     private modal: NzModalRef,
     @Inject(NZ_MODAL_DATA)
-    public data?: { report: WeeklyReportDataEmission; isEditMode: boolean }
+    public data?: { report: WeeklyReport; isEditMode: boolean }
   ) {}
   isInputRowValid$ = new BehaviorSubject<boolean>(false);
   isInputRowTouched$ = new BehaviorSubject<boolean>(false);
@@ -113,7 +113,8 @@ export class CreateWeeklyReportModalComponent implements OnInit {
   }
 
   submitForm() {
-    const reportData: WeeklyReportDataEmission = {
+    const reportData: WeeklyReport = {
+      id: this.data?.report?.id || undefined,
       expenseList: this.expenseList,
       payroll: this.payroll || 0,
       revenue: this.revenue || 0,

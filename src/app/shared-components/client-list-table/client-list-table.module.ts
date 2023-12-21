@@ -9,6 +9,7 @@ import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzTableModule } from 'ng-zorro-antd/table';
+import { NzPaginationModule } from 'ng-zorro-antd/pagination';
 
 @NgModule({
   declarations: [ClientListTableComponent],
@@ -22,6 +23,7 @@ import { NzTableModule } from 'ng-zorro-antd/table';
     NzButtonModule,
     NzPopconfirmModule,
     NzIconModule,
+    NzPaginationModule,
   ],
   exports: [ClientListTableComponent],
 })

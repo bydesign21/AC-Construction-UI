@@ -1,17 +1,3 @@
-export interface WeeklyReportDataEmission {
-  expenseList: ExpenseItem[];
-  payroll: number;
-  revenue: number;
-  profit: number;
-  profitSplit: number;
-  moulding: number;
-  framing: number;
-  misc: number;
-  decking: number;
-  totalExpenses: number;
-  date: Date[];
-}
-
 export enum ExpenseTypes {
   FRAMING = 'Framing',
   DECKING = 'Decking',
@@ -59,9 +45,11 @@ export interface WeeklyReport {
   revenue: number;
   totalExpenses: number;
   profit: number;
+  expenseList: ExpenseItem[];
   profitSplit: number;
   payroll: number;
   moulding: number;
+  decking: number;
   framing: number;
   misc: number;
   date: Date[];

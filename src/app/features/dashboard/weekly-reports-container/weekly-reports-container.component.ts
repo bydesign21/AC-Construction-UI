@@ -9,13 +9,11 @@ import { NzModalService } from 'ng-zorro-antd/modal';
 import { DeleteWeeklyReportModalComponent } from './delete-weekly-report-modal/delete-weekly-report-modal.component';
 import { CreateWeeklyReportModalComponent } from './create-weekly-report-modal/create-weekly-report-modal.component';
 import { BehaviorSubject, Subject, take, takeUntil } from 'rxjs';
-import {
-  WeeklyReport,
-  WeeklyReportDataEmission,
-} from './weekly-reports-model/model';
+import { WeeklyReport } from './weekly-reports-model/model';
 import { WeeklyReportsService } from './weekly-reports-services/weekly-reports.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CreateWeeklyReportAnalysisModalComponent } from './create-weekly-report-analysis-modal/create-weekly-report-analysis-modal.component';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -30,7 +28,9 @@ export class WeeklyReportsContainerComponent implements OnInit, OnDestroy {
     private modal: NzModalService,
     private data: WeeklyReportsService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private reports: WeeklyReportsService,
+    private message: NzMessageService
   ) {}
   reports$: BehaviorSubject<WeeklyReport[]> = new BehaviorSubject<
     WeeklyReport[]
@@ -102,23 +102,11 @@ export class WeeklyReportsContainerComponent implements OnInit, OnDestroy {
       });
     });
 
-    modal.afterClose
-      .pipe(take(1))
-      .subscribe((report: WeeklyReportDataEmission) => {
-        if (report) {
-          const reports = this.reports$.getValue();
-          const reportIndex = reports.findIndex(
-            report => report.id === item.id
-          );
-          if (reportIndex === -1) {
-            console.error('Report not found in reports array', item);
-            return;
-          }
-          reports[reportIndex] = report;
-          this.reports$.next([...reports]);
-          this.cd.detectChanges();
-        }
-      });
+    modal.afterClose.pipe(take(1)).subscribe((report: WeeklyReport) => {
+      if (report) {
+        this.updateReport(report);
+      }
+    });
   }
 
   handlePrintItem(item: WeeklyReport) {
@@ -174,12 +162,44 @@ export class WeeklyReportsContainerComponent implements OnInit, OnDestroy {
 
     modalRef.afterClose
       .pipe(take(1), takeUntil(this.destroy$))
-      .subscribe((report: WeeklyReportDataEmission) => {
+      .subscribe((report: WeeklyReport) => {
         if (report) {
-          // TODO: Update report in db
-          this.reports$.next([...this.reports$.getValue(), report]);
-          this.cd.detectChanges();
+          this.putReport(report);
         }
+      });
+  }
+
+  putReport(report: WeeklyReport) {
+    this.reports
+      .putWeeklyReport(report)
+      .pipe(take(1))
+      .subscribe({
+        next: putReport => {
+          console.log('putReport', putReport);
+          this.loadData(this.currentPage);
+          this.message.success('Report created successfully');
+        },
+        error: err => {
+          this.message.error(`Error creating report: ${err.message}`);
+        },
+        complete: () => this.cd.detectChanges(),
+      });
+  }
+
+  updateReport(report: WeeklyReport) {
+    this.reports
+      .updateWeeklyReport(report)
+      .pipe(take(1))
+      .subscribe({
+        next: updateReport => {
+          console.log('putReport', updateReport);
+          this.loadData(this.currentPage);
+          this.message.success('Report updated successfully');
+        },
+        error: err => {
+          this.message.error(`Error updating report: ${err.message}`);
+        },
+        complete: () => this.cd.detectChanges(),
       });
   }
 }
