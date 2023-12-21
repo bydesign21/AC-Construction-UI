@@ -25,8 +25,8 @@ export interface SelectOption {
 export interface InvoiceReport extends Invoice {}
 
 export interface Client {
-  id?: string;
-  name: string;
+  id: string;
+  companyName: string;
   address: string;
   city: string;
   state: string;
@@ -34,5 +34,5 @@ export interface Client {
   phone: string;
   email: string;
   fax?: string;
-  vendorNumber?: string;
+  vendorId?: string;
 }

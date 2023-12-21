@@ -1,17 +1,16 @@
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
-  EventEmitter,
-  Input,
   OnDestroy,
   OnInit,
-  Output,
 } from '@angular/core';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 import { CreateClientFormComponent } from './create-client-form/create-client-form.component';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import { Subject, debounceTime, takeUntil } from 'rxjs';
+import { BehaviorSubject, Subject, debounceTime, take, takeUntil } from 'rxjs';
 import { Client } from '../invoices-model/model';
+import { InvoicesService } from '../invoice-service/invoices.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -21,157 +20,29 @@ import { Client } from '../invoices-model/model';
   styleUrl: './clients-modal.component.scss',
 })
 export class ClientsModalComponent implements OnInit, OnDestroy {
-  @Input() clientList: Client[] = [
-    {
-      id: '1',
-      name: 'Client 1',
-      address: '123 Main St',
-      city: 'City',
-      state: 'State',
-      zipCode: '12345',
-      phone: '1234567890',
-      email: 'loganvasquez@gmail.com',
-    },
-    {
-      id: '1',
-      name: 'Client 1',
-      address: '123 Main St',
-      city: 'City',
-      state: 'State',
-      zipCode: '12345',
-      phone: '1234567890',
-      email: 'loganvasquez@gmail.com',
-    },
-    {
-      id: '1',
-      name: 'Client 1',
-      address: '123 Main St',
-      city: 'City',
-      state: 'State',
-      zipCode: '12345',
-      phone: '1234567890',
-      email: 'loganvasquez@gmail.com',
-    },
-    {
-      id: '1',
-      name: 'Client 1',
-      address: '123 Main St',
-      city: 'City',
-      state: 'State',
-      zipCode: '12345',
-      phone: '1234567890',
-      email: 'loganvasquez@gmail.com',
-    },
-    {
-      id: '1',
-      name: 'Client 1',
-      address: '123 Main St',
-      city: 'City',
-      state: 'State',
-      zipCode: '12345',
-      phone: '1234567890',
-      email: 'loganvasquez@gmail.com',
-    },
-    {
-      id: '1',
-      name: 'Client 1',
-      address: '123 Main St',
-      city: 'City',
-      state: 'State',
-      zipCode: '12345',
-      phone: '1234567890',
-      email: 'loganvasquez@gmail.com',
-    },
-    {
-      id: '1',
-      name: 'Client 1',
-      address: '123 Main St',
-      city: 'City',
-      state: 'State',
-      zipCode: '12345',
-      phone: '1234567890',
-      email: 'loganvasquez@gmail.com',
-    },
-    {
-      id: '1',
-      name: 'Client 1',
-      address: '123 Main St',
-      city: 'City',
-      state: 'State',
-      zipCode: '12345',
-      phone: '1234567890',
-      email: 'loganvasquez@gmail.com',
-    },
-    {
-      id: '1',
-      name: 'Client 1',
-      address: '123 Main St',
-      city: 'City',
-      state: 'State',
-      zipCode: '12345',
-      phone: '1234567890',
-      email: 'loganvasquez@gmail.com',
-    },
-    {
-      id: '1',
-      name: 'Client 1',
-      address: '123 Main St',
-      city: 'City',
-      state: 'State',
-      zipCode: '12345',
-      phone: '1234567890',
-      email: 'loganvasquez@gmail.com',
-    },
-    {
-      id: '1',
-      name: 'Client 1',
-      address: '123 Main St',
-      city: 'City',
-      state: 'State',
-      zipCode: '12345',
-      phone: '1234567890',
-      email: 'loganvasquez@gmail.com',
-    },
-    {
-      id: '1',
-      name: 'Client 1',
-      address: '123 Main St',
-      city: 'City',
-      state: 'State',
-      zipCode: '12345',
-      phone: '1234567890',
-      email: 'loganvasquez@gmail.com',
-    },
-    {
-      id: '1',
-      name: 'Client 1',
-      address: '123 Main St',
-      city: 'City',
-      state: 'State',
-      zipCode: '12345',
-      phone: '1234567890',
-      email: 'loganvasquez@gmail.com',
-    },
-  ];
-  @Output() clientCreated: EventEmitter<Client> = new EventEmitter<Client>();
-  @Output() clientDeleted: EventEmitter<number> = new EventEmitter<number>();
-  @Output() clientEdited: EventEmitter<Client> = new EventEmitter<Client>();
-  @Output() clientSearched: EventEmitter<string> = new EventEmitter<string>();
   createClientModalRef!: NzModalRef<CreateClientFormComponent, any>;
+  clientList: Client[] = [];
+  count: number = 0;
+  currentPage: number = 1;
+  limit: number = 8;
   searchTerm$ = new Subject<string>();
+  loading$ = new BehaviorSubject<boolean>(false);
   searchTerm: string = '';
   destroy$ = new Subject<void>();
 
   constructor(
     private modal: NzModalService,
-    private message: NzMessageService
+    private message: NzMessageService,
+    private cd: ChangeDetectorRef,
+    private invoices: InvoicesService
   ) {}
 
   ngOnInit(): void {
+    this.loadClientData();
     this.searchTerm$
       .pipe(takeUntil(this.destroy$), debounceTime(300))
       .subscribe(term => {
-        this.clientSearched.emit(term);
+        this.loadClientData(term);
       });
   }
 
@@ -179,6 +50,42 @@ export class ClientsModalComponent implements OnInit, OnDestroy {
     this.destroy$.next();
     this.destroy$.complete();
     this.destroy$.unsubscribe();
+  }
+
+  loadClientData(searchTerm?: string) {
+    this.loading$.next(true);
+    this.invoices
+      .getClients(this.currentPage, this.limit, searchTerm)
+      .pipe(take(1))
+      .subscribe({
+        next: clients => {
+          console.log(
+            `clients from ${searchTerm}`,
+            clients.data,
+            clients.count
+          );
+          this.clientList = clients.data;
+          this.count = clients.count;
+        },
+        error: err => {
+          this.message.error(`Error loading clients: ${err.message}`);
+        },
+        complete: () => {
+          this.loading$.next(false);
+          this.cd.detectChanges();
+          console.log('complete', this.count, this.currentPage);
+        },
+      });
+  }
+
+  loadInvoicesData(searchTerm?: string) {
+    return searchTerm;
+  }
+
+  handlePageChange(page: number) {
+    if (page === this.currentPage) return;
+    this.currentPage = page;
+    this.loadClientData();
   }
 
   handleCreateClientClicked() {
@@ -200,8 +107,6 @@ export class ClientsModalComponent implements OnInit, OnDestroy {
           nzOkDisabled: isDisabled,
         });
       });
-
-    this.searchTerm = '';
   }
 
   handleViewClientClicked(client: Client) {
@@ -223,8 +128,6 @@ export class ClientsModalComponent implements OnInit, OnDestroy {
           nzOkDisabled: isDisabled,
         });
       });
-
-    this.searchTerm = '';
   }
 
   handleCreateClientModalOk() {
@@ -232,12 +135,11 @@ export class ClientsModalComponent implements OnInit, OnDestroy {
     if (instance.isFormValid()) {
       const form = instance.onSubmit();
       const isClientUpdated = Boolean(instance?.data?.client);
+      console.log('isClientUpdated', isClientUpdated);
       if (isClientUpdated) {
         this.handleClientEdited(form);
-        this.message.success('Client updated');
       } else {
         this.handleClientCreated(form);
-        this.message.success('Client created');
       }
       return true;
     } else {
@@ -252,23 +154,53 @@ export class ClientsModalComponent implements OnInit, OnDestroy {
   }
 
   handleClientCreated(client: Client) {
-    this.clientCreated.emit(client);
+    this.invoices
+      .putClient(client)
+      .pipe(take(1))
+      .subscribe({
+        next: () => {
+          this.message.success('Client created');
+          this.loadClientData();
+        },
+        error: err => {
+          this.message.error(`Error creating client: ${err.message}`);
+        },
+      });
   }
 
-  handleClientDeleted(clientIndex: number) {
-    this.clientDeleted.emit(clientIndex);
+  handleClientDeleted(itemId: string) {
+    // TODO: make api call to delete client in backend
+    this.invoices
+      .deleteClient(itemId)
+      .pipe(take(1))
+      .subscribe({
+        next: () => {
+          this.message.success('Client deleted');
+          this.loadClientData();
+        },
+        error: err => {
+          this.message.error(`Error deleting client: ${err.message}`);
+        },
+      });
   }
 
   handleClientEdited(client: Client) {
-    this.clientEdited.emit(client);
+    this.invoices
+      .updateClient(client)
+      .pipe(take(1))
+      .subscribe({
+        next: () => {
+          this.message.success('Client updated');
+          this.loadClientData();
+        },
+        error: err => {
+          this.message.error(`Error updating client: ${err.message}`);
+        },
+      });
   }
 
   handleClientSearch(searchTerm: string) {
     this.searchTerm$.next(searchTerm);
-  }
-
-  handleDeleteItem(itemIndex: number) {
-    this.clientDeleted.emit(itemIndex);
   }
 
   handlePrintItem(item: Client) {

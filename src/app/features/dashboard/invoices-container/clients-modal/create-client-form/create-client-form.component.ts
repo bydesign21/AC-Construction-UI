@@ -28,15 +28,17 @@ export class CreateClientFormComponent implements OnInit, OnDestroy {
 
   constructor(
     private fb: FormBuilder,
-    private cd: ChangeDetectorRef,
     @Inject(NZ_MODAL_DATA) public data?: { client: Client; isEditMode: boolean }
   ) {}
 
   ngOnInit(): void {
     this.isEditMode = this.data?.isEditMode || false;
     this.createClientForm = this.fb.group({
-      name: [
-        { value: this.data?.client?.name || '', disabled: !this.isEditMode },
+      companyName: [
+        {
+          value: this.data?.client?.companyName || '',
+          disabled: !this.isEditMode,
+        },
         [Validators.required],
       ],
       address: [
@@ -74,9 +76,9 @@ export class CreateClientFormComponent implements OnInit, OnDestroy {
       fax: [
         { value: this.data?.client?.fax || '', disabled: !this.isEditMode },
       ],
-      vendorNumber: [
+      vendorId: [
         {
-          value: this.data?.client?.vendorNumber || '',
+          value: this.data?.client?.vendorId || '',
           disabled: !this.isEditMode,
         },
       ],

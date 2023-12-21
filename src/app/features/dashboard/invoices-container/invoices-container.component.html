@@ -65,10 +65,5 @@
 </ng-template>
 
 <ng-template #ClientManagementModalTemplate>
-  <app-clients-modal
-    (clientCreated)="handleClientCreated($event)"
-    [clientList]="(clientList$ | async) || []"
-    (clientSearched)="handleClientSearched($event)"
-    (clientEdited)="handleClientEdited($event)"
-    (clientDeleted)="handleClientDeleted($event)" />
+  <app-clients-modal />
 </ng-template>

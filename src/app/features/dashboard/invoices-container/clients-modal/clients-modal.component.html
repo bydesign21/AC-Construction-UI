@@ -27,10 +27,15 @@
       </div>
     </div>
     <app-client-list-table
+      [count]="count"
+      [limit]="limit"
+      [currentPage]="currentPage"
+      [loading$]="loading$"
       [listOfData]="clientList"
-      (deleteItem)="handleDeleteItem($event)"
+      (pageChange)="handlePageChange($event)"
+      (deleteItem)="handleClientDeleted($event)"
       (printItem)="handlePrintItem($event)"
       (viewItem)="handleViewClientClicked($event)"
-      class="[&>*]:mt-8"></app-client-list-table>
+      class="[&>*]:mt-4"></app-client-list-table>
   </div>
 </div>

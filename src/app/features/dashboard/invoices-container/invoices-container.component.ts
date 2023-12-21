@@ -24,8 +24,6 @@ import { Client, Invoice } from './invoices-model/model';
 export class InvoicesContainerComponent {
   @ViewChild('CreateInvoiceReportModalTemplate')
   createReportModalRef!: TemplateRef<CreateReportModalComponent>;
-  @ViewChild('ClientManagementModalTemplate')
-  clientManagementModalRef!: TemplateRef<ClientsModalComponent>;
   constructor(
     private cd: ChangeDetectorRef,
     private modal: NzModalService
@@ -50,28 +48,6 @@ export class InvoicesContainerComponent {
       isPaid: false,
     },
   ]);
-  clientList$: BehaviorSubject<Client[]> = new BehaviorSubject<Client[]>([
-    {
-      id: '1',
-      name: 'Client 1',
-      address: '123 Main St',
-      city: 'City',
-      state: 'State',
-      zipCode: '12345',
-      phone: '1234567890',
-      email: 'loganvasquez@gmail.com',
-    },
-    {
-      id: '12',
-      name: 'Client 1',
-      address: '123 Main St',
-      city: 'City',
-      state: 'State',
-      zipCode: '12345',
-      phone: '1234567890',
-      email: 'loganvasquez@gmail.com',
-    },
-  ]);
 
   // Invoices container
 
@@ -81,7 +57,6 @@ export class InvoicesContainerComponent {
       nzOkText: 'Update',
       nzCancelText: 'Cancel',
       nzContent: CreateInvoiceModalComponent,
-      nzData: { clientList: this.clientList$.getValue(), invoice: item },
       nzWidth: '100dvw',
       nzBodyStyle: { height: '85dvh' },
       nzStyle: { top: '1rem', margin: '1rem' },
@@ -173,7 +148,6 @@ export class InvoicesContainerComponent {
       nzOkText: 'Create',
       nzCancelText: 'Cancel',
       nzContent: CreateInvoiceModalComponent,
-      nzData: { clientList: this.clientList$.getValue() },
       nzWidth: '100dvw',
       nzBodyStyle: { height: '85dvh' },
       nzStyle: { top: '1rem', margin: '1rem' },
@@ -214,41 +188,10 @@ export class InvoicesContainerComponent {
     this.modal.create({
       nzTitle: 'Manage Clients',
       nzFooter: null,
-      nzContent: this.clientManagementModalRef,
+      nzContent: ClientsModalComponent,
       nzWidth: '100dvw',
       nzBodyStyle: { height: '90dvh' },
       nzStyle: { top: '1rem', margin: '1rem' },
     });
-  }
-
-  handleClientCreated(client: Client) {
-    this.clientList$.next([...this.clientList$.getValue(), client]);
-    // TODO: make api call to create client in backend
-  }
-
-  handleClientSearched(searchTerm: string) {
-    console.log('search term', searchTerm);
-    // TODO: Search for clients matching search term
-    // and set client list to result
-  }
-
-  handleClientEdited(client: Client) {
-    const clientList = this.clientList$.getValue();
-
-    const clientIndex = clientList.findIndex(c => {
-      return c.id ? c.id === client.id : null;
-    });
-    clientList[clientIndex] = client;
-    this.clientList$.next([...clientList]);
-    // TODO: make api call to edit client in backend
-  }
-
-  handleClientDeleted(clientIndex: number) {
-    const clientList = this.clientList$
-      .getValue()
-      .filter((_, i) => i !== clientIndex);
-    this.clientList$.next([...clientList]);
-    // TODO: make api call to delete client in backend
-    // and update client list
   }
 }
