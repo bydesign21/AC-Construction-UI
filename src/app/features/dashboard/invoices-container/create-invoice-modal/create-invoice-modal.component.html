@@ -1,5 +1,23 @@
 <div class="flex flex-col mt-[1rem] min-w-full overflow-hidden">
   <div class="overflow-auto max-h-[80dvh]">
+    <div
+      *ngIf="data?.invoice"
+      class="flex flex-row w-full justify-end items-center">
+      <button
+        title="Edit Client"
+        class="!flex !flex-row !justify-center !items-center !rounded-2xl !gap-1"
+        nz-button
+        [nzType]="isEditMode ? 'default' : 'primary'"
+        (click)="handleEditModeToggled()"
+        type="button">
+        <span class="sr-only">Edit</span>
+        <span
+          class="!flex !flex-row !justify-center !items-center !ml-0"
+          nz-icon
+          [nzType]="'edit'"
+          nzTheme="outline"></span>
+      </button>
+    </div>
     <div class="flex flex-row gap-4 mx-2 items-center justify-between">
       <div class="w-[12rem]">
         <!-- create client nz-select -->

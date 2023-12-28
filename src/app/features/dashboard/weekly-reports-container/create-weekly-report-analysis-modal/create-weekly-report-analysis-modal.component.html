@@ -48,6 +48,9 @@
       </div>
     </div>
     <app-weekly-reports-table
+      [stateTemplate]="
+        dateRange.length === 2 ? NoResultsTemplate : NoFiltersTemplate
+      "
       [isActionRowVisible]="false"
       [limit]="limit"
       (pageChange)="onPageChange($event)"
@@ -58,3 +61,21 @@
       class="[&>*]:mt-8 !min-h-full" />
   </div>
 </div>
+
+<ng-template #NoResultsTemplate>
+  <app-table-state-template
+    class="[&>*]:!h-[55dvh]"
+    [iconType]="'frown'"
+    [mainMessage]="'No Weekly Reports Found'"
+    [additionalInfo]="
+      'Please refine your filters or create your first weekly report.'
+    " />
+</ng-template>
+
+<ng-template #NoFiltersTemplate>
+  <app-table-state-template
+    class="[&>*]:!h-[55dvh]"
+    [iconType]="'search'"
+    [mainMessage]="'Add Filters to Start'"
+    [additionalInfo]="'Add Filters to find the desired weekly reports.'" />
+</ng-template>

@@ -1,27 +1,13 @@
 import { Injectable } from '@angular/core';
-import { SupabaseService } from '../../../auth/supabase.service';
+import { SupabaseClientDBResponse, SupabaseService } from '../../../auth/supabase.service';
 import { Observable, from, map } from 'rxjs';
-import { Check } from '../check-model/model';
+import { Check, Employee } from '../check-model/model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ChecksService {
-  constructor(private sb: SupabaseService) {}
-
-  // getChecks(): Observable<any> {
-  //   return from(
-  //     this.sb.client
-  //       .from('checks')
-  //       .select('*', { count: 'exact' })
-  //       .order('date', { ascending: false, nullsFirst: false })
-  //   ).pipe(
-  //     map(res => {
-  //       console.log('res', res);
-  //       return { data: res.data || [], count: res.count || 0 };
-  //     })
-  //   );
-  // }
+  constructor(private sb: SupabaseService) { }
 
   getChecks(
     page: number,
@@ -29,7 +15,7 @@ export class ChecksService {
     startDate?: Date,
     endDate?: Date,
     name?: string
-  ): Observable<any> {
+  ): Observable<SupabaseClientDBResponse<Check>> {
     console.log('getChecks');
     const start = (page - 1) * limit;
     const end = start + limit - 1;
@@ -59,27 +45,6 @@ export class ChecksService {
     );
   }
 
-  getEmployees(): Observable<any> {
-    return from(this.sb.client.from('employees').select('*')).pipe(
-      map(res => {
-        return res.data || [];
-      })
-    );
-  }
-
-  getEmployeesBySearchTerm(searchTerm: string): Observable<any> {
-    // Add % wildcards around the search term for partial matching
-    const likeQuery = `%${searchTerm}%`;
-
-    return from(
-      this.sb.client.from('employees').select('*').ilike('name', likeQuery)
-    ).pipe(
-      map(res => {
-        return res.data || [];
-      })
-    );
-  }
-
   deleteCheck(checkNumber: string): Observable<any> {
     return from(this.sb.client.from('checks').delete().match({ checkNumber }));
   }
@@ -94,8 +59,75 @@ export class ChecksService {
   }
 
   putCheck(check: Check): Observable<Check> {
-    return from(this.sb.client.from('checks').insert(check).select()).pipe(
-      map(res => res?.data?.[0])
+    return from(
+      this.sb.client.from('checks').insert(check)
     ) as unknown as Observable<Check>;
+  }
+
+  putEmployee(employee: Employee): Observable<any> {
+    return from(this.sb.client.from('employees').insert(employee));
+  }
+
+  updateEmployee(employee: Employee): Observable<any> {
+    return from(
+      this.sb.client
+        .from('employees')
+        .update(employee)
+        .match({ id: employee.id })
+    );
+  }
+
+  deleteEmployee(employeeId: string): Observable<any> {
+    return from(
+      this.sb.client.from('employees').delete().match({ id: employeeId })
+    );
+  }
+
+  getEmployees(
+    page: number = 1,
+    limit: number,
+    searchTerm?: string
+  ): Observable<SupabaseClientDBResponse<Employee>> {
+    const start = (page - 1) * limit;
+    const end = start + limit - 1;
+    if (searchTerm) {
+      return this.getEmployeesBySearchTerm(searchTerm, page, limit);
+    } else {
+      return from(
+        this.sb.client
+          .from('employees')
+          .select('*', { count: 'exact' })
+          .range(start, end)
+      ).pipe(
+        map(res => {
+          console.log('res', res);
+          return { data: res.data || [], count: res.count || 0 };
+        })
+      );
+    }
+  }
+
+  private getEmployeesBySearchTerm(
+    searchTerm: string,
+    page: number = 1,
+    limit: number
+  ): Observable<SupabaseClientDBResponse<Employee>> {
+    // Add % wildcards around the search term for partial matching
+    const likeQuery = `%${searchTerm}%`;
+    const start = (page - 1) * limit;
+    const end = start + limit - 1;
+
+    return from(
+      this.sb.client
+        .from('employees')
+        .select('*', { count: 'exact' })
+        .ilike('name', likeQuery)
+        .range(start, end)
+    ).pipe(
+      map(res => {
+        console.log('res', res);
+        return { data: res.data || [], count: res.count || 0 };
+      })
+    );
   }
 }

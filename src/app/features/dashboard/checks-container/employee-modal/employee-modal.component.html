@@ -9,12 +9,14 @@
             [nzRequired]="false">
             Search
           </nz-form-label>
-          <input
-            nz-input
-            placeholder="Search Employees"
-            aria-label="search"
-            [(ngModel)]="searchTermInternal"
-            (ngModelChange)="handleEmployeeSearch($event)" />
+          <nz-input-group [nzSuffixIcon]="'search'">
+            <input
+              nz-input
+              placeholder="Search Employees"
+              aria-label="search"
+              [(ngModel)]="searchTermInternal"
+              (ngModelChange)="handleEmployeeSearch($event)" />
+          </nz-input-group>
         </div>
       </div>
       <div class="flex flex-row gap-2">
@@ -36,10 +38,14 @@
     </div>
     <app-employee-list-table
       [loading$]="loading$"
-      [listOfData]="(employeeList$ | async) || []"
-      (deleteItem)="handleDeleteItem($event)"
+      [totalRecords]="totalEmployeeRecords"
+      [currentPage]="currentPage"
+      [limit]="limit"
+      [listOfData]="employeeList || []"
+      (deleteItem)="handleEmployeeDeleted($event)"
       (printItem)="handlePrintItem($event)"
       (viewItem)="handleViewEmployeeClicked($event)"
+      (pageChange)="handlePageChange($event)"
       class="[&>*]:mt-8"></app-employee-list-table>
   </div>
 </div>

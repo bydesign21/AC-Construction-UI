@@ -42,7 +42,8 @@ export class ClientsModalComponent implements OnInit, OnDestroy {
     this.searchTerm$
       .pipe(takeUntil(this.destroy$), debounceTime(300))
       .subscribe(term => {
-        this.loadClientData(term);
+        this.searchTerm = term;
+        this.loadClientData();
       });
   }
 
@@ -52,15 +53,15 @@ export class ClientsModalComponent implements OnInit, OnDestroy {
     this.destroy$.unsubscribe();
   }
 
-  loadClientData(searchTerm?: string) {
+  loadClientData() {
     this.loading$.next(true);
     this.invoices
-      .getClients(this.currentPage, this.limit, searchTerm)
+      .getClients(this.currentPage, this.limit, this.searchTerm)
       .pipe(take(1))
       .subscribe({
         next: clients => {
           console.log(
-            `clients from ${searchTerm}`,
+            `clients from ${this.searchTerm}`,
             clients.data,
             clients.count
           );

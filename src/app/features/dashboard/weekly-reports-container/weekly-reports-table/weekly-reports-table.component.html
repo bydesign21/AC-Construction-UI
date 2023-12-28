@@ -3,6 +3,7 @@
   <nz-table
     [nzPageSize]="limit"
     #nzTable
+    [nzNoResult]="stateTemplate ? stateTemplate : noResultsTemplate"
     [nzLoading]="loading$ | async"
     [nzLoadingIndicator]="loadingIndicator"
     [nzData]="listOfData"
@@ -116,4 +117,13 @@
   <span class="!text-[4rem] flex flex-col items-center justify-center"
     ><i nz-icon nzTheme="outline" nzType="loading"></i
   ></span>
+</ng-template>
+
+<ng-template #noResultsTemplate>
+  <app-table-state-template
+    *ngIf="(loading$ | async) === false"
+    class="[&>*]:!h-[55dvh]"
+    [iconType]="'file-search'"
+    [mainMessage]="'No Weekly Reports were found'"
+    [additionalInfo]="'Please create your first weekly report.'" />
 </ng-template>

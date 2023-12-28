@@ -4,6 +4,7 @@
   #table
   class="flex flex-col justify-center items-center min-w-full overflow-hidden">
   <nz-table
+    [ngClass]="isDisabled ? 'opacity-60 cursor-not-allowed' : ''"
     class="min-w-full overflow-hidden mb-[3.5rem]"
     #editRowTable
     nzBordered

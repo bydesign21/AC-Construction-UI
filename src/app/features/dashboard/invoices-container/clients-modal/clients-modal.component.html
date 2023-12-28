@@ -2,12 +2,14 @@
   <div class="overflow-auto max-h-[80dvh]">
     <div class="flex flex-row gap-4 mx-2 items-center justify-between">
       <div class="w-[12rem]">
-        <input
-          nz-input
-          placeholder="Search Clients"
-          aria-label="search"
-          [(ngModel)]="searchTerm"
-          (ngModelChange)="handleClientSearch($event)" />
+        <nz-input-group [nzSuffixIcon]="'search'">
+          <input
+            nz-input
+            placeholder="Search Clients"
+            aria-label="search"
+            [(ngModel)]="searchTerm"
+            (ngModelChange)="handleClientSearch($event)" />
+        </nz-input-group>
       </div>
       <div class="flex flex-row gap-2">
         <button

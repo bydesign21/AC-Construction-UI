@@ -4,12 +4,20 @@ import {
   Component,
   Inject,
   Input,
+  OnDestroy,
   OnInit,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
 import { NZ_MODAL_DATA, NzModalRef } from 'ng-zorro-antd/modal';
-import { BehaviorSubject, Observable, debounceTime } from 'rxjs';
+import {
+  BehaviorSubject,
+  Observable,
+  Subject,
+  debounceTime,
+  take,
+  takeUntil,
+} from 'rxjs';
 import {
   Check,
   CheckLineItem,
@@ -26,17 +34,21 @@ import { ChecksService } from '../checks-services/checks.service';
   templateUrl: './create-check-modal.component.html',
   styleUrl: './create-check-modal.component.scss',
 })
-export class CreateCheckModalComponent implements OnInit {
+export class CreateCheckModalComponent implements OnInit, OnDestroy {
   @ViewChild('checkItemListComponent')
   checkItemListComponentRef?: CheckItemListComponent;
   @ViewChild('modalFooter') modalFooter!: TemplateRef<any>;
   @Input() check?: CheckReport;
-  isValid$ = new BehaviorSubject<boolean>(false);
-  employeeList$: Observable<Employee[]> = this.checks.getEmployees();
+  IsCheckFormValid$ = new BehaviorSubject<boolean>(false);
+  employeeList: Employee[] = [];
   searchTerm$ = new BehaviorSubject<string>('');
+  destroy$ = new Subject<void>();
   checkItemList: CheckLineItem[] = [];
   checkNumber?: string;
   searchTermInternal: string = '';
+  isEditMode = false;
+  employeeInputTouched$ = new BehaviorSubject<boolean>(false);
+  checkFormTouched$ = new BehaviorSubject<boolean>(false);
 
   constructor(
     private cd: ChangeDetectorRef,
@@ -44,7 +56,7 @@ export class CreateCheckModalComponent implements OnInit {
     private checks: ChecksService,
     @Inject(NZ_MODAL_DATA)
     public data?: { check?: Check }
-  ) {}
+  ) { }
 
   get selectedEmployee() {
     return this.searchTerm$.getValue();
@@ -59,24 +71,40 @@ export class CreateCheckModalComponent implements OnInit {
       this.check = this.data?.check;
     }
     if (this.check) {
+      this.isEditMode = true;
       this.checkNumber = this.check.checkNumber;
-      this.searchTerm$.next(this.check.name);
-      this.searchTermInternal = this.check.name;
+      this.selectedEmployee = this.check.name;
       console.log('checkName', this.check.name);
       this.checkItemList = this.check.lineItems;
     }
+  }
 
-    this.searchTerm$.pipe(debounceTime(300)).subscribe(term => {
-      this.employeeList$ = this.checks.getEmployeesBySearchTerm(term);
-    });
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+    this.destroy$.unsubscribe();
+  }
+
+  handleEditModeToggled() {
+    this.isEditMode = !this.isEditMode;
+    this.cd.detectChanges();
   }
 
   isFormValid(): boolean {
-    return this.isValid$.getValue();
+    const isFormsValid = this.IsCheckFormValid$.getValue() && this.selectedEmployee.length > 0;
+    const isEitherFormOrInputTouched = this.checkFormTouched$.getValue() || this.employeeInputTouched$.getValue();
+    return isFormsValid && isEitherFormOrInputTouched;
+
   }
 
   onCancel() {
     this.modal.destroy();
+  }
+
+  handleEmployeeSelected(employee: string) {
+    this.selectedEmployee = employee;
+    this.employeeInputTouched$.next(true);
+    this.cd.detectChanges();
   }
 
   handleAddLineItem() {
@@ -130,6 +158,28 @@ export class CreateCheckModalComponent implements OnInit {
   }
 
   handleIsValid(isValid: boolean) {
-    this.isValid$.next(isValid);
+    this.IsCheckFormValid$.next(isValid);
+  }
+
+  handleCheckFormTouched(isTouched: boolean) {
+    this.checkFormTouched$.next(isTouched);
+  }
+
+  handleEmployeeSearch(search: string) {
+    this.searchTermInternal = search;
+    console.log('search', search);
+    if (search.length < 1) {
+      this.employeeList = [];
+      this.cd.detectChanges();
+      return;
+    }
+    this.checks
+      .getEmployees(1, 10, search)
+      .pipe(take(1), takeUntil(this.destroy$))
+      .subscribe(employees => {
+        console.log('employees', employees);
+        this.employeeList = employees.data;
+        this.cd.detectChanges();
+      });
   }
 }

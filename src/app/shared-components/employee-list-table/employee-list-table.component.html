@@ -1,12 +1,11 @@
 <div
-  class="shadow overflow-scroll sm:rounded-lg p-4 border border-gray-900 bg-white h-full invoice-report-table">
+  class="shadow overflow-scroll sm:rounded-lg p-4 border border-gray-900 bg-white h-full employee-list-table">
   <nz-table
-    [nzPageSize]="8"
+    [nzNoResult]="emptyStateTemplate ? emptyStateTemplate : EmptyStateTemplate"
     #nzTable
     [nzLoading]="loading$ | async"
     [nzData]="listOfData"
-    [nzPaginationPosition]="'bottom'"
-    [nzShowPagination]="listOfData.length > 0"
+    [nzShowPagination]="false"
     [nzTableLayout]="'fixed'">
     <thead>
       <tr
@@ -21,7 +20,7 @@
         </th>
       </tr>
     </thead>
-    <tbody>
+    <tbody *ngIf="(loading$ | async) === false">
       <tr *ngFor="let data of nzTable.data; index as i">
         <td>{{ data.name }}</td>
         <td>
@@ -66,7 +65,7 @@
               class="!rounded-lg items-center justify-center flex flex-col"
               nz-popconfirm
               nzPopconfirmTitle="Are you sure?"
-              (nzOnConfirm)="handleDeleteItem(i)">
+              (nzOnConfirm)="handleDeleteItem(data)">
               <div>
                 <span
                   class="items-center !text-red-400 justify-center h-[1.4rem]"
@@ -81,4 +80,25 @@
       </tr>
     </tbody>
   </nz-table>
+  <div
+    class="flex flex-row min-w-full justify-end mt-4"
+    *ngIf="totalRecords > 0">
+    <nz-pagination
+      [nzPageIndex]="currentPage"
+      [nzTotal]="totalRecords"
+      [nzPageSize]="limit"
+      (nzPageIndexChange)="handlePageChange($event)">
+    </nz-pagination>
+  </div>
 </div>
+
+<ng-template #EmptyStateTemplate>
+  <app-table-state-template
+    *ngIf="(loading$ | async) === false"
+    class="[&>*]:!h-[55dvh]"
+    [iconType]="'frown'"
+    [mainMessage]="'No Employees Found'"
+    [additionalInfo]="
+      'Please adjust your search terms or add an employee first.'
+    " />
+</ng-template>

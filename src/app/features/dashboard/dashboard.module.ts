@@ -28,6 +28,8 @@ import {
   ExclamationCircleOutline,
   LoadingOutline,
   FileSearchOutline,
+  SearchOutline,
+  FrownOutline,
 } from '@ant-design/icons-angular/icons';
 import { AuthService } from '../auth/auth.service';
 import { NzMessageModule } from 'ng-zorro-antd/message';
@@ -79,6 +81,11 @@ import { NzPaginationModule } from 'ng-zorro-antd/pagination';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { CreateWeeklyReportAnalysisModalComponent } from './weekly-reports-container/create-weekly-report-analysis-modal/create-weekly-report-analysis-modal.component';
 import { InvoicesService } from './invoices-container/invoice-service/invoices.service';
+import { TypeToSearchTemplateComponent } from '../../shared-components/type-to-search-template/type-to-search-template.component';
+import { TypeToSearchTemplateModule } from '../../shared-components/type-to-search-template/type-to-search-template.module';
+import { NoResultsInputTemplateModule } from '../../shared-components/no-results-input-template/no-results-input-template.module';
+import { TableStateTemplateModule } from '../../shared-components/table-state-template/table-state-template.module';
+import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 
 const icons = [
   SettingOutline,
@@ -102,6 +109,8 @@ const icons = [
   ExclamationCircleOutline,
   LoadingOutline,
   FileSearchOutline,
+  SearchOutline,
+  FrownOutline,
 ];
 
 @NgModule({
@@ -163,6 +172,10 @@ const icons = [
     NzAutocompleteModule,
     NzPaginationModule,
     NzSpinModule,
+    TypeToSearchTemplateModule,
+    NoResultsInputTemplateModule,
+    TableStateTemplateModule,
+    NzCheckboxModule,
   ],
   providers: [
     provideRouter(routes),

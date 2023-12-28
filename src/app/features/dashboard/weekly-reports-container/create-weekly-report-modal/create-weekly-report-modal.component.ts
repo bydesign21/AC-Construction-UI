@@ -33,7 +33,7 @@ export class CreateWeeklyReportModalComponent implements OnInit {
     private modal: NzModalRef,
     @Inject(NZ_MODAL_DATA)
     public data?: { report: WeeklyReport; isEditMode: boolean }
-  ) {}
+  ) { }
   isInputRowValid$ = new BehaviorSubject<boolean>(false);
   isInputRowTouched$ = new BehaviorSubject<boolean>(false);
   isExpenseListTouched$ = new BehaviorSubject<boolean>(false);
@@ -50,11 +50,11 @@ export class CreateWeeklyReportModalComponent implements OnInit {
   profit: number = 0;
   profitSplit: number = 0;
   date: Date[] = [];
-  isEditMode: boolean = true;
+  isEditMode: boolean = false;
 
   ngOnInit(): void {
     if (this.data) {
-      this.isEditMode = false;
+      this.isEditMode = true;
       this.expenseList = this.data.report.expenseList;
       this.payroll = this.data.report.payroll;
       this.revenue = this.data.report.revenue;
@@ -156,12 +156,7 @@ export class CreateWeeklyReportModalComponent implements OnInit {
   }
 
   handleAddExpenseRow() {
-    const generateId = () => {
-      return Math.random().toString(36).substr(2, 9);
-    };
-
     const newItemTemplate: ExpenseItem = {
-      id: generateId(),
       employeeName: '',
       address: '',
       isPaid: false,

@@ -18,7 +18,7 @@ import {
   ValidationErrors,
 } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
-import { TableFormService } from '../table-form.service';
+import { FormConfig, TableFormService } from '../table-form.service';
 import { InvoiceItem } from '../../features/dashboard/invoices-container/invoices-model/model';
 
 @Component({
@@ -84,15 +84,18 @@ export class InvoiceItemListComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   createRowForm(item: InvoiceItem): FormGroup {
-    const formConfig = {
+    const formConfig: FormConfig = {
       planId: { defaultValue: item.planId },
-      address: { defaultValue: item.address, validators: Validators.required },
+      address: {
+        defaultValue: item.address,
+        validators: [Validators.required],
+      },
       quantity: {
         defaultValue: item.quantity,
         validators: [Validators.required, Validators.min(1)],
       },
-      rate: { defaultValue: item.rate, validators: Validators.required },
-      total: { defaultValue: item.total, validators: Validators.required },
+      rate: { defaultValue: item.rate, validators: [Validators.required] },
+      total: { defaultValue: item.total, validators: [Validators.required] },
       discount: { defaultValue: item.discount },
     };
 

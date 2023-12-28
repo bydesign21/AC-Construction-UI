@@ -5,6 +5,7 @@
   class="flex flex-col justify-center items-center min-h-full min-w-full overflow-hidden">
   <nz-table
     class="min-w-full overflow-hidden mb-[5rem]"
+    [ngClass]="isDisabled ? 'opacity-60 cursor-not-allowed' : ''"
     #editRowTable
     nzBordered
     [nzTableLayout]="'fixed'"
@@ -63,6 +64,7 @@
 
         <td class="flex flex-col items-center justify-center">
           <button
+            [disabled]="isDisabled"
             title="Delete Row"
             type="button"
             class="!rounded-lg items-center justify-center flex flex-col"
@@ -86,7 +88,10 @@
     class="fixed bottom-[5rem] w-full flex flex-col justify-center items-center">
     <button
       nz-button
-      [disabled]="rowForms.length > 0 && !rowForms[rowForms.length - 1].valid"
+      [disabled]="
+        (rowForms.length > 0 && !rowForms[rowForms.length - 1].valid) ||
+        isDisabled
+      "
       (click)="requestAddItem()"
       nzType="primary"
       nzSize="large"

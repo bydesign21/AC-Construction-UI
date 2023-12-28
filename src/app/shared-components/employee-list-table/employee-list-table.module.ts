@@ -9,6 +9,8 @@ import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { EmployeeListTableComponent } from './employee-list-table.component';
+import { TableStateTemplateModule } from '../table-state-template/table-state-template.module';
+import { NzPaginationModule } from 'ng-zorro-antd/pagination';
 
 @NgModule({
   declarations: [EmployeeListTableComponent],
@@ -22,7 +24,9 @@ import { EmployeeListTableComponent } from './employee-list-table.component';
     NzButtonModule,
     NzPopconfirmModule,
     NzIconModule,
+    TableStateTemplateModule,
+    NzPaginationModule,
   ],
   exports: [EmployeeListTableComponent],
 })
-export class EmployeeListTableModule {}
+export class EmployeeListTableModule { }

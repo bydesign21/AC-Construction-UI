@@ -24,23 +24,31 @@ import {
 export class CreateChecksReportModalComponent {
   selectedEmployee: Employee['name'] | undefined = undefined;
   dateRange: Date[] = [];
-  employees$: Observable<Employee[]> = this.checks.getEmployees();
+  employees$: BehaviorSubject<Employee[]> = new BehaviorSubject<Employee[]>([]);
   checks$: BehaviorSubject<any> = new BehaviorSubject([]);
   totalRecords = 0;
   currentPage = 1;
   limit = 10;
   loading$ = new BehaviorSubject<boolean>(false);
   destroy$ = new Subject();
+  searchTerm = '';
 
   constructor(
     private cd: ChangeDetectorRef,
     private checks: ChecksService
-  ) {}
+  ) { }
 
-  loadData(page: number = 1): void {
+  loadData(): void {
+    if (!this.dateRange.length && !this.selectedEmployee) {
+      this.checks$.next([]);
+      this.totalRecords = 0;
+      this.loading$.next(false);
+      this.cd.detectChanges();
+      return;
+    }
     this.checks
       .getChecks(
-        page,
+        this.currentPage,
         this.limit,
         this.dateRange[0],
         this.dateRange[1],
@@ -67,14 +75,14 @@ export class CreateChecksReportModalComponent {
 
   handlePageChange(page: any) {
     this.currentPage = page;
-    this.loadData(this.currentPage);
+    this.loadData();
   }
 
   handleEmployeeSelected(employee: string) {
     this.currentPage = 1;
     console.log('employee', employee);
     this.selectedEmployee = employee;
-    this.loadData(this.currentPage);
+    this.loadData();
     this.cd.detectChanges();
   }
 
@@ -85,7 +93,24 @@ export class CreateChecksReportModalComponent {
       this.dateRange = dateRange;
     }
     this.currentPage = 1;
-    this.loadData(this.currentPage);
+    this.loadData();
     this.cd.detectChanges();
+  }
+
+  handleEmployeeSearch(search: string) {
+    this.searchTerm = search;
+    console.log('search', search);
+    if (search.length < 3) {
+      this.employees$.next([]);
+      this.cd.detectChanges();
+      return;
+    }
+    this.checks
+      .getEmployees(1, 10, search)
+      .pipe(take(1), takeUntil(this.destroy$))
+      .subscribe(employees => {
+        this.employees$.next(employees.data);
+        this.cd.detectChanges();
+      });
   }
 }

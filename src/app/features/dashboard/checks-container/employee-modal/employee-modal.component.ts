@@ -8,14 +8,7 @@ import {
 import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 import { CreateEmployeeFormComponent } from './create-employee-form/create-employee-form.component';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import {
-  BehaviorSubject,
-  Observable,
-  Subject,
-  debounceTime,
-  takeUntil,
-  tap,
-} from 'rxjs';
+import { BehaviorSubject, Subject, debounceTime, take, takeUntil } from 'rxjs';
 import { Employee } from '../check-model/model';
 import { ChecksService } from '../checks-services/checks.service';
 
@@ -28,32 +21,53 @@ import { ChecksService } from '../checks-services/checks.service';
 })
 export class EmployeeModalComponent implements OnInit, OnDestroy {
   createEmployeeModalRef!: NzModalRef<CreateEmployeeFormComponent, any>;
-  searchTerm$ = new Subject<string>();
-  employeeList$: Observable<Employee[]> = this.checks.getEmployees();
+  searchTerm$ = new BehaviorSubject<string>('');
+  employeeList: Employee[] = [];
   destroy$ = new Subject<void>();
   loading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   searchTermInternal = '';
+  currentPage = 1;
+  limit = 8;
+  totalEmployeeRecords = 0;
 
   constructor(
     private modal: NzModalService,
     private message: NzMessageService,
     private checks: ChecksService,
     private cd: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit(): void {
+    this.loadData();
     this.searchTerm$
-      .pipe(
-        takeUntil(this.destroy$),
-        debounceTime(500),
-        tap(() => this.loading$.next(true))
-      )
+      .pipe(takeUntil(this.destroy$), debounceTime(500))
       .subscribe(term => {
-        console.log('searchTerm', term);
+        if (term.length < 1) return;
         this.searchTermInternal = term;
-        this.employeeList$ = this.checks.getEmployeesBySearchTerm(term);
-        this.loading$.next(false);
-        this.cd.detectChanges();
+        this.loadData();
+      });
+  }
+
+  loadData() {
+    this.loading$.next(true);
+    this.checks
+      .getEmployees(this.currentPage, this.limit, this.searchTermInternal)
+      .pipe(take(1))
+      .subscribe({
+        next: employees => {
+          this.employeeList = employees.data;
+          this.totalEmployeeRecords = employees.count;
+          console.log('employees', this.employeeList);
+          console.log('count', this.totalEmployeeRecords);
+          this.loading$.next(false);
+        },
+        error: (err: Error) => {
+          console.log('error', err);
+          this.message.error(`Error getting employees: ${err.message}`);
+        },
+        complete: () => {
+          this.cd.detectChanges();
+        },
       });
   }
 
@@ -71,19 +85,25 @@ export class EmployeeModalComponent implements OnInit, OnDestroy {
       nzData: { isEditMode: true },
       nzStyle: { top: '2rem' },
       nzOkText: 'Create',
+      nzOkDisabled: true,
       nzCancelText: 'Cancel',
-      nzOnOk: () => this.handleCreateEmployeeModalOk(),
     });
 
-    this.createEmployeeModalRef.componentInstance?.isOkDisabled
+    this.createEmployeeModalRef.afterOpen
       .pipe(takeUntil(this.destroy$))
-      .subscribe((isDisabled: boolean) => {
+      .subscribe(() => {
         this.createEmployeeModalRef.updateConfig({
-          nzOkDisabled: isDisabled,
+          nzFooter: this.createEmployeeModalRef.componentInstance?.footerRef,
         });
       });
 
-    this.searchTerm$.next('');
+    this.createEmployeeModalRef.afterClose
+      .pipe(take(1), takeUntil(this.destroy$))
+      .subscribe((employee: Employee) => {
+        if (employee) {
+          this.handleModalOk(employee);
+        }
+      });
   }
 
   handleViewEmployeeClicked(employee: Employee) {
@@ -91,74 +111,112 @@ export class EmployeeModalComponent implements OnInit, OnDestroy {
       nzContent: CreateEmployeeFormComponent,
       nzTitle: 'View Employee',
       nzWidth: '60%',
-      nzData: { employee: employee },
+      nzData: { employee: employee, isEditMode: false },
       nzStyle: { top: '2rem' },
       nzOkText: 'Update',
+      nzOkDisabled: true,
       nzCancelText: 'Cancel',
-      nzOnOk: () => this.handleCreateEmployeeModalOk(),
     });
 
-    this.createEmployeeModalRef.componentInstance?.isOkDisabled
+    this.createEmployeeModalRef.afterOpen
       .pipe(takeUntil(this.destroy$))
-      .subscribe((isDisabled: boolean) => {
+      .subscribe(() => {
         this.createEmployeeModalRef.updateConfig({
-          nzOkDisabled: isDisabled,
+          nzFooter: this.createEmployeeModalRef.componentInstance?.footerRef,
         });
+      });
+
+    this.createEmployeeModalRef.afterClose
+      .pipe(take(1), takeUntil(this.destroy$))
+      .subscribe((employee: Employee) => {
+        if (employee) {
+          this.handleModalOk(employee, true);
+        }
       });
   }
 
-  handleCreateEmployeeModalOk() {
-    const instance = this.createEmployeeModalRef.getContentComponent();
-    if (instance.isFormValid()) {
-      const form = instance.onSubmit();
-      const isEmployeeUpdated = Boolean(instance?.data?.employee);
-      if (isEmployeeUpdated) {
-        this.handleEmployeeEdited(form);
-        this.message.success('Employee updated');
-      } else {
-        this.handleEmployeeCreated(form);
-        this.message.success('Employee created');
-      }
-      return true;
+  handleModalOk(employee: Employee, isEmployeeUpdated: boolean = false) {
+    if (isEmployeeUpdated) {
+      this.handleEmployeeEdited(employee);
     } else {
-      this.message.error('Form is invalid');
-      return false;
+      this.handleEmployeeCreated(employee);
     }
   }
 
-  handleIsFormTouched() {
-    const instance = this.createEmployeeModalRef.getContentComponent();
-    return instance.isFormTouched();
-  }
-
   handleEmployeeCreated(employee: Employee) {
-    // TODO: Add employee in db
-    // TODO: Add employee in employee list
+    this.checks
+      .putEmployee(employee)
+      .pipe(take(1))
+      .subscribe({
+        next: (employee: Employee) => {
+          console.log('employee', employee);
+          this.message.success('Employee created successfully');
+        },
+        error: (err: Error) => {
+          console.log('error', err);
+          this.message.error(`Error creating employee: ${err.message}`);
+        },
+        complete: () => {
+          this.loadData();
+          this.cd.detectChanges();
+        },
+      });
   }
 
-  handleEmployeeDeleted(employeeIndex: number) {
-    // TODO: Delete employee in db
-    // TODO: Delete employee in employee list
+  handleEmployeeDeleted(employee: Employee) {
+    if (!employee.id) return;
+    this.checks
+      .deleteEmployee(employee?.id)
+      .pipe(take(1))
+      .subscribe({
+        next: () => {
+          this.message.success('Employee deleted successfully');
+        },
+        error: (err: Error) => {
+          console.log('error', err);
+          this.message.error(`Error deleting employee: ${err.message}`);
+        },
+        complete: () => {
+          this.loadData();
+          this.cd.detectChanges();
+        },
+      });
   }
 
   handleEmployeeEdited(employee: Employee) {
-    // TODO: Edit employee in db
-    // TODO: Edit employee in employee list
+    this.checks
+      .updateEmployee(employee)
+      .pipe(take(1))
+      .subscribe({
+        next: () => {
+          this.message.success('Employee updated successfully');
+        },
+        error: (err: Error) => {
+          console.log('error', err);
+          this.message.error(`Error updating employee: ${err.message}`);
+        },
+        complete: () => {
+          this.loadData();
+          this.cd.detectChanges();
+        },
+      });
   }
 
   handleEmployeeSearch(searchTerm: string) {
+    this.currentPage = 1;
+    this.totalEmployeeRecords = 0;
     console.log('searchTerm Changed', searchTerm);
     this.searchTermInternal = searchTerm.trim();
     if (this.searchTermInternal.length > 0) {
       this.searchTerm$.next(this.searchTermInternal);
     } else {
-      this.employeeList$ = this.checks.getEmployees();
+      this.loadData();
     }
   }
 
-  handleDeleteItem(itemIndex: number) {
-    // TODO: Delete item in db
-    // TODO: Delete item in item list
+  handlePageChange(page: number) {
+    this.currentPage = page;
+    this.loadData();
   }
 
   handlePrintItem(item: Employee) {

@@ -8,7 +8,7 @@ export enum ExpenseTypes {
 export type ExpenseType = `${ExpenseTypes}`;
 
 export interface ExpenseItem {
-  id: string;
+  id?: string;
   employeeName?: string;
   address: string;
   sqftPrice?: number;

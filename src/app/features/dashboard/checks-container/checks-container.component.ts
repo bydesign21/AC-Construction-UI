@@ -39,7 +39,7 @@ export class ChecksContainerComponent implements OnInit {
   }
   checks$: BehaviorSubject<Check[]> = new BehaviorSubject<Check[]>([]);
   reportChecks$: BehaviorSubject<Check[]> = new BehaviorSubject<Check[]>([]);
-  loading$ = new BehaviorSubject<boolean>(false);
+  loading$ = new BehaviorSubject<boolean>(true);
   destroy$ = new Subject<void>();
   currentPage: number = 1;
   limit = 10;

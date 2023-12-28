@@ -1,15 +1,16 @@
 import {
-  ChangeDetectorRef,
   Component,
   EventEmitter,
   Inject,
   OnDestroy,
   OnInit,
   Output,
+  TemplateRef,
+  ViewChild,
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { NZ_MODAL_DATA } from 'ng-zorro-antd/modal';
-import { Subject, takeUntil } from 'rxjs';
+import { NZ_MODAL_DATA, NzModalRef } from 'ng-zorro-antd/modal';
+import { Subject } from 'rxjs';
 import { Employee } from '../../check-model/model';
 
 @Component({
@@ -19,21 +20,21 @@ import { Employee } from '../../check-model/model';
   styleUrl: './create-employee-form.component.scss',
 })
 export class CreateEmployeeFormComponent implements OnInit, OnDestroy {
+  @ViewChild('modalFooter') footerRef!: TemplateRef<any>;
   @Output() employeeUpdated: EventEmitter<Employee> =
     new EventEmitter<Employee>();
   @Output() employeeCreated: EventEmitter<Employee> =
     new EventEmitter<Employee>();
-  @Output() isOkDisabled: EventEmitter<boolean> = new EventEmitter<boolean>();
   createEmployeeForm!: FormGroup;
   isEditMode: boolean = false;
   destroy$ = new Subject<void>();
 
   constructor(
     private fb: FormBuilder,
-    private cd: ChangeDetectorRef,
+    private modal: NzModalRef,
     @Inject(NZ_MODAL_DATA)
     public data?: { employee: Employee; isEditMode: boolean }
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.isEditMode = this.data?.isEditMode || false;
@@ -44,18 +45,15 @@ export class CreateEmployeeFormComponent implements OnInit, OnDestroy {
       ],
       address: [
         {
-          value: this.data?.employee?.address || '',
+          value: this.data?.employee?.address.trim() || '',
           disabled: !this.isEditMode,
         },
-        [Validators.required],
       ],
       city: [
         { value: this.data?.employee?.city || '', disabled: !this.isEditMode },
-        [Validators.required],
       ],
       state: [
         { value: this.data?.employee?.state || '', disabled: !this.isEditMode },
-        [Validators.required],
       ],
       zipCode: [
         {
@@ -63,41 +61,47 @@ export class CreateEmployeeFormComponent implements OnInit, OnDestroy {
           disabled: !this.isEditMode,
         },
         [
-          Validators.required,
           Validators.pattern('^[0-9]{5}(?:-[0-9]{4})?$'),
           Validators.maxLength(8),
         ],
       ],
       phone: [
         { value: this.data?.employee?.phone || '', disabled: !this.isEditMode },
-        [
-          Validators.required,
-          Validators.pattern('^\\+?[0-9]{10,12}$'),
-          Validators.maxLength(12),
-        ],
+        [Validators.pattern('^\\+?[0-9]{10,12}$'), Validators.maxLength(12)],
       ],
       email: [
         { value: this.data?.employee?.email || '', disabled: !this.isEditMode },
-        [Validators.required, Validators.email],
+        [Validators.email],
       ],
       hourlyRate: [
         {
           value: this.data?.employee?.hourlyRate || null,
           disabled: !this.isEditMode,
         },
-        [Validators.required],
+      ],
+      isContractor: [
+        {
+          value: this.data?.employee?.isContractor || false,
+          disabled: !this.isEditMode,
+        },
+      ],
+      jobTitle: [
+        {
+          value: this.data?.employee?.jobTitle || '',
+          disabled: !this.isEditMode,
+        },
+      ],
+      socialSecurityNumber: [
+        {
+          value: this.data?.employee?.socialSecurityNumber || '',
+          disabled: !this.isEditMode,
+        },
       ],
     });
 
-    this.createEmployeeForm.valueChanges
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(() => {
-        this.isOkDisabled.emit(!this.isFormValid() || !this.isFormDirty());
-      });
-
     this.data?.employee
-      ? this.createEmployeeForm.disable()
-      : this.createEmployeeForm.enable();
+      ? this.createEmployeeForm.disable({ emitEvent: false })
+      : this.createEmployeeForm.enable({ emitEvent: false });
   }
 
   ngOnDestroy(): void {
@@ -106,25 +110,28 @@ export class CreateEmployeeFormComponent implements OnInit, OnDestroy {
     this.destroy$.unsubscribe();
   }
 
-  onSubmit(): Employee {
+  onSubmit(): void {
+    console.log('onSubmit', this.createEmployeeForm.value);
     if (this.data?.employee) {
-      console.log('createEmployeeForm', this.data.employee);
-      this.employeeUpdated.emit({
+      Object.keys(this.createEmployeeForm.controls).forEach(key => {
+        if (typeof this.createEmployeeForm.controls[key].value === 'string') {
+          this.createEmployeeForm.controls[key].setValue(
+            this.createEmployeeForm.controls[key].value.trim()
+          );
+          console.log('key', key, this.createEmployeeForm.controls[key].value)
+        }
+      });
+      this.modal.destroy({
         id: this.data?.employee.id,
         ...this.createEmployeeForm.value,
       });
-      return {
-        id: this.data?.employee.id,
-        ...this.createEmployeeForm.value,
-      };
     } else {
-      this.employeeCreated.emit(this.createEmployeeForm.value);
-      return this.createEmployeeForm.value;
+      this.modal.destroy(this.createEmployeeForm.value);
     }
   }
 
   isFormValid(): boolean {
-    return this.createEmployeeForm.valid;
+    return this.createEmployeeForm.valid && this.isFormTouched();
   }
 
   isFormTouched(): boolean {
@@ -133,6 +140,10 @@ export class CreateEmployeeFormComponent implements OnInit, OnDestroy {
 
   isFormDirty(): boolean {
     return this.createEmployeeForm.dirty;
+  }
+
+  onCancel() {
+    this.modal.destroy();
   }
 
   handleEditToggleClicked() {

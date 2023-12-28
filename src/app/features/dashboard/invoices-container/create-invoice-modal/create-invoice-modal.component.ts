@@ -10,10 +10,6 @@ import { NZ_MODAL_DATA, NzModalRef } from 'ng-zorro-antd/modal';
 import { BehaviorSubject } from 'rxjs';
 import { Client, Invoice, InvoiceItem } from '../invoices-model/model';
 
-export const generateId = () => {
-  return Math.random().toString(36).substr(2, 9);
-};
-
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-create-invoice-modal',
@@ -28,6 +24,7 @@ export class CreateInvoiceModalComponent implements OnInit {
   selectedClient$: BehaviorSubject<string> = new BehaviorSubject('');
   invoiceItemList: InvoiceItem[] = [];
   invoiceId: string = '';
+  isEditMode = false;
 
   constructor(
     private cd: ChangeDetectorRef,
@@ -46,15 +43,14 @@ export class CreateInvoiceModalComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.data) {
-      this.clientList = this.data.clientList;
-      this.invoice = this.data.invoice;
+      this.clientList = this.data?.clientList;
+      this.invoice = this.data?.invoice;
     }
     if (this.invoice) {
+      this.isEditMode = true;
       this.invoiceId = this.invoice.id;
       this.selectedClient$.next(this.invoice.clientId);
       this.invoiceItemList = this.invoice.items;
-    } else {
-      this.invoiceId = generateId();
     }
   }
 
@@ -78,7 +74,13 @@ export class CreateInvoiceModalComponent implements OnInit {
   }
 
   handleDeleteLineItem(index: number) {
+    // TODO: Implement delete line item from db
     this.invoiceItemList = this.invoiceItemList.filter((_, i) => i !== index);
+    this.cd.detectChanges();
+  }
+
+  handleEditModeToggled() {
+    this.isEditMode = !this.isEditMode;
     this.cd.detectChanges();
   }
 

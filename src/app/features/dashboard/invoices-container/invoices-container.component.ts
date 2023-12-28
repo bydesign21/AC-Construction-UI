@@ -57,6 +57,7 @@ export class InvoicesContainerComponent {
       nzOkText: 'Update',
       nzCancelText: 'Cancel',
       nzContent: CreateInvoiceModalComponent,
+      nzData: { invoice: item },
       nzWidth: '100dvw',
       nzBodyStyle: { height: '85dvh' },
       nzStyle: { top: '1rem', margin: '1rem' },

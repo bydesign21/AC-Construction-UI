@@ -7,7 +7,7 @@
           [isRequired]="true"
           (changed)="handleDateChanged($event)"></app-date-range-picker>
         <!-- create client nz-select -->
-        <div>
+        <div class="w-[12rem]">
           <nz-form-label
             class="!text-left [&>*]:!text-lg"
             [nzNoColon]="true"
@@ -18,13 +18,21 @@
             class="w-full"
             nzShowSearch
             nzAllowClear
-            nzPlaceHolder="Select Employee"
+            [nzNotFoundContent]="
+              searchTerm.length > 0
+                ? noResultsSearchTemplate
+                : typeToSearchTemplate
+            "
+            [nzServerSearch]="true"
+            [nzShowSearch]="true"
+            [nzPlaceHolder]="selectedEmployee || 'Select Employee'"
             [(ngModel)]="selectedEmployee"
+            (nzOnSearch)="handleEmployeeSearch($event)"
             (ngModelChange)="handleEmployeeSelected($event)">
             <nz-option
-              *ngFor="let client of (employees$ | async) || []"
-              [nzLabel]="client.name"
-              [nzValue]="client.name"></nz-option>
+              *ngFor="let employee of (employees$ | async) || []"
+              [nzLabel]="employee.name"
+              [nzValue]="employee.name"></nz-option>
           </nz-select>
         </div>
       </div>
@@ -71,6 +79,11 @@
       </div>
     </div>
     <app-checks-report-table
+      [stateTemplate]="
+        selectedEmployee || dateRange.length > 0
+          ? noResultsTableTemplate
+          : FilterChecksTemplate
+      "
       [currentPage]="currentPage"
       [limit]="limit"
       [loading$]="loading$"
@@ -80,3 +93,31 @@
       class="[&>*]:mt-8" />
   </div>
 </div>
+
+<!-- No Results Found Template -->
+<ng-template #noResultsSearchTemplate>
+  <app-no-results-input-template></app-no-results-input-template>
+</ng-template>
+
+<!-- Type to Search Template -->
+<ng-template #typeToSearchTemplate>
+  <app-type-to-search-template></app-type-to-search-template>
+</ng-template>
+
+<ng-template #noResultsTableTemplate>
+  <app-table-state-template
+    class="[&>*]:!h-[55dvh]"
+    [iconType]="'frown'"
+    [mainMessage]="'No Checks Found'"
+    [additionalInfo]="'We couldn’t find any checks matching your criteria.'" />
+</ng-template>
+
+<ng-template #FilterChecksTemplate>
+  <app-table-state-template
+    class="[&>*]:!h-[55dvh]"
+    [iconType]="'search'"
+    [mainMessage]="'Add Filters To Get Started'"
+    [additionalInfo]="
+      'Use the filters above to find the checks you’re looking for.'
+    " />
+</ng-template>

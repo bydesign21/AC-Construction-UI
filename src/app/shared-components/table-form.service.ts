@@ -1,10 +1,24 @@
 import { Injectable } from '@angular/core';
 import {
+  AsyncValidator,
   FormBuilder,
   FormControl,
   FormGroup,
   ValidationErrors,
+  Validator,
+  ValidatorFn,
+  FormControlOptions,
 } from '@angular/forms';
+
+export interface FormConfig {
+  [key: string]: {
+    defaultValue: any;
+    validators?: ValidatorFn[];
+    asyncValidators?: AsyncValidator[];
+    disabled?: boolean;
+    options?: FormControlOptions;
+  };
+}
 
 @Injectable({
   providedIn: 'root',
@@ -12,12 +26,25 @@ import {
 export class TableFormService {
   constructor(private fb: FormBuilder) {}
 
-  createRowForm(item: any, formConfig: any): FormGroup {
+  createRowForm(item: any, formConfig: FormConfig): FormGroup {
     const group: any = {};
     Object.keys(formConfig).forEach(key => {
       const controlConfig = formConfig[key];
       const value = item[key] ?? controlConfig.defaultValue;
-      group[key] = [value, controlConfig.validators];
+
+      let control;
+      if (controlConfig.disabled) {
+        // If disabled, use this constructor
+        control = new FormControl(
+          { value: value, disabled: true },
+          controlConfig.validators
+        );
+      } else {
+        // If not disabled, use this constructor
+        control = new FormControl(value, controlConfig.validators);
+      }
+
+      group[key] = control;
     });
     return this.fb.group(group);
   }

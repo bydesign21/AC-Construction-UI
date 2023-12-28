@@ -5,6 +5,7 @@ import {
   Input,
   OnInit,
   Output,
+  TemplateRef,
 } from '@angular/core';
 import { Check } from '../../features/dashboard/checks-container/check-model/model';
 import { BehaviorSubject } from 'rxjs';
@@ -18,6 +19,7 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class ChecksReportTableComponent implements OnInit {
   @Input() limit: number = 10;
+  @Input() stateTemplate?: TemplateRef<any> | string;
   @Input() loading$: BehaviorSubject<boolean> = new BehaviorSubject(true);
   @Input() listOfData: Check[] = [];
   @Input() isActionRowVisible: boolean = false;
@@ -48,6 +50,7 @@ export class ChecksReportTableComponent implements OnInit {
   ];
 
   ngOnInit(): void {
+    this.loading$.subscribe(loading => console.log('isLoading', loading));
     if (this.isActionRowVisible) this.tableHeaders.push({ label: 'Actions' });
   }
 

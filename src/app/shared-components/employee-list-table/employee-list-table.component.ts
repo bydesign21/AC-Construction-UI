@@ -3,8 +3,11 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnChanges,
   OnInit,
   Output,
+  SimpleChanges,
+  TemplateRef,
 } from '@angular/core';
 import { Employee } from '../../features/dashboard/checks-container/check-model/model';
 import { BehaviorSubject } from 'rxjs';
@@ -16,15 +19,20 @@ import { BehaviorSubject } from 'rxjs';
   templateUrl: './employee-list-table.component.html',
   styleUrl: './employee-list-table.component.scss',
 })
-export class EmployeeListTableComponent implements OnInit {
+export class EmployeeListTableComponent implements OnInit, OnChanges {
   @Input() listOfData: Employee[] = [];
   @Input() isActionRowVisible: boolean = true;
-  @Output() viewItem: EventEmitter<Employee> = new EventEmitter<Employee>();
-  @Output() printItem: EventEmitter<Employee> = new EventEmitter<Employee>();
-  @Output() deleteItem: EventEmitter<number> = new EventEmitter<number>();
+  @Input() emptyStateTemplate?: string | TemplateRef<any>;
   @Input() loading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(
     false
   );
+  @Input() totalRecords: number = 0;
+  @Input() currentPage: number = 1;
+  @Input() limit: number = 8;
+  @Output() viewItem: EventEmitter<Employee> = new EventEmitter<Employee>();
+  @Output() printItem: EventEmitter<Employee> = new EventEmitter<Employee>();
+  @Output() deleteItem: EventEmitter<Employee> = new EventEmitter<Employee>();
+  @Output() pageChange: EventEmitter<number> = new EventEmitter<number>();
 
   tableHeaders: any[] = [
     {
@@ -45,8 +53,14 @@ export class EmployeeListTableComponent implements OnInit {
     if (this.isActionRowVisible) this.tableHeaders.push({ label: 'Actions' });
   }
 
-  handleDeleteItem(index: number) {
-    this.deleteItem.emit(index);
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.totalRecords) {
+      console.log('totalRecords', changes.totalRecords.currentValue);
+    }
+  }
+
+  handleDeleteItem(item: Employee) {
+    this.deleteItem.emit(item);
   }
 
   handleViewItem(item: Employee) {
@@ -55,5 +69,9 @@ export class EmployeeListTableComponent implements OnInit {
 
   handlePrintItem(item: Employee) {
     this.printItem.emit(item);
+  }
+
+  handlePageChange(page: number) {
+    this.pageChange.emit(page);
   }
 }

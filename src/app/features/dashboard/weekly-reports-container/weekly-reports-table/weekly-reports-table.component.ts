@@ -5,6 +5,7 @@ import {
   Input,
   OnInit,
   Output,
+  TemplateRef,
 } from '@angular/core';
 import { WeeklyReport } from '../weekly-reports-model/model';
 import { BehaviorSubject } from 'rxjs';
@@ -20,6 +21,7 @@ export class WeeklyReportsTableComponent implements OnInit {
   @Input() loading$ = new BehaviorSubject<boolean>(true);
   @Input() listOfData: WeeklyReport[] = [];
   @Input() limit: number = 10;
+  @Input() stateTemplate?: string | TemplateRef<any>;
   @Input() isActionRowVisible: boolean = true;
   @Input() totalRecords: number = 0;
   @Input() currentPage!: number;
