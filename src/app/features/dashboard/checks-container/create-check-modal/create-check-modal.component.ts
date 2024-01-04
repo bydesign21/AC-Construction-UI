@@ -74,7 +74,6 @@ export class CreateCheckModalComponent implements OnInit, OnDestroy {
       this.isEditMode = true;
       this.checkNumber = this.check.checkNumber;
       this.selectedEmployee = this.check.name;
-      console.log('checkName', this.check.name);
       this.checkItemList = this.check.lineItems;
     }
   }
@@ -143,7 +142,6 @@ export class CreateCheckModalComponent implements OnInit, OnDestroy {
   }
 
   calculateTotal() {
-    console.log(this.checkItemList, 'items');
     let total = 0;
     for (const item of this.checkItemList) {
       total += item?.total || 0;
@@ -153,7 +151,6 @@ export class CreateCheckModalComponent implements OnInit, OnDestroy {
 
   handleLineItemsChanged(items: CheckLineItem[]) {
     this.checkItemList = items;
-    console.log(this.calculateTotal());
     this.cd.detectChanges();
   }
 
@@ -167,7 +164,6 @@ export class CreateCheckModalComponent implements OnInit, OnDestroy {
 
   handleEmployeeSearch(search: string) {
     this.searchTermInternal = search;
-    console.log('search', search);
     if (search.length < 1) {
       this.employeeList = [];
       this.cd.detectChanges();
@@ -177,7 +173,6 @@ export class CreateCheckModalComponent implements OnInit, OnDestroy {
       .getEmployees(1, 10, search)
       .pipe(take(1), takeUntil(this.destroy$))
       .subscribe(employees => {
-        console.log('employees', employees);
         this.employeeList = employees.data;
         this.cd.detectChanges();
       });

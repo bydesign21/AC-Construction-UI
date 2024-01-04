@@ -22,6 +22,7 @@
               'quantity',
               'rate',
               'discount',
+              'subtotal',
               'total'
             ]
           ">
@@ -97,15 +98,26 @@
         </td>
         <td>
           <div [hidden]="editIndex === i" (click)="startEdit(i)">
-            {{ data.value.discount | currency }}
+            {{ data.value.discount || 0 | percent }}
           </div>
           <input
             aria-label="Discount"
             (click)="$event.stopPropagation()"
             [hidden]="editIndex !== i"
             nz-input
-            type="number"
             [formControl]="getFormControl(rowForms[i], 'discount')" />
+        </td>
+        <td>
+          <div [hidden]="editIndex === i" (click)="startEdit(i)">
+            {{ data.value.subtotal | currency }}
+          </div>
+          <input
+            aria-label="Subtotal"
+            (click)="$event.stopPropagation()"
+            [hidden]="editIndex !== i"
+            nz-input
+            type="number"
+            [formControl]="getFormControl(rowForms[i], 'subtotal')" />
         </td>
         <td>
           <div [hidden]="editIndex === i" (click)="startEdit(i)">

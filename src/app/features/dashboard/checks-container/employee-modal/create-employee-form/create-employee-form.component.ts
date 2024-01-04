@@ -111,14 +111,12 @@ export class CreateEmployeeFormComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(): void {
-    console.log('onSubmit', this.createEmployeeForm.value);
     if (this.data?.employee) {
       Object.keys(this.createEmployeeForm.controls).forEach(key => {
         if (typeof this.createEmployeeForm.controls[key].value === 'string') {
           this.createEmployeeForm.controls[key].setValue(
             this.createEmployeeForm.controls[key].value.trim()
           );
-          console.log('key', key, this.createEmployeeForm.controls[key].value)
         }
       });
       this.modal.destroy({

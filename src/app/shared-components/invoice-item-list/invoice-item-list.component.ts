@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
@@ -19,7 +20,7 @@ import {
 } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { FormConfig, TableFormService } from '../table-form.service';
-import { InvoiceItem } from '../../features/dashboard/invoices-container/invoices-model/model';
+import { InvoiceItemDetail } from '../../features/dashboard/invoices-container/invoices-model/model';
 
 @Component({
   selector: 'app-invoice-item-list',
@@ -28,13 +29,14 @@ import { InvoiceItem } from '../../features/dashboard/invoices-container/invoice
 })
 export class InvoiceItemListComponent implements OnInit, OnChanges, OnDestroy {
   @ViewChild('table') table!: ElementRef;
-  @Input() items: InvoiceItem[] = [];
-  @Output() changed: EventEmitter<InvoiceItem[]> = new EventEmitter<
-    InvoiceItem[]
+  @Input() items: InvoiceItemDetail[] = [];
+  @Output() changed: EventEmitter<InvoiceItemDetail[]> = new EventEmitter<
+    InvoiceItemDetail[]
   >();
   @Output() itemDeleted: EventEmitter<number> = new EventEmitter<number>();
   @Output() addItemRequest: EventEmitter<void> = new EventEmitter<void>();
   @Output() isValid: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output() isTouched: EventEmitter<boolean> = new EventEmitter<boolean>();
   rowForms: FormGroup[] = [];
   fieldErrors: ValidationErrors[] = [];
   destroy$ = new Subject<void>();
@@ -47,7 +49,7 @@ export class InvoiceItemListComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  constructor(private ts: TableFormService) {}
+  constructor(private ts: TableFormService) { }
 
   editIndex: number | null = null;
 
@@ -80,10 +82,15 @@ export class InvoiceItemListComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   initializeRowForms(): void {
-    this.rowForms = this.items.map(item => this.createRowForm(item));
+    this.rowForms = this.items.map((item, index) => {
+      const form = this.createRowForm(item, index);
+      this.handleCalculateRowTotal(index); // Initial calculation
+      return form;
+    });
+    this.recalculateIsValidAndEmit();
   }
 
-  createRowForm(item: InvoiceItem): FormGroup {
+  createRowForm(item: InvoiceItemDetail, index: number): FormGroup {
     const formConfig: FormConfig = {
       planId: { defaultValue: item.planId },
       address: {
@@ -94,7 +101,11 @@ export class InvoiceItemListComponent implements OnInit, OnChanges, OnDestroy {
         defaultValue: item.quantity,
         validators: [Validators.required, Validators.min(1)],
       },
-      rate: { defaultValue: item.rate, validators: [Validators.required] },
+      rate: { defaultValue: item.rate },
+      subtotal: {
+        defaultValue: item.subtotal,
+        validators: [Validators.required],
+      },
       total: { defaultValue: item.total, validators: [Validators.required] },
       discount: { defaultValue: item.discount },
     };
@@ -102,13 +113,13 @@ export class InvoiceItemListComponent implements OnInit, OnChanges, OnDestroy {
     const form = this.ts.createRowForm(item, formConfig);
 
     form.valueChanges.pipe(takeUntil(this.destroy$)).subscribe(() => {
-      const itemIndex = this.items.indexOf(item);
-      if (itemIndex === -1) {
+      if (index === -1) {
         console.error('Item not found in items array', item);
         return;
       }
-
-      this.updateFieldErrors(form, itemIndex);
+      this.isTouched.emit(true);
+      this.handleCalculateRowTotal(index);
+      this.updateFieldErrors(form, index);
       this.recalculateIsValidAndEmit();
     });
 
@@ -181,7 +192,23 @@ export class InvoiceItemListComponent implements OnInit, OnChanges, OnDestroy {
     this.initializeRowForms();
   }
 
-  // handleCalculateRowTotal() {
+  handleCalculateRowTotal(index: number) {
+    const item = this.rowForms[index];
 
-  // }
+    if (!item) {
+      return;
+    }
+
+    const quantity = item.value.quantity || 0;
+    const rate = item.value.rate || 0;
+    const discount = item.value.discount || 0;
+
+    const subtotal = quantity * rate;
+    const total = subtotal - subtotal * discount;
+
+    item.get('subtotal')?.patchValue(subtotal, { emitEvent: false });
+    item.get('total')?.patchValue(total, { emitEvent: false });
+    this.items[index] = { ...this.items[index], ...item.value };
+    this.changed.emit(this.items);
+  }
 }

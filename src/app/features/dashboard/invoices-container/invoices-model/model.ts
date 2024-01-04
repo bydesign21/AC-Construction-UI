@@ -1,28 +1,31 @@
-export interface InvoiceItem {
+export interface InvoiceItemDetail {
+  orderId?: number;
   planId?: string;
-  invoiceId?: string;
-  quantity: number | null;
-  address: string;
-  rate: number | null;
-  total: number | null;
-  discount?: number | null;
+  address?: string;
+  quantity?: number;
+  rate?: number;
+  discount?: number;
+  total?: number;
+  subtotal?: number;
 }
 
 export interface Invoice {
-  id: string;
-  clientId: string;
-  date: string;
-  items: InvoiceItem[];
-  total: number;
+  orderId?: number;
+  date: string | Date;
+  isPrinted: boolean;
   isPaid: boolean;
+  paidDate?: string | Date;
+  checkNumber?: string;
+  orderItems: InvoiceItemDetail[];
+  client: string;
+  orderTotal: number;
+  subtotal: number;
 }
 
 export interface SelectOption {
   label: string;
   value: string;
 }
-
-export interface InvoiceReport extends Invoice {}
 
 export interface Client {
   id: string;

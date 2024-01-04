@@ -57,7 +57,7 @@ export class ExpenseItemListComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  constructor(private ts: TableFormService) {}
+  constructor(private ts: TableFormService) { }
 
   rowForms: FormGroup[] = [];
   editIndex: number | null = null;
@@ -72,7 +72,6 @@ export class ExpenseItemListComponent implements OnInit, OnChanges, OnDestroy {
   ];
 
   ngOnInit(): void {
-    console.log('items', this.items);
     if (!this.items.length) this.requestAddItem();
     this.initializeRowForms();
     this.recalculateIsValidAndEmit();

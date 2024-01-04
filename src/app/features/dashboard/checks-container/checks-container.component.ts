@@ -12,7 +12,7 @@ import { CreateCheckModalComponent } from './create-check-modal/create-check-mod
 import { DeleteWeeklyReportModalComponent } from '../weekly-reports-container/delete-weekly-report-modal/delete-weekly-report-modal.component';
 import { Check } from './check-model/model';
 import { ChecksService } from './checks-services/checks.service';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
@@ -30,13 +30,7 @@ export class ChecksContainerComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private message: NzMessageService
-  ) {
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationEnd) {
-        console.log('NavigationEnd:', event);
-      }
-    });
-  }
+  ) { }
   checks$: BehaviorSubject<Check[]> = new BehaviorSubject<Check[]>([]);
   reportChecks$: BehaviorSubject<Check[]> = new BehaviorSubject<Check[]>([]);
   loading$ = new BehaviorSubject<boolean>(true);
@@ -101,7 +95,6 @@ export class ChecksContainerComponent implements OnInit {
 
     modal.afterClose.pipe(take(1)).subscribe((check: Check) => {
       if (check) {
-        // TODO: make api call to update check in backend
         this.updateCheck(check);
       }
     });
@@ -205,13 +198,11 @@ export class ChecksContainerComponent implements OnInit {
   }
 
   putCheck(check: Check) {
-    console.log('check', check);
     this.checks
       .putCheck(check)
       .pipe(take(1))
       .subscribe({
-        next: putCheck => {
-          console.log('putCheck', putCheck);
+        next: () => {
           this.loadData(this.currentPage);
           this.message.success('Check created successfully');
         },
@@ -234,35 +225,4 @@ export class ChecksContainerComponent implements OnInit {
       nzStyle: { top: '1rem', margin: '1rem' },
     });
   }
-
-  // handleEmployeeCreated(employee: Employee) {
-  //   // TODO: make api call to create client in backend
-
-  // }
-
-  handleClientSearched(searchTerm: string) {
-    console.log('search term', searchTerm);
-    // TODO: Search for clients matching search term
-    // and set client list to result
-  }
-
-  // handleEmployeeEdited(employee: Employee) {
-  //   const employeeList = this.employeeList$.getValue();
-
-  //   const employeeIndex = employeeList.findIndex(e => {
-  //     return e.id ? e.id === employee.id : null;
-  //   });
-  //   employeeList[employeeIndex] = employee;
-  //   this.employeeList$.next([...employeeList]);
-  //   // TODO: make api call to edit client in backend
-  // }
-
-  // handleEmployeeDeleted(employeeIndex: number) {
-  //   const employeeList = this.employeeList$
-  //     .getValue()
-  //     .filter((_, i) => i !== employeeIndex);
-  //   this.employeeList$.next([...employeeList]);
-  //   // TODO: make api call to delete employee in backend
-  //   // and update employee list
-  // }
 }

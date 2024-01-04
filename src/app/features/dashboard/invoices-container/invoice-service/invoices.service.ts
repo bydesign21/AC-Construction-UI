@@ -4,16 +4,59 @@ import {
   SupabaseService,
 } from '../../../auth/supabase.service';
 import { Observable, from, map } from 'rxjs';
-import { Client } from '../invoices-model/model';
+import { Client, Invoice, InvoiceItemDetail } from '../invoices-model/model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class InvoicesService {
-  constructor(private sb: SupabaseService) {}
+  constructor(private sb: SupabaseService) { }
 
-  getInvoices(): Observable<any> {
-    return from(this.sb.client.from('invoices').select('*'));
+  getInvoices(
+    page: number = 1,
+    limit: number
+  ): Observable<SupabaseClientDBResponse<Invoice>> {
+    const start = (page - 1) * limit;
+    const end = start + limit - 1;
+    // make more robust handle pagination, etc. return in format of {data: [], count: 0}
+    return from(
+      this.sb.client
+        .from('orders')
+        .select('*', { count: 'exact' })
+        .range(start, end)
+        .order('date', { ascending: false, nullsFirst: false })
+    ).pipe(
+      map(res => {
+        return {
+          data: res.data || [],
+          count: res.count || 0,
+        };
+      })
+    );
+  }
+
+  putInvoice(invoice: any): Observable<any> {
+    return from(this.sb.client.from('orders').insert(invoice).select());
+  }
+
+  updateInvoice(invoice: any): Observable<any> {
+    return from(
+      this.sb.client
+        .from('orders')
+        .update(invoice)
+        .match({ orderId: invoice.orderId })
+        .select()
+    );
+  }
+
+  deleteInvoice(invoiceId: number): Observable<any> {
+    return from(
+      this.sb.client
+        .from('orders')
+        .delete()
+        .match({ orderId: invoiceId })
+        .select()
+    );
   }
 
   getClients(
@@ -107,5 +150,38 @@ export class InvoicesService {
         };
       })
     );
+  }
+
+  calculateTotals(invoiceItemList: InvoiceItemDetail[]): Partial<Invoice> {
+    let orderTotal = 0;
+    let subtotal = 0;
+
+    if (invoiceItemList.length === 0) {
+      return {
+        orderItems: [],
+        orderTotal,
+        subtotal,
+      };
+    }
+
+    invoiceItemList.forEach(item => {
+      // Calculate item subtotal and total
+      const itemSubtotal = (item?.quantity || 1) * (item?.rate || 0);
+      const itemTotal = itemSubtotal - itemSubtotal * (item?.discount || 0);
+
+      // Set calculated values to the item
+      item.subtotal = itemSubtotal;
+      item.total = itemTotal;
+
+      // Accumulate order totals
+      subtotal += itemSubtotal;
+      orderTotal += itemTotal;
+    });
+
+    return {
+      orderItems: invoiceItemList,
+      orderTotal,
+      subtotal,
+    };
   }
 }

@@ -50,7 +50,6 @@ export class ChecksReportTableComponent implements OnInit {
   ];
 
   ngOnInit(): void {
-    this.loading$.subscribe(loading => console.log('isLoading', loading));
     if (this.isActionRowVisible) this.tableHeaders.push({ label: 'Actions' });
   }
 
@@ -68,7 +67,6 @@ export class ChecksReportTableComponent implements OnInit {
 
   handlePageChange(page: number) {
     if (page !== this.currentPage) {
-      console.log('page', page);
       this.pageChange.emit(page);
     }
   }

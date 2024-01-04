@@ -30,4 +30,4 @@ import { TableFormService } from '../table-form.service';
   providers: [TableFormService],
   exports: [InvoiceItemListComponent],
 })
-export class InvoiceItemListModule {}
+export class InvoiceItemListModule { }

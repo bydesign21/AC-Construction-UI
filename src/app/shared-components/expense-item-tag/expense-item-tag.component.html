@@ -1,14 +1,31 @@
 <div class="flex flex-col pt-4">
-  <nz-tag class="!rounded-lg !p-[0.25rem]">
-    <span
-      [class]="
-        value === 0
-          ? 'text-black'
-          : value < 0
-            ? 'text-green-800'
-            : 'text-red-500'
-      "
-      >{{ label }}: {{ value | currency }}</span
-    >
-  </nz-tag>
+  <ng-container *ngIf="!isExpense; else reverseTemplate">
+    <nz-tag class="!rounded-lg !p-[0.25rem]">
+      <span
+        [class]="
+          value === 0
+            ? 'text-black'
+            : value < 0
+              ? 'text-green-800'
+              : 'text-red-500'
+        "
+        >{{ label }}: {{ value | currency }}</span
+      >
+    </nz-tag>
+  </ng-container>
+
+  <ng-template #reverseTemplate>
+    <nz-tag class="!rounded-lg !p-[0.25rem]">
+      <span
+        [class]="
+          value === 0
+            ? 'text-black'
+            : value < 0
+              ? 'text-red-500'
+              : 'text-green-800'
+        "
+        >{{ label }}: {{ value | currency }}</span
+      >
+    </nz-tag>
+  </ng-template>
 </div>

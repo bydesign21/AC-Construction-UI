@@ -57,8 +57,6 @@ export class EmployeeModalComponent implements OnInit, OnDestroy {
         next: employees => {
           this.employeeList = employees.data;
           this.totalEmployeeRecords = employees.count;
-          console.log('employees', this.employeeList);
-          console.log('count', this.totalEmployeeRecords);
           this.loading$.next(false);
         },
         error: (err: Error) => {
@@ -148,8 +146,7 @@ export class EmployeeModalComponent implements OnInit, OnDestroy {
       .putEmployee(employee)
       .pipe(take(1))
       .subscribe({
-        next: (employee: Employee) => {
-          console.log('employee', employee);
+        next: () => {
           this.message.success('Employee created successfully');
         },
         error: (err: Error) => {
@@ -205,7 +202,6 @@ export class EmployeeModalComponent implements OnInit, OnDestroy {
   handleEmployeeSearch(searchTerm: string) {
     this.currentPage = 1;
     this.totalEmployeeRecords = 0;
-    console.log('searchTerm Changed', searchTerm);
     this.searchTermInternal = searchTerm.trim();
     if (this.searchTermInternal.length > 0) {
       this.searchTerm$.next(this.searchTermInternal);

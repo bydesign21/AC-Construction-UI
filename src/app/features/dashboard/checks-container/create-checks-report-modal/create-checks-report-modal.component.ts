@@ -60,12 +60,6 @@ export class CreateChecksReportModalComponent {
         tap(() => this.loading$.next(true))
       )
       .subscribe(response => {
-        console.log(
-          this.limit,
-          this.dateRange[0],
-          this.dateRange[1],
-          this.selectedEmployee
-        );
         this.checks$.next(response.data);
         this.totalRecords = response.count;
         this.loading$.next(false);
@@ -73,14 +67,13 @@ export class CreateChecksReportModalComponent {
       });
   }
 
-  handlePageChange(page: any) {
+  handlePageChange(page: number) {
     this.currentPage = page;
     this.loadData();
   }
 
   handleEmployeeSelected(employee: string) {
     this.currentPage = 1;
-    console.log('employee', employee);
     this.selectedEmployee = employee;
     this.loadData();
     this.cd.detectChanges();
@@ -99,7 +92,6 @@ export class CreateChecksReportModalComponent {
 
   handleEmployeeSearch(search: string) {
     this.searchTerm = search;
-    console.log('search', search);
     if (search.length < 3) {
       this.employees$.next([]);
       this.cd.detectChanges();

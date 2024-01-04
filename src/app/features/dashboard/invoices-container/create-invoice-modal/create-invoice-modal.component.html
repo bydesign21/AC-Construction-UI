@@ -2,7 +2,7 @@
   <div class="overflow-auto max-h-[80dvh]">
     <div
       *ngIf="data?.invoice"
-      class="flex flex-row w-full justify-end items-center">
+      class="flex flex-row w-full justify-end items-center mb-4">
       <button
         title="Edit Client"
         class="!flex !flex-row !justify-center !items-center !rounded-2xl !gap-1"
@@ -19,20 +19,47 @@
       </button>
     </div>
     <div class="flex flex-row gap-4 mx-2 items-center justify-between">
-      <div class="w-[12rem]">
-        <!-- create client nz-select -->
-        <nz-select
-          class="w-full"
-          nzShowSearch
-          nzAllowClear
-          nzPlaceHolder="Select Client"
-          [(ngModel)]="selectedClient"
-          (ngModelChange)="handleClientChanged($event)">
-          <nz-option
-            *ngFor="let client of clientList"
-            [nzLabel]="client.companyName"
-            [nzValue]="client.companyName"></nz-option>
-        </nz-select>
+      <div class="flex flex-row gap-4">
+        <div class="w-[12rem]">
+          <nz-form-label
+            class="!text-left [&>*]:!text-lg"
+            [nzNoColon]="true"
+            [nzRequired]="false">
+            Select Employee
+          </nz-form-label>
+          <nz-select
+            [disabled]="isEditMode"
+            class="w-full"
+            nzShowSearch
+            nzAllowClear
+            [nzNotFoundContent]="
+              searchTermInternal.length > 0
+                ? noResultsSearchTemplate
+                : typeToSearchTemplate
+            "
+            [nzServerSearch]="true"
+            [nzShowSearch]="true"
+            [nzServerSearch]="true"
+            [nzPlaceHolder]="selectedClient || 'Select Client'"
+            [(ngModel)]="selectedClient"
+            (nzOnSearch)="handleSearchTermChanged($event)"
+            (ngModelChange)="handleClientChanged($event)">
+            <nz-option
+              *ngFor="let client of clientList || []"
+              [nzLabel]="client.companyName"
+              [nzValue]="client.companyName"></nz-option>
+          </nz-select>
+        </div>
+        <div class="flex flex-row relative top-[1rem]">
+          <app-expense-item-tag
+            [isExpense]="true"
+            [label]="'Subtotal'"
+            [value]="(subtotal$ | async) || 0" />
+          <app-expense-item-tag
+            [isExpense]="true"
+            [label]="'Total'"
+            [value]="(total$ | async) || 0" />
+        </div>
       </div>
       <div class="flex flex-row gap-2">
         <button
@@ -81,7 +108,29 @@
       (addItemRequest)="handleAddLineItem()"
       (itemDeleted)="handleDeleteLineItem($event)"
       (changed)="handleLineItemsChanged($event)"
-      (isValid)="handleIsValid($event)"
+      (isValid)="handleIsItemListValid($event)"
+      (isTouched)="handleIsItemListTouched($event)"
       class="[&>*]:mt-4"></app-invoice-item-list>
   </div>
 </div>
+
+<ng-template #modalFooter>
+  <button nz-button nzType="default" (click)="onCancel()">Cancel</button>
+  <button
+    nz-button
+    nzType="primary"
+    [disabled]="!isFormValid()"
+    (click)="onOk()">
+    {{ data?.invoice || order ? 'Update' : 'Create' }}
+  </button>
+</ng-template>
+
+<!-- No Results Found Template -->
+<ng-template #noResultsSearchTemplate>
+  <app-no-results-input-template></app-no-results-input-template>
+</ng-template>
+
+<!-- Type to Search Template -->
+<ng-template #typeToSearchTemplate>
+  <app-type-to-search-template></app-type-to-search-template>
+</ng-template>

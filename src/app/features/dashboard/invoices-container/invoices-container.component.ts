@@ -2,17 +2,21 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  OnDestroy,
+  OnInit,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
 import { NzModalService } from 'ng-zorro-antd/modal';
-import { BehaviorSubject, combineLatest, take, takeUntil } from 'rxjs';
-import { SecondaryNavigationBarService } from '../../../shared-components/secondary-navigation-bar/secondary-navigation-bar.service';
+import { BehaviorSubject, Subject, combineLatest, take, takeUntil } from 'rxjs';
 import { DeleteWeeklyReportModalComponent } from '../weekly-reports-container/delete-weekly-report-modal/delete-weekly-report-modal.component';
 import { CreateReportModalComponent } from './create-report-modal/create-report-modal.component';
 import { ClientsModalComponent } from './clients-modal/clients-modal.component';
 import { CreateInvoiceModalComponent } from './create-invoice-modal/create-invoice-modal.component';
-import { Client, Invoice } from './invoices-model/model';
+import { Invoice } from './invoices-model/model';
+import { InvoicesService } from './invoice-service/invoices.service';
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -21,33 +25,69 @@ import { Client, Invoice } from './invoices-model/model';
   templateUrl: './invoices-container.component.html',
   styleUrl: './invoices-container.component.scss',
 })
-export class InvoicesContainerComponent {
+export class InvoicesContainerComponent implements OnInit, OnDestroy {
   @ViewChild('CreateInvoiceReportModalTemplate')
   createReportModalRef!: TemplateRef<CreateReportModalComponent>;
   constructor(
     private cd: ChangeDetectorRef,
-    private modal: NzModalService
-  ) {}
-  invoices: BehaviorSubject<Invoice[]> = new BehaviorSubject<Invoice[]>([
-    {
-      id: '1',
-      clientId: '1',
-      items: [],
-      date: '2021-01-01',
-      total: 0,
-      isPaid: false,
-    },
-  ]);
-  reportInvoices$: BehaviorSubject<Invoice[]> = new BehaviorSubject<Invoice[]>([
-    {
-      id: '1',
-      clientId: '1',
-      items: [],
-      date: '2021-01-01',
-      total: 0,
-      isPaid: false,
-    },
-  ]);
+    private modal: NzModalService,
+    private invoices: InvoicesService,
+    private message: NzMessageService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) { }
+  orders$: BehaviorSubject<Invoice[]> = new BehaviorSubject<Invoice[]>([]);
+  reportOrders$: BehaviorSubject<Invoice[]> = new BehaviorSubject<Invoice[]>(
+    []
+  );
+  loading$ = new BehaviorSubject<boolean>(false);
+  destroy$ = new Subject();
+  currentPage = 1;
+  totalRecords = 0;
+  limit = 10;
+
+  ngOnInit(): void {
+    this.route.queryParams.pipe(takeUntil(this.destroy$)).subscribe(params => {
+      const newPage = Number(params?.page) || 1;
+      this.currentPage = newPage;
+      this.loadData();
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next(true);
+    this.destroy$.complete();
+    this.destroy$.unsubscribe();
+  }
+
+  loadData() {
+    this.loading$.next(true);
+    this.invoices
+      .getInvoices(this.currentPage, this.limit)
+      .pipe(take(1))
+      .subscribe({
+        next: reports => {
+          this.orders$.next(reports.data);
+          this.totalRecords = reports.count;
+        },
+        error: err => {
+          this.message.error(`Error loading invoices: ${err.message}`);
+        },
+        complete: () => {
+          this.loading$.next(false);
+          this.cd.detectChanges();
+        },
+      });
+  }
+
+  onPageChange(newPage: number): void {
+    this.currentPage = newPage;
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { page: newPage },
+      queryParamsHandling: 'merge',
+    });
+  }
 
   // Invoices container
 
@@ -56,41 +96,18 @@ export class InvoicesContainerComponent {
       nzTitle: 'View Invoice',
       nzOkText: 'Update',
       nzCancelText: 'Cancel',
+      nzOkDisabled: true,
       nzContent: CreateInvoiceModalComponent,
       nzData: { invoice: item },
       nzWidth: '100dvw',
       nzBodyStyle: { height: '85dvh' },
       nzStyle: { top: '1rem', margin: '1rem' },
-      nzOnOk: componentInstance => {
-        if (componentInstance instanceof CreateInvoiceModalComponent) {
-          componentInstance.onOk();
-        }
-      },
     });
-
-    if (
-      modal.componentInstance?.isValid$ &&
-      modal.componentInstance?.selectedClient$
-    ) {
-      combineLatest([
-        modal.componentInstance.isValid$,
-        modal.componentInstance.selectedClient$,
-      ])
-        .pipe(takeUntil(modal.afterClose))
-        .subscribe(([isValid, selectedClient]) => {
-          const isOkActive = selectedClient && isValid;
-          modal.updateConfig({ nzOkDisabled: !isOkActive });
-        });
-    }
 
     modal.afterClose.pipe(take(1)).subscribe((invoice: Invoice) => {
       if (invoice) {
         // TODO: make api call to update invoice in backend
-        const invoices = this.invoices.getValue();
-        const invoiceIndex = invoices.findIndex(i => i.id === invoice.id);
-        invoices[invoiceIndex] = invoice;
-        this.invoices.next([...invoices]);
-        this.cd.detectChanges();
+        this.handleUpdateInvoice(invoice);
       }
     });
   }
@@ -101,9 +118,9 @@ export class InvoicesContainerComponent {
 
   handleDeleteItem(index: number) {
     const deleteItem = (index: number) => {
-      const invoices = this.invoices.getValue();
+      const invoices = this.orders$.getValue();
       invoices.splice(index, 1);
-      this.invoices.next([...invoices]);
+      this.orders$.next([...invoices]);
     };
 
     // TODO: make api call to delete invoice in backend
@@ -132,7 +149,7 @@ export class InvoicesContainerComponent {
     });
 
     modal.afterClose.pipe(take(1)).subscribe(() => {
-      this.reportInvoices$.next([]);
+      this.reportOrders$.next([]);
     });
   }
 
@@ -152,37 +169,66 @@ export class InvoicesContainerComponent {
       nzWidth: '100dvw',
       nzBodyStyle: { height: '85dvh' },
       nzStyle: { top: '1rem', margin: '1rem' },
-      nzOnOk: componentInstance => {
-        if (componentInstance instanceof CreateInvoiceModalComponent) {
-          componentInstance.onOk();
-        }
-      },
+      nzOkDisabled: true,
     });
 
     modal.afterClose.pipe(take(1)).subscribe((invoice: Invoice) => {
       if (invoice) {
         // TODO: make api call to create invoice in backend
-        this.invoices.next([...this.invoices.getValue(), invoice]);
-        this.cd.detectChanges();
+        this.handlePutInvoice(invoice);
       }
     });
+  }
 
-    if (
-      modal.componentInstance?.isValid$ &&
-      modal.componentInstance?.selectedClient$
-    ) {
-      combineLatest([
-        modal.componentInstance.isValid$,
-        modal.componentInstance.selectedClient$,
-      ])
-        .pipe(takeUntil(modal.afterClose))
-        .subscribe(([isValid, selectedClient]) => {
-          const isOkActive = selectedClient && isValid;
-          modal.updateConfig({ nzOkDisabled: !isOkActive });
+  handlePutInvoice(invoice: Invoice) {
+    this.invoices
+      .putInvoice(invoice)
+      .pipe(take(1))
+      .subscribe({
+        next: () => {
+          this.loadData();
+          this.message.success('Invoice created successfully');
+        },
+        error: err => {
+          this.message.error(`Error creating invoice: ${err.message}`);
+        },
+        complete: () => this.cd.detectChanges(),
+      });
+  }
+
+  handleUpdateInvoice(invoice: Invoice) {
+    this.invoices
+      .updateInvoice(invoice)
+      .pipe(take(1))
+      .subscribe({
+        next: () => {
+          this.loadData();
+          this.message.success('Invoice updated successfully');
+        },
+        error: err => {
+          this.message.error(`Error updating invoice: ${err.message}`);
+        },
+        complete: () => this.cd.detectChanges(),
+      });
+  }
+
+  handleDeleteInvoice(invoice: Invoice) {
+    if (invoice.orderId) {
+      this.invoices
+        .deleteInvoice(invoice.orderId)
+        .pipe(take(1))
+        .subscribe({
+          next: () => {
+            this.loadData();
+            this.message.success('Invoice deleted successfully');
+          },
+          error: err => {
+            this.message.error(`Error deleting invoice: ${err.message}`);
+          },
+          complete: () => this.cd.detectChanges(),
         });
     }
   }
-
   // Client Management Modal
 
   handleClientManagement() {

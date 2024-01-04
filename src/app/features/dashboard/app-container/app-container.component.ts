@@ -9,7 +9,7 @@ import { SecondaryNavigationBarService } from '../../../shared-components/second
   styleUrl: './app-container.component.scss',
 })
 export class AppContainerComponent implements OnInit {
-  constructor(private navigation: SecondaryNavigationBarService) {}
+  constructor(private navigation: SecondaryNavigationBarService) { }
   ngOnInit(): void {
     this.navigation.setNavigationLinks([
       { label: 'Dashboard', iconUrl: 'home', routerUrl: 'dashboard' },
@@ -20,11 +20,6 @@ export class AppContainerComponent implements OnInit {
       },
       { label: 'Invoices', iconUrl: 'profile', routerUrl: 'invoices' },
       { label: 'Checks', iconUrl: 'mail', routerUrl: 'checks' },
-      {
-        label: 'Payroll Reports',
-        iconUrl: 'bar-chart',
-        routerUrl: 'payroll-reports',
-      },
     ]);
   }
 }

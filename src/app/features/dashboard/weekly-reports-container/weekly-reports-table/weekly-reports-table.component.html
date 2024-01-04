@@ -4,8 +4,6 @@
     [nzPageSize]="limit"
     #nzTable
     [nzNoResult]="stateTemplate ? stateTemplate : noResultsTemplate"
-    [nzLoading]="loading$ | async"
-    [nzLoadingIndicator]="loadingIndicator"
     [nzData]="listOfData"
     [nzShowPagination]="false"
     [nzTableLayout]="'fixed'">

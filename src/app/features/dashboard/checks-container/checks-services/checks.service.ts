@@ -16,7 +16,6 @@ export class ChecksService {
     endDate?: Date,
     name?: string
   ): Observable<SupabaseClientDBResponse<Check>> {
-    console.log('getChecks');
     const start = (page - 1) * limit;
     const end = start + limit - 1;
 
@@ -100,7 +99,6 @@ export class ChecksService {
           .range(start, end)
       ).pipe(
         map(res => {
-          console.log('res', res);
           return { data: res.data || [], count: res.count || 0 };
         })
       );
@@ -125,7 +123,6 @@ export class ChecksService {
         .range(start, end)
     ).pipe(
       map(res => {
-        console.log('res', res);
         return { data: res.data || [], count: res.count || 0 };
       })
     );

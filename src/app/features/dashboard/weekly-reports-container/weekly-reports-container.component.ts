@@ -26,12 +26,11 @@ export class WeeklyReportsContainerComponent implements OnInit, OnDestroy {
   constructor(
     private cd: ChangeDetectorRef,
     private modal: NzModalService,
-    private data: WeeklyReportsService,
     private route: ActivatedRoute,
     private router: Router,
     private reports: WeeklyReportsService,
     private message: NzMessageService
-  ) {}
+  ) { }
   reports$: BehaviorSubject<WeeklyReport[]> = new BehaviorSubject<
     WeeklyReport[]
   >([]);
@@ -45,7 +44,7 @@ export class WeeklyReportsContainerComponent implements OnInit, OnDestroy {
     this.route.queryParams.pipe(takeUntil(this.destroy$)).subscribe(params => {
       const newPage = Number(params?.page) || 1;
       this.currentPage = newPage;
-      this.loadData(this.currentPage);
+      this.loadData();
     });
   }
 
@@ -55,22 +54,21 @@ export class WeeklyReportsContainerComponent implements OnInit, OnDestroy {
     this.destroy$.unsubscribe();
   }
 
-  loadData(page: number = 1) {
+  loadData() {
     this.loading$.next(true);
-    this.data
-      .getWeeklyReports(page, this.limit)
+    this.reports
+      .getWeeklyReports(this.currentPage, this.limit)
       .pipe(take(1))
       .subscribe(reports => {
         this.reports$.next(reports.data);
         this.totalRecords = reports.count;
-        this.currentPage = page;
-        console.log('reports', reports);
         this.loading$.next(false);
         this.cd.detectChanges();
       });
   }
 
   onPageChange(newPage: number): void {
+    this.currentPage = newPage;
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams: { page: newPage },
@@ -174,9 +172,8 @@ export class WeeklyReportsContainerComponent implements OnInit, OnDestroy {
       .putWeeklyReport(report)
       .pipe(take(1))
       .subscribe({
-        next: putReport => {
-          console.log('putReport', putReport);
-          this.loadData(this.currentPage);
+        next: () => {
+          this.loadData();
           this.message.success('Report created successfully');
         },
         error: err => {
@@ -191,9 +188,8 @@ export class WeeklyReportsContainerComponent implements OnInit, OnDestroy {
       .updateWeeklyReport(report)
       .pipe(take(1))
       .subscribe({
-        next: updateReport => {
-          console.log('putReport', updateReport);
-          this.loadData(this.currentPage);
+        next: () => {
+          this.loadData();
           this.message.success('Report updated successfully');
         },
         error: err => {

@@ -3,10 +3,8 @@ import {
   Component,
   EventEmitter,
   Input,
-  OnChanges,
   OnInit,
   Output,
-  SimpleChanges,
   TemplateRef,
 } from '@angular/core';
 import { Employee } from '../../features/dashboard/checks-container/check-model/model';
@@ -19,7 +17,7 @@ import { BehaviorSubject } from 'rxjs';
   templateUrl: './employee-list-table.component.html',
   styleUrl: './employee-list-table.component.scss',
 })
-export class EmployeeListTableComponent implements OnInit, OnChanges {
+export class EmployeeListTableComponent implements OnInit {
   @Input() listOfData: Employee[] = [];
   @Input() isActionRowVisible: boolean = true;
   @Input() emptyStateTemplate?: string | TemplateRef<any>;
@@ -51,12 +49,6 @@ export class EmployeeListTableComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     if (this.isActionRowVisible) this.tableHeaders.push({ label: 'Actions' });
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes.totalRecords) {
-      console.log('totalRecords', changes.totalRecords.currentValue);
-    }
   }
 
   handleDeleteItem(item: Employee) {
