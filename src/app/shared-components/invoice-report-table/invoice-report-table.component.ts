@@ -7,7 +7,7 @@ import {
   Output,
   TemplateRef,
 } from '@angular/core';
-import { Invoice } from '../../features/dashboard/invoices-container/invoices-model/model';
+import { Invoice } from '../../features/dashboard-container/invoices-container/invoices-model/model';
 import { BehaviorSubject } from 'rxjs';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

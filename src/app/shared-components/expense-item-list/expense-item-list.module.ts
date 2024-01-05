@@ -14,6 +14,7 @@ import { SharedUtilsService } from '../shared-utils.service';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { TableFormService } from '../table-form.service';
 import { NzAutocompleteModule } from 'ng-zorro-antd/auto-complete';
+import { TableStateTemplateModule } from '../table-state-template/table-state-template.module';
 
 @NgModule({
   declarations: [ExpenseItemListComponent],
@@ -30,8 +31,9 @@ import { NzAutocompleteModule } from 'ng-zorro-antd/auto-complete';
     NzToolTipModule,
     ReactiveFormsModule,
     NzAutocompleteModule,
+    TableStateTemplateModule,
   ],
   exports: [ExpenseItemListComponent],
   providers: [ExpensesService, SharedUtilsService, TableFormService],
 })
-export class ExpenseItemListModule {}
+export class ExpenseItemListModule { }

@@ -1,5 +1,5 @@
 import {
-  ChangeDetectorRef,
+  ChangeDetectionStrategy,
   Component,
   ElementRef,
   EventEmitter,
@@ -20,9 +20,10 @@ import {
 } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { FormConfig, TableFormService } from '../table-form.service';
-import { InvoiceItemDetail } from '../../features/dashboard/invoices-container/invoices-model/model';
+import { InvoiceItemDetail } from '../../features/dashboard-container/invoices-container/invoices-model/model';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-invoice-item-list',
   templateUrl: './invoice-item-list.component.html',
   styleUrls: ['./invoice-item-list.component.scss'],
@@ -30,6 +31,7 @@ import { InvoiceItemDetail } from '../../features/dashboard/invoices-container/i
 export class InvoiceItemListComponent implements OnInit, OnChanges, OnDestroy {
   @ViewChild('table') table!: ElementRef;
   @Input() items: InvoiceItemDetail[] = [];
+  @Input() isDisabled: boolean = false;
   @Output() changed: EventEmitter<InvoiceItemDetail[]> = new EventEmitter<
     InvoiceItemDetail[]
   >();
@@ -131,6 +133,7 @@ export class InvoiceItemListComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   startEdit(index: number): void {
+    if (this.isDisabled) return;
     if (this.editIndex !== null && this.editIndex !== index) {
       this.validateAndEmitRow(this.editIndex);
     }
@@ -174,6 +177,7 @@ export class InvoiceItemListComponent implements OnInit, OnChanges, OnDestroy {
 
   deleteItem(index: number): void {
     this.itemDeleted.emit(index);
+    this.isTouched.emit(true);
   }
 
   getFormControl(row: FormGroup, controlName: string): FormControl {

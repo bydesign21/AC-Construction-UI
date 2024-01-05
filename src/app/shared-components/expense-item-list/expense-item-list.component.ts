@@ -21,9 +21,9 @@ import { Subject, takeUntil } from 'rxjs';
 import { TableFormService } from '../table-form.service';
 import {
   ExpenseItem,
-  SelectOption,
   ExpenseTypes,
-} from '../../features/dashboard/weekly-reports-container/weekly-reports-model/model';
+} from '../../features/dashboard-container/weekly-reports-container/weekly-reports-model/model';
+import { Employee } from '../../features/dashboard-container/checks-container/check-model/model';
 
 @Component({
   selector: 'app-expense-item-list',
@@ -34,10 +34,7 @@ export class ExpenseItemListComponent implements OnInit, OnChanges, OnDestroy {
   @ViewChild('table') table!: ElementRef;
   @Input() items: ExpenseItem[] = [];
   @Input() isDisabled: boolean = false;
-  @Input() employeeList: SelectOption[] = [
-    { label: 'Mark Zuckerburg', value: '908798' },
-    { label: 'Logan Vasquez', value: '3248923' },
-  ];
+  @Input() employeeList: Partial<Employee>[] = [];
   @Output() changed: EventEmitter<ExpenseItem[]> = new EventEmitter<
     ExpenseItem[]
   >();
@@ -45,6 +42,8 @@ export class ExpenseItemListComponent implements OnInit, OnChanges, OnDestroy {
   @Output() addItemRequest: EventEmitter<void> = new EventEmitter<void>();
   @Output() isValid: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Output() isTouched: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output() employeeSearch: EventEmitter<string> = new EventEmitter<string>();
+  searchTermInternal: string = '';
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
@@ -273,5 +272,10 @@ export class ExpenseItemListComponent implements OnInit, OnChanges, OnDestroy {
     item?.get('amount')?.patchValue(total());
     this.rowForms[index] = item;
     this.emitValidItems();
+  }
+
+  handleEmployeeSearch(searchTerm: string): void {
+    this.searchTermInternal = searchTerm;
+    this.employeeSearch.emit(searchTerm);
   }
 }

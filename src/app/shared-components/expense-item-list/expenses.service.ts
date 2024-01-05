@@ -4,7 +4,7 @@ import {
   ExpenseItem,
   ExpenseTypes,
   WeeklyReportTotals,
-} from '../../features/dashboard/weekly-reports-container/weekly-reports-model/model';
+} from '../../features/dashboard-container/weekly-reports-container/weekly-reports-model/model';
 
 @Injectable({
   providedIn: 'root',

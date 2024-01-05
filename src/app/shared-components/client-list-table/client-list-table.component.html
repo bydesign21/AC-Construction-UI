@@ -4,6 +4,7 @@
     class="pb-4"
     [nzPageSize]="limit"
     #nzTable
+    [nzNoResult]="noResultTemplate"
     [nzLoading]="loading$ | async"
     [nzData]="listOfData"
     [nzShowPagination]="false"
@@ -90,3 +91,14 @@
     </nz-pagination>
   </div>
 </div>
+
+<ng-template #noResultTemplate>
+  <app-table-state-template
+    *ngIf="(loading$ | async) === false"
+    class="[&>*]:!h-[55dvh]"
+    [iconType]="'frown'"
+    [mainMessage]="'No Clients Found'"
+    [additionalInfo]="
+      'Please refine your search term or add your first client.'
+    "></app-table-state-template>
+</ng-template>

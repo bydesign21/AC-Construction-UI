@@ -6,7 +6,7 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import { Client } from '../../features/dashboard/invoices-container/invoices-model/model';
+import { Client } from '../../features/dashboard-container/invoices-container/invoices-model/model';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({

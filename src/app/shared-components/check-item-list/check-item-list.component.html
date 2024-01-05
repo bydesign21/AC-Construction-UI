@@ -8,6 +8,7 @@
     [ngClass]="isDisabled ? 'opacity-60 cursor-not-allowed' : ''"
     #editRowTable
     nzBordered
+    [nzNoResult]="noDataTemplate"
     [nzTableLayout]="'fixed'"
     [nzShowPagination]="false"
     [nzData]="items || []">
@@ -109,4 +110,14 @@
       {{ getErrorMessageForField(field) }}
     </span>
   </div>
+</ng-template>
+
+<ng-template #noDataTemplate>
+  <app-table-state-template
+    class="[&>*]:!h-[50dvh]"
+    [iconType]="'plus-circle'"
+    [mainMessage]="'No Items In Check'"
+    [additionalInfo]="
+      'Please add an item to the check to get started.'
+    "></app-table-state-template>
 </ng-template>

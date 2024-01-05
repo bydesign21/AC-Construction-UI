@@ -19,7 +19,7 @@ import {
 } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { FormConfig, TableFormService } from '../table-form.service';
-import { CheckLineItem } from '../../features/dashboard/checks-container/check-model/model';
+import { CheckLineItem } from '../../features/dashboard-container/checks-container/check-model/model';
 
 @Component({
   selector: 'app-check-item-list',
@@ -75,7 +75,6 @@ export class CheckItemListComponent implements OnInit, OnChanges, OnDestroy {
 
   recalculateFormStatusAndEmit(): void {
     this.isValid.emit(this.rowForms.every(form => form.valid));
-    this.isTouched.emit(this.rowForms.some(form => form.touched));
   }
 
   recalculateFieldErrors(): void {
@@ -107,7 +106,7 @@ export class CheckItemListComponent implements OnInit, OnChanges, OnDestroy {
         console.error('Item not found in items array', item);
         return;
       }
-
+      this.isTouched.emit(true);
       this.updateFieldErrors(form, itemIndex);
       this.recalculateFormStatusAndEmit();
     });
@@ -163,6 +162,7 @@ export class CheckItemListComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   deleteItem(index: number): void {
+    this.isTouched.emit(true);
     this.itemDeleted.emit(index);
   }
 

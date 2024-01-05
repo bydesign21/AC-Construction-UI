@@ -7,7 +7,7 @@ import {
   Output,
   TemplateRef,
 } from '@angular/core';
-import { Employee } from '../../features/dashboard/checks-container/check-model/model';
+import { Employee } from '../../features/dashboard-container/checks-container/check-model/model';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
