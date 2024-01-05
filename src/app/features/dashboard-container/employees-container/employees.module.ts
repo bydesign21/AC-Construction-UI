@@ -12,7 +12,6 @@ import { EmployeeListTableModule } from '../../../shared-components/employee-lis
 import { provideRouter } from '@angular/router';
 import { routes } from './employees.routes';
 import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
-import { ChecksService } from '../checks-container/checks-services/checks.service';
 
 @NgModule({
   declarations: [EmployeeContainerComponent, CreateEmployeeFormComponent],
@@ -28,7 +27,7 @@ import { ChecksService } from '../checks-container/checks-services/checks.servic
     EmployeeListTableModule,
     NzCheckboxModule,
   ],
-  providers: [provideRouter(routes), ChecksService],
+  providers: [provideRouter(routes)],
   exports: [EmployeeContainerComponent, CreateEmployeeFormComponent],
 })
-export class EmployeesModule {}
+export class EmployeesModule { }

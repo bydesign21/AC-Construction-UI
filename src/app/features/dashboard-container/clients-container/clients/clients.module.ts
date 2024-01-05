@@ -11,7 +11,6 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { provideRouter } from '@angular/router';
 import { routes } from './clients.routes';
-import { InvoicesService } from '../../invoices-container/invoice-service/invoices.service';
 import { TableStateTemplateModule } from '../../../../shared-components/table-state-template/table-state-template.module';
 
 @NgModule({
@@ -28,7 +27,7 @@ import { TableStateTemplateModule } from '../../../../shared-components/table-st
     NzModalModule,
     TableStateTemplateModule,
   ],
-  providers: [provideRouter(routes), InvoicesService],
+  providers: [provideRouter(routes)],
   exports: [ClientsContainerComponent, CreateClientFormComponent],
 })
-export class ClientsModule {}
+export class ClientsModule { }

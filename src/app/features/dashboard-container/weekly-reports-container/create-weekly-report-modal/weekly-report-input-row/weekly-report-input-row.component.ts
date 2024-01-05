@@ -21,8 +21,7 @@ import { WeeklyReportInputRowProps } from '../../weekly-reports-model/model';
   styleUrl: './weekly-report-input-row.component.scss',
 })
 export class WeeklyReportInputRowComponent
-  implements OnInit, OnChanges, OnDestroy
-{
+  implements OnInit, OnChanges, OnDestroy {
   @Input() isDisabled: boolean = false;
   @Input() dateRange: Date[] = [];
   @Input() revenueTotal: number | null = null;
@@ -62,11 +61,6 @@ export class WeeklyReportInputRowComponent
   }
 
   checkAndEmitValidityAndTouched() {
-    console.log(
-      'checkAndEmitValidityAndTouched',
-      this.form?.valid,
-      this.form?.touched
-    );
     this.isValid.emit(this.form?.valid);
     this.isTouched.emit(this.form?.touched);
   }

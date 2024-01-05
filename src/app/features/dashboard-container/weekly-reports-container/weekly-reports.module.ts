@@ -23,7 +23,6 @@ import { ExpenseItemTagModule } from '../../../shared-components/expense-item-ta
 import { ExpenseItemLabelModule } from '../../../shared-components/expense-item-label/expense-item-label.module';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NoResultsInputTemplateModule } from '../../../shared-components/no-results-input-template/no-results-input-template.module';
-import { WeeklyReportsService } from './weekly-reports-services/weekly-reports.service';
 
 @NgModule({
   declarations: [
@@ -53,7 +52,7 @@ import { WeeklyReportsService } from './weekly-reports-services/weekly-reports.s
     NzButtonModule,
     NoResultsInputTemplateModule,
   ],
-  providers: [provideRouter(routes), WeeklyReportsService],
+  providers: [provideRouter(routes)],
   exports: [
     WeeklyReportsContainerComponent,
     CreateWeeklyReportModalComponent,
@@ -63,4 +62,4 @@ import { WeeklyReportsService } from './weekly-reports-services/weekly-reports.s
     WeeklyReportInputRowComponent,
   ],
 })
-export class WeeklyReportsModule {}
+export class WeeklyReportsModule { }

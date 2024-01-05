@@ -36,7 +36,7 @@ export class CreateWeeklyReportModalComponent implements OnInit {
     private checks: ChecksService,
     @Inject(NZ_MODAL_DATA)
     public data?: { report: WeeklyReport; isEditMode: boolean }
-  ) {}
+  ) { }
   isInputRowValid$ = new BehaviorSubject<boolean>(false);
   isInputRowTouched$ = new BehaviorSubject<boolean>(false);
   isExpenseListTouched$ = new BehaviorSubject<boolean>(false);
@@ -141,6 +141,7 @@ export class CreateWeeklyReportModalComponent implements OnInit {
         revenue: this.revenue || 0,
         payroll: this.payroll || 0,
       });
+    console.log({ profit, profitSplit, total, decking, framing, misc, moulding })
     this.profit = profit;
     this.profitSplit = profitSplit;
     this.totalExpenses = total;
@@ -153,8 +154,9 @@ export class CreateWeeklyReportModalComponent implements OnInit {
 
   handleInputRowChanged(inputRowVals: WeeklyReportInputRowProps) {
     const { payrollTotal, revenueTotal, dateRange } = inputRowVals;
-    this.payroll = payrollTotal;
-    this.revenue = revenueTotal;
+    console.log(inputRowVals)
+    this.payroll = Number(payrollTotal);
+    this.revenue = Number(revenueTotal);
     this.date = dateRange;
     this.calculateTotals();
   }

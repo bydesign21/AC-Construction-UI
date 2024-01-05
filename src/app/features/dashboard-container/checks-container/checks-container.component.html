@@ -17,7 +17,7 @@
         ></span>
       </button>
       <button
-        [routerLink]="['/employees']"
+        (click)="handleEmployeeManagement()"
         title="Manage Employees"
         nz-button
         class="ml-2 items-center flex mb-[0.5em] !rounded-lg">
@@ -64,7 +64,3 @@
 <ng-template #CreateChecksReportModalTemplate>
   <app-create-checks-report-modal />
 </ng-template>
-
-<!-- <ng-template #EmployeeManagementModalTemplate>
-  <app-employee-container />
-</ng-template> -->
