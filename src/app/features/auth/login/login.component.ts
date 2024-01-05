@@ -29,7 +29,7 @@ export class LoginComponent {
     private router: Router,
     private cd: ChangeDetectorRef,
     private modal: NzModalService
-  ) {}
+  ) { }
 
   loginForm = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
@@ -48,12 +48,11 @@ export class LoginComponent {
               const { user, session } = res;
               sessionStorage.setItem('session', JSON.stringify(session));
               sessionStorage.setItem('isAuthenticated', 'true');
-              await this.router.navigate([''], { replaceUrl: true });
+              await this.router.navigate(['/dashboard'], { replaceUrl: true });
               this.message.success(
-                `Welcome,  ${
-                  user?.user_metadata?.firstName
-                    ? user.user_metadata.firstName
-                    : 'User'
+                `Welcome,  ${user?.user_metadata?.firstName
+                  ? user.user_metadata.firstName
+                  : 'User'
                 }`
               );
               this.cd.detectChanges();
