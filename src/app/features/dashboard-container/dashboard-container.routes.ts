@@ -56,11 +56,11 @@ export const routes: Routes = [
             '../dashboard-container/clients-container/clients/clients.module'
           ).then(m => m.ClientsModule),
       },
-      {
-        path: '**',
-        redirectTo: '/dashboard',
-        pathMatch: 'full',
-      },
+      // {
+      //   path: '**',
+      //   redirectTo: '/dashboard',
+      //   pathMatch: 'full',
+      // },
     ],
   },
 ];
