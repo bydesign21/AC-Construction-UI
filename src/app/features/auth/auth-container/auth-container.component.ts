@@ -17,7 +17,7 @@ export class AuthContainerComponent implements OnInit {
   constructor(
     private router: Router,
     private cd: ChangeDetectorRef
-  ) { }
+  ) {}
 
   async ngOnInit(): Promise<void> {
     const isAuthenticated = JSON.parse(

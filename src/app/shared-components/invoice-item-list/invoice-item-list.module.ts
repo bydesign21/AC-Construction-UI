@@ -32,4 +32,4 @@ import { TableStateTemplateModule } from '../table-state-template/table-state-te
   providers: [TableFormService],
   exports: [InvoiceItemListComponent],
 })
-export class InvoiceItemListModule { }
+export class InvoiceItemListModule {}

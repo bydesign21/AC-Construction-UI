@@ -36,4 +36,4 @@ import { TableStateTemplateModule } from '../table-state-template/table-state-te
   exports: [ExpenseItemListComponent],
   providers: [ExpensesService, SharedUtilsService, TableFormService],
 })
-export class ExpenseItemListModule { }
+export class ExpenseItemListModule {}

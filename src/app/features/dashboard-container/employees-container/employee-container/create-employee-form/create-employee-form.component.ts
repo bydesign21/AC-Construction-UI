@@ -34,7 +34,7 @@ export class CreateEmployeeFormComponent implements OnInit, OnDestroy {
     private modal: NzModalRef,
     @Inject(NZ_MODAL_DATA)
     public data?: { employee: Employee; isEditMode: boolean }
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.isEditMode = this.data?.isEditMode || false;

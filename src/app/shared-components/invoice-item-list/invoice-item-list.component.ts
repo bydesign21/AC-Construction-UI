@@ -51,7 +51,7 @@ export class InvoiceItemListComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  constructor(private ts: TableFormService) { }
+  constructor(private ts: TableFormService) {}
 
   editIndex: number | null = null;
 

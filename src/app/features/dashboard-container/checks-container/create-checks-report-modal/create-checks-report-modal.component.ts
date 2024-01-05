@@ -36,7 +36,7 @@ export class CreateChecksReportModalComponent {
   constructor(
     private cd: ChangeDetectorRef,
     private checks: ChecksService
-  ) { }
+  ) {}
 
   loadData(): void {
     if (!this.dateRange.length && !this.selectedEmployee) {

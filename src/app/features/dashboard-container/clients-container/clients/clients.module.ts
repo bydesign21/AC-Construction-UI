@@ -31,4 +31,4 @@ import { TableStateTemplateModule } from '../../../../shared-components/table-st
   providers: [provideRouter(routes), InvoicesService],
   exports: [ClientsContainerComponent, CreateClientFormComponent],
 })
-export class ClientsModule { }
+export class ClientsModule {}

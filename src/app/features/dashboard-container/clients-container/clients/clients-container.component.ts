@@ -35,7 +35,7 @@ export class ClientsContainerComponent implements OnInit, OnDestroy {
     private message: NzMessageService,
     private cd: ChangeDetectorRef,
     private invoices: InvoicesService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.loadClientData();

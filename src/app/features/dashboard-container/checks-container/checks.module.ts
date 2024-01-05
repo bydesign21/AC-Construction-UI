@@ -50,4 +50,4 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
     CreateChecksReportModalComponent,
   ],
 })
-export class ChecksModule { }
+export class ChecksModule {}

@@ -142,4 +142,4 @@ const icons = [
   ],
   exports: [AppContainerComponent, NavigationBarComponent],
 })
-export class DashboardContainerModule { }
+export class DashboardContainerModule {}

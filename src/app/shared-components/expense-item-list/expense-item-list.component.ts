@@ -56,7 +56,7 @@ export class ExpenseItemListComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  constructor(private ts: TableFormService) { }
+  constructor(private ts: TableFormService) {}
 
   rowForms: FormGroup[] = [];
   editIndex: number | null = null;

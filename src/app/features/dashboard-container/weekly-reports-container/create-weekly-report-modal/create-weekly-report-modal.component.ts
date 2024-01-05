@@ -36,7 +36,7 @@ export class CreateWeeklyReportModalComponent implements OnInit {
     private checks: ChecksService,
     @Inject(NZ_MODAL_DATA)
     public data?: { report: WeeklyReport; isEditMode: boolean }
-  ) { }
+  ) {}
   isInputRowValid$ = new BehaviorSubject<boolean>(false);
   isInputRowTouched$ = new BehaviorSubject<boolean>(false);
   isExpenseListTouched$ = new BehaviorSubject<boolean>(false);

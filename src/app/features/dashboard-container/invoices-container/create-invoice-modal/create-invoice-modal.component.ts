@@ -46,7 +46,7 @@ export class CreateInvoiceModalComponent implements OnInit, OnDestroy {
     private message: NzMessageService,
     @Inject(NZ_MODAL_DATA)
     public data?: { clientList: Client[]; invoice?: Invoice }
-  ) { }
+  ) {}
 
   get selectedClient() {
     return this.selectedClient$.getValue();

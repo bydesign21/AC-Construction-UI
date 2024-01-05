@@ -35,7 +35,7 @@ export class EmployeeContainerComponent implements OnInit, OnDestroy {
     private message: NzMessageService,
     private checks: ChecksService,
     private cd: ChangeDetectorRef
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.loadData();

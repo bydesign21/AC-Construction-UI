@@ -10,7 +10,7 @@ import { Client, Invoice, InvoiceItemDetail } from '../invoices-model/model';
   providedIn: 'root',
 })
 export class InvoicesService {
-  constructor(private sb: SupabaseService) { }
+  constructor(private sb: SupabaseService) {}
 
   getInvoices(
     page: number = 1,

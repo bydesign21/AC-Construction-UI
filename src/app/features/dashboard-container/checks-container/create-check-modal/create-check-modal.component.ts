@@ -56,7 +56,7 @@ export class CreateCheckModalComponent implements OnInit, OnDestroy {
     private checks: ChecksService,
     @Inject(NZ_MODAL_DATA)
     public data?: { check?: Check }
-  ) { }
+  ) {}
 
   get selectedEmployee() {
     return this.searchTerm$.getValue();

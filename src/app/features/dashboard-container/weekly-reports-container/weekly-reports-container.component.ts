@@ -30,7 +30,7 @@ export class WeeklyReportsContainerComponent implements OnInit, OnDestroy {
     private router: Router,
     private reports: WeeklyReportsService,
     private message: NzMessageService
-  ) { }
+  ) {}
   reports$: BehaviorSubject<WeeklyReport[]> = new BehaviorSubject<
     WeeklyReport[]
   >([]);

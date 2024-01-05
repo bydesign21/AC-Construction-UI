@@ -34,4 +34,4 @@ import { TableStateTemplateModule } from '../table-state-template/table-state-te
   providers: [TableFormService],
   exports: [CheckItemListComponent],
 })
-export class CheckItemListModule { }
+export class CheckItemListModule {}

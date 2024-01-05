@@ -29,4 +29,4 @@ import { NzPaginationModule } from 'ng-zorro-antd/pagination';
   ],
   exports: [EmployeeListTableComponent],
 })
-export class EmployeeListTableModule { }
+export class EmployeeListTableModule {}

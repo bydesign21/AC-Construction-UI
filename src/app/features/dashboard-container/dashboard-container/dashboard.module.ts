@@ -11,4 +11,4 @@ import { routes } from './dashboard.routes';
   providers: [provideRouter(routes)],
   exports: [DashboardComponent],
 })
-export class DashboardModule { }
+export class DashboardModule {}

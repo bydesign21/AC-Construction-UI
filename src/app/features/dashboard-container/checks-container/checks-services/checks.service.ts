@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
-import { SupabaseClientDBResponse, SupabaseService } from '../../../auth/supabase.service';
+import {
+  SupabaseClientDBResponse,
+  SupabaseService,
+} from '../../../auth/supabase.service';
 import { Observable, from, map } from 'rxjs';
 import { Check, Employee } from '../check-model/model';
 
@@ -7,7 +10,7 @@ import { Check, Employee } from '../check-model/model';
   providedIn: 'root',
 })
 export class ChecksService {
-  constructor(private sb: SupabaseService) { }
+  constructor(private sb: SupabaseService) {}
 
   getChecks(
     page: number,

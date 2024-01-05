@@ -29,4 +29,4 @@ import { TableStateTemplateModule } from '../table-state-template/table-state-te
   ],
   exports: [InvoiceReportTableComponent],
 })
-export class InvoiceReportTableModule { }
+export class InvoiceReportTableModule {}

@@ -29,4 +29,4 @@ import { TableStateTemplateModule } from '../table-state-template/table-state-te
   ],
   exports: [ClientListTableComponent],
 })
-export class ClientListTableModule { }
+export class ClientListTableModule {}

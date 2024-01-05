@@ -44,8 +44,7 @@ export class InvoiceReportTableComponent implements OnInit {
     },
     {
       label: 'Company',
-      sortFn: (a: Invoice, b: Invoice) =>
-        a.client.localeCompare(b.client),
+      sortFn: (a: Invoice, b: Invoice) => a.client.localeCompare(b.client),
     },
     {
       label: 'Amount',

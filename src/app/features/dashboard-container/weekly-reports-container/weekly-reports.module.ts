@@ -63,4 +63,4 @@ import { WeeklyReportsService } from './weekly-reports-services/weekly-reports.s
     WeeklyReportInputRowComponent,
   ],
 })
-export class WeeklyReportsModule { }
+export class WeeklyReportsModule {}

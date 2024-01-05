@@ -31,4 +31,4 @@ import { ChecksService } from '../checks-container/checks-services/checks.servic
   providers: [provideRouter(routes), ChecksService],
   exports: [EmployeeContainerComponent, CreateEmployeeFormComponent],
 })
-export class EmployeesModule { }
+export class EmployeesModule {}

@@ -29,7 +29,7 @@ export class CreateClientFormComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     @Inject(NZ_MODAL_DATA) public data?: { client: Client; isEditMode: boolean }
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.isEditMode = this.data?.isEditMode || false;

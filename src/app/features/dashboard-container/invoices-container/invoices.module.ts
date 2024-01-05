@@ -49,4 +49,4 @@ import { TableStateTemplateModule } from '../../../shared-components/table-state
     CreateReportModalComponent,
   ],
 })
-export class InvoicesModule { }
+export class InvoicesModule {}
