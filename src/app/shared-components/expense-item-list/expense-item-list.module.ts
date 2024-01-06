@@ -12,6 +12,7 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { NzAutocompleteModule } from 'ng-zorro-antd/auto-complete';
 import { TableStateTemplateModule } from '../table-state-template/table-state-template.module';
+import { CurrencyMaskModule } from 'ng2-currency-mask';
 
 @NgModule({
   declarations: [ExpenseItemListComponent],
@@ -29,6 +30,7 @@ import { TableStateTemplateModule } from '../table-state-template/table-state-te
     ReactiveFormsModule,
     NzAutocompleteModule,
     TableStateTemplateModule,
+    CurrencyMaskModule,
   ],
   exports: [ExpenseItemListComponent],
   providers: [],

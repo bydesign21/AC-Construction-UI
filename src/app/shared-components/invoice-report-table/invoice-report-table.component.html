@@ -2,6 +2,7 @@
   class="shadow overflow-scroll sm:rounded-lg p-4 border border-gray-900 bg-white h-full order-report-table">
   <nz-table
     #nzTable
+    [nzPageSize]="limit"
     [nzNoResult]="stateTemplate ? stateTemplate : NoResultTemplate"
     [nzData]="listOfData"
     [nzShowPagination]="false"

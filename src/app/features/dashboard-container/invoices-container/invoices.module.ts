@@ -18,6 +18,7 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TableStateTemplateModule } from '../../../shared-components/table-state-template/table-state-template.module';
+import { CurrencyMaskModule } from 'ng2-currency-mask';
 
 @NgModule({
   declarations: [
@@ -41,6 +42,7 @@ import { TableStateTemplateModule } from '../../../shared-components/table-state
     ReactiveFormsModule,
     FormsModule,
     TableStateTemplateModule,
+    CurrencyMaskModule,
   ],
   providers: [provideRouter(routes)],
   exports: [
@@ -49,4 +51,4 @@ import { TableStateTemplateModule } from '../../../shared-components/table-state
     CreateReportModalComponent,
   ],
 })
-export class InvoicesModule {}
+export class InvoicesModule { }

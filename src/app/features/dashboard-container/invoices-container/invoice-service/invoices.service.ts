@@ -10,20 +10,47 @@ import { Client, Invoice, InvoiceItemDetail } from '../invoices-model/model';
   providedIn: 'root',
 })
 export class InvoicesService {
-  constructor(private sb: SupabaseService) {}
+  constructor(private sb: SupabaseService) { }
 
   getInvoices(
     page: number = 1,
-    limit: number
+    limit: number,
+    dateRange?: string[]
   ): Observable<SupabaseClientDBResponse<Invoice>> {
     const start = (page - 1) * limit;
     const end = start + limit - 1;
-    // make more robust handle pagination, etc. return in format of {data: [], count: 0}
+
+    if (dateRange) {
+      return this.getInvoicesByDateRange(page, limit, dateRange);
+    }
     return from(
       this.sb.client
         .from('orders')
         .select('*', { count: 'exact' })
         .range(start, end)
+        .order('date', { ascending: false, nullsFirst: false })
+    ).pipe(
+      map(res => {
+        return {
+          data: res.data || [],
+          count: res.count || 0,
+        };
+      })
+    );
+  }
+
+  private getInvoicesByDateRange(page = 1, limit: number, dateRange: string[]) {
+    const start = (page - 1) * limit;
+    const end = start + limit - 1;
+    const startDate = dateRange[0];
+    const endDate = dateRange[1];
+    return from(
+      this.sb.client
+        .from('orders')
+        .select('*', { count: 'exact' })
+        .range(start, end)
+        .gte('date', startDate)
+        .lte('date', endDate)
         .order('date', { ascending: false, nullsFirst: false })
     ).pipe(
       map(res => {

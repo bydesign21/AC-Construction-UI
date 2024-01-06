@@ -60,11 +60,3 @@
       (pageChange)="onPageChange($event)" />
   </div>
 </div>
-
-<ng-template #CreateInvoiceReportModalTemplate>
-  <app-create-report-modal
-    [invoices]="(reportOrders$ | async) || []"
-    (dateRangeChanged)="
-      handleReportDateRangeChange($event)
-    "></app-create-report-modal>
-</ng-template>

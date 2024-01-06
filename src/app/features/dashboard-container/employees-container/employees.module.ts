@@ -12,6 +12,7 @@ import { EmployeeListTableModule } from '../../../shared-components/employee-lis
 import { provideRouter } from '@angular/router';
 import { routes } from './employees.routes';
 import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
+import { CurrencyMaskModule } from 'ng2-currency-mask';
 
 @NgModule({
   declarations: [EmployeeContainerComponent, CreateEmployeeFormComponent],
@@ -26,6 +27,7 @@ import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
     NzModalModule,
     EmployeeListTableModule,
     NzCheckboxModule,
+    CurrencyMaskModule,
   ],
   providers: [provideRouter(routes)],
   exports: [EmployeeContainerComponent, CreateEmployeeFormComponent],

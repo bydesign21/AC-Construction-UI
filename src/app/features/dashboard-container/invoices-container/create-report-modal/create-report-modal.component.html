@@ -47,6 +47,24 @@
         </button>
       </div>
     </div>
-    <app-invoice-report-table [listOfData]="invoices" class="[&>*]:mt-8" />
+    <app-invoice-report-table
+      [stateTemplate]="
+        (dateRange$ | async)?.length !== 2 ? filterStateTemplate : undefined
+      "
+      [currentPage]="(currentPage$ | async) || 1"
+      [limit]="limit"
+      [totalItems]="totalRecords"
+      [isActionRowVisible]="false"
+      [listOfData]="reports"
+      (pageChange)="onPageChange($event)"
+      class="[&>*]:mt-8" />
   </div>
 </div>
+
+<ng-template #filterStateTemplate>
+  <app-table-state-template
+    class="[&>*]:!h-[55dvh]"
+    [iconType]="'search'"
+    [mainMessage]="'Select a Date Range To Start'"
+    [additionalInfo]="'Please adjust the filters to find desired invoices.'" />
+</ng-template>

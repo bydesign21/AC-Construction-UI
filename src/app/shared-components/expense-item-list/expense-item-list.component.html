@@ -198,11 +198,11 @@
             {{ data.value.sqftPrice | currency }}
           </div>
           <input
+            currencyMask
             aria-label="Sqft Price"
             (click)="$event.stopPropagation()"
             [hidden]="editIndex !== i"
             nz-input
-            type="number"
             [formControl]="getFormControl(rowForms[i], 'sqftPrice')"
             (ngModelChange)="handleSqftCostCalc(i)" />
         </td>
@@ -228,11 +228,11 @@
             {{ data.value.amount | currency }}
           </div>
           <input
+            currencyMask
             aria-label="Amount"
             (click)="$event.stopPropagation()"
             [hidden]="editIndex !== i"
             nz-input
-            type="number"
             [formControl]="getFormControl(rowForms[i], 'amount')" />
         </td>
         <td>

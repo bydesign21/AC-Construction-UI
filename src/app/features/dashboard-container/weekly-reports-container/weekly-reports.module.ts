@@ -23,6 +23,7 @@ import { ExpenseItemTagModule } from '../../../shared-components/expense-item-ta
 import { ExpenseItemLabelModule } from '../../../shared-components/expense-item-label/expense-item-label.module';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NoResultsInputTemplateModule } from '../../../shared-components/no-results-input-template/no-results-input-template.module';
+import { CurrencyMaskModule } from 'ng2-currency-mask';
 
 @NgModule({
   declarations: [
@@ -51,6 +52,7 @@ import { NoResultsInputTemplateModule } from '../../../shared-components/no-resu
     ExpenseItemLabelModule,
     NzButtonModule,
     NoResultsInputTemplateModule,
+    CurrencyMaskModule,
   ],
   providers: [provideRouter(routes)],
   exports: [

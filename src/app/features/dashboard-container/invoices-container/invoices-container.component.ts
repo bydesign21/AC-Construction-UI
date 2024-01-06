@@ -4,11 +4,9 @@ import {
   Component,
   OnDestroy,
   OnInit,
-  TemplateRef,
-  ViewChild,
 } from '@angular/core';
 import { NzModalService } from 'ng-zorro-antd/modal';
-import { BehaviorSubject, Subject, combineLatest, take, takeUntil } from 'rxjs';
+import { BehaviorSubject, Subject, take, takeUntil } from 'rxjs';
 import { DeleteWeeklyReportModalComponent } from '../weekly-reports-container/delete-weekly-report-modal/delete-weekly-report-modal.component';
 import { CreateReportModalComponent } from './create-report-modal/create-report-modal.component';
 import { ClientsContainerComponent } from '../clients-container/clients/clients-container.component';
@@ -26,8 +24,6 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrl: './invoices-container.component.scss',
 })
 export class InvoicesContainerComponent implements OnInit, OnDestroy {
-  @ViewChild('CreateInvoiceReportModalTemplate')
-  createReportModalRef!: TemplateRef<CreateReportModalComponent>;
   constructor(
     private cd: ChangeDetectorRef,
     private modal: NzModalService,
@@ -35,11 +31,8 @@ export class InvoicesContainerComponent implements OnInit, OnDestroy {
     private message: NzMessageService,
     private router: Router,
     private route: ActivatedRoute
-  ) {}
+  ) { }
   orders$: BehaviorSubject<Invoice[]> = new BehaviorSubject<Invoice[]>([]);
-  reportOrders$: BehaviorSubject<Invoice[]> = new BehaviorSubject<Invoice[]>(
-    []
-  );
   loading$ = new BehaviorSubject<boolean>(false);
   destroy$ = new Subject();
   currentPage = 1;
@@ -141,21 +134,12 @@ export class InvoicesContainerComponent implements OnInit, OnDestroy {
   handleCreateInvoiceReport() {
     const modal = this.modal.create({
       nzTitle: 'Create Invoices Report',
-      nzContent: this.createReportModalRef,
+      nzContent: CreateReportModalComponent,
       nzWidth: '100dvw',
       nzBodyStyle: { height: '90dvh' },
       nzStyle: { top: '1rem', margin: '1rem' },
       nzFooter: null,
     });
-
-    modal.afterClose.pipe(take(1)).subscribe(() => {
-      this.reportOrders$.next([]);
-    });
-  }
-
-  handleReportDateRangeChange(dateRange: string) {
-    // TODO: handle getting new invoices from backend fitting date range
-    // set reportInvoices to result
   }
 
   // Invoice Modal
