@@ -6,7 +6,8 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import { Client } from '../../features/dashboard/invoices-container/invoices-model/model';
+import { Client } from '../../features/dashboard-container/invoices-container/invoices-model/model';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -18,14 +19,22 @@ import { Client } from '../../features/dashboard/invoices-container/invoices-mod
 export class ClientListTableComponent implements OnInit {
   @Input() listOfData: Client[] = [];
   @Input() isActionRowVisible: boolean = true;
+  @Input() loading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(
+    false
+  );
+  @Input() limit: number = 10;
+  @Input() currentPage: number = 1;
+  @Input() count: number = 0;
   @Output() viewItem: EventEmitter<Client> = new EventEmitter<Client>();
   @Output() printItem: EventEmitter<Client> = new EventEmitter<Client>();
-  @Output() deleteItem: EventEmitter<number> = new EventEmitter<number>();
+  @Output() deleteItem: EventEmitter<string> = new EventEmitter<string>();
+  @Output() pageChange: EventEmitter<number> = new EventEmitter<number>();
 
   tableHeaders: any[] = [
     {
       label: 'Name',
-      sortFn: (a: Client, b: Client) => a.name.localeCompare(b.name),
+      sortFn: (a: Client, b: Client) =>
+        a.companyName.localeCompare(b.companyName),
     },
     {
       label: 'Phone',
@@ -41,8 +50,8 @@ export class ClientListTableComponent implements OnInit {
     if (this.isActionRowVisible) this.tableHeaders.push({ label: 'Actions' });
   }
 
-  handleDeleteItem(index: number) {
-    this.deleteItem.emit(index);
+  handleDeleteItem(itemId: string) {
+    this.deleteItem.emit(itemId);
   }
 
   handleViewItem(item: Client) {
@@ -51,5 +60,10 @@ export class ClientListTableComponent implements OnInit {
 
   handlePrintItem(item: Client) {
     this.printItem.emit(item);
+  }
+
+  handlePageChange(page: number) {
+    if (page === this.currentPage) return;
+    this.pageChange.emit(page);
   }
 }

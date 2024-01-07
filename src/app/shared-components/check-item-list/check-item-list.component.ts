@@ -18,8 +18,8 @@ import {
   ValidationErrors,
 } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
-import { TableFormService } from '../table-form.service';
-import { CheckLineItem } from '../../features/dashboard/checks-container/check-model/model';
+import { FormConfig, TableFormService } from '../table-form.service';
+import { CheckLineItem } from '../../features/dashboard-container/checks-container/check-model/model';
 
 @Component({
   selector: 'app-check-item-list',
@@ -29,12 +29,14 @@ import { CheckLineItem } from '../../features/dashboard/checks-container/check-m
 export class CheckItemListComponent implements OnInit, OnChanges, OnDestroy {
   @ViewChild('table') table!: ElementRef;
   @Input() items: CheckLineItem[] = [];
+  @Input() isDisabled = false;
   @Output() changed: EventEmitter<CheckLineItem[]> = new EventEmitter<
     CheckLineItem[]
   >();
   @Output() itemDeleted: EventEmitter<number> = new EventEmitter<number>();
   @Output() addItemRequest: EventEmitter<void> = new EventEmitter<void>();
   @Output() isValid: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output() isTouched: EventEmitter<boolean> = new EventEmitter<boolean>();
   rowForms: FormGroup[] = [];
   fieldErrors: ValidationErrors[] = [];
   destroy$ = new Subject<void>();
@@ -61,7 +63,7 @@ export class CheckItemListComponent implements OnInit, OnChanges, OnDestroy {
     if (changes.items && !changes.items.firstChange) {
       this.initializeRowForms();
       this.recalculateFieldErrors();
-      this.recalculateIsValidAndEmit();
+      this.recalculateFormStatusAndEmit();
     }
   }
 
@@ -71,7 +73,7 @@ export class CheckItemListComponent implements OnInit, OnChanges, OnDestroy {
     this.destroy$.unsubscribe();
   }
 
-  recalculateIsValidAndEmit(): void {
+  recalculateFormStatusAndEmit(): void {
     this.isValid.emit(this.rowForms.every(form => form.valid));
   }
 
@@ -81,17 +83,18 @@ export class CheckItemListComponent implements OnInit, OnChanges, OnDestroy {
 
   initializeRowForms(): void {
     this.rowForms = this.items.map(item => this.createRowForm(item));
+    this.recalculateFormStatusAndEmit();
   }
 
   createRowForm(item: CheckLineItem): FormGroup {
-    const formConfig = {
+    const formConfig: FormConfig = {
       description: {
         defaultValue: item?.description || null,
-        Validators: Validators.required,
+        validators: [Validators.required],
       },
       total: {
         defaultValue: item?.total || null,
-        validators: Validators.required,
+        validators: [Validators.required],
       },
     };
 
@@ -103,9 +106,9 @@ export class CheckItemListComponent implements OnInit, OnChanges, OnDestroy {
         console.error('Item not found in items array', item);
         return;
       }
-
+      this.isTouched.emit(true);
       this.updateFieldErrors(form, itemIndex);
-      this.recalculateIsValidAndEmit();
+      this.recalculateFormStatusAndEmit();
     });
 
     return form;
@@ -116,6 +119,7 @@ export class CheckItemListComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   startEdit(index: number): void {
+    if (this.isDisabled) return;
     if (this.editIndex !== null && this.editIndex !== index) {
       this.validateAndEmitRow(this.editIndex);
     }
@@ -158,6 +162,7 @@ export class CheckItemListComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   deleteItem(index: number): void {
+    this.isTouched.emit(true);
     this.itemDeleted.emit(index);
   }
 

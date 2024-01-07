@@ -9,11 +9,10 @@ import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
-import { ExpensesService } from './expenses.service';
-import { SharedUtilsService } from '../shared-utils.service';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
-import { TableFormService } from '../table-form.service';
 import { NzAutocompleteModule } from 'ng-zorro-antd/auto-complete';
+import { TableStateTemplateModule } from '../table-state-template/table-state-template.module';
+import { CurrencyMaskModule } from 'ng2-currency-mask';
 
 @NgModule({
   declarations: [ExpenseItemListComponent],
@@ -30,8 +29,10 @@ import { NzAutocompleteModule } from 'ng-zorro-antd/auto-complete';
     NzToolTipModule,
     ReactiveFormsModule,
     NzAutocompleteModule,
+    TableStateTemplateModule,
+    CurrencyMaskModule,
   ],
   exports: [ExpenseItemListComponent],
-  providers: [ExpensesService, SharedUtilsService, TableFormService],
+  providers: [],
 })
-export class ExpenseItemListModule {}
+export class ExpenseItemListModule { }

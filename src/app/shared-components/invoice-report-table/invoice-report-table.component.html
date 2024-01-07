@@ -1,11 +1,11 @@
 <div
-  class="shadow overflow-scroll sm:rounded-lg p-4 border border-gray-900 bg-white h-full invoice-report-table">
+  class="shadow overflow-scroll sm:rounded-lg p-4 border border-gray-900 bg-white h-full order-report-table">
   <nz-table
-    [nzPageSize]="8"
     #nzTable
+    [nzPageSize]="limit"
+    [nzNoResult]="stateTemplate ? stateTemplate : NoResultTemplate"
     [nzData]="listOfData"
-    [nzPaginationPosition]="'bottom'"
-    [nzShowPagination]="listOfData.length > 0"
+    [nzShowPagination]="false"
     [nzTableLayout]="'fixed'">
     <thead>
       <tr
@@ -22,11 +22,11 @@
     </thead>
     <tbody>
       <tr *ngFor="let data of nzTable.data; index as i">
-        <td class="italic">{{ data.id }}</td>
+        <td class="italic">{{ data.orderId }}</td>
         <td>{{ data.date | date: 'MM/dd/yyyy' }}</td>
-        <td>{{ data.clientId }}</td>
+        <td>{{ data.client }}</td>
         <td>
-          {{ data.total | currency }}
+          {{ data.orderTotal | currency }}
         </td>
         <td *ngIf="isActionRowVisible">
           <div class="flex flex-row gap-2 justify-center">
@@ -79,4 +79,22 @@
       </tr>
     </tbody>
   </nz-table>
+  <div
+    *ngIf="listOfData.length > 0"
+    class="flex flex-row justify-end items-center w-full mt-4">
+    <nz-pagination
+      [nzPageIndex]="currentPage"
+      [nzTotal]="totalItems"
+      [nzPageSize]="limit"
+      (nzPageIndexChange)="handlePageChange($event)" />
+  </div>
 </div>
+
+<ng-template #NoResultTemplate>
+  <app-table-state-template
+    *ngIf="(loading$ | async) === false"
+    class="[&>*]:!h-[55dvh]"
+    [iconType]="'frown'"
+    [mainMessage]="'No Invoices Found'"
+    [additionalInfo]="'Please try again, or create your first invoice.'" />
+</ng-template>

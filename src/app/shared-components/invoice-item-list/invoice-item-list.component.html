@@ -4,11 +4,13 @@
   #table
   class="flex flex-col justify-center items-center min-h-full min-w-full overflow-hidden">
   <nz-table
+    [ngClass]="isDisabled ? 'opacity-60 cursor-not-allowed' : ''"
     class="min-w-full overflow-hidden"
     #editRowTable
     nzBordered
     [nzTableLayout]="'fixed'"
     [nzPageSize]="8"
+    [nzNoResult]="noDataTemplate"
     [nzPaginationPosition]="'bottom'"
     [nzShowPagination]="items!.length > 8"
     [nzData]="items || []">
@@ -22,6 +24,7 @@
               'quantity',
               'rate',
               'discount',
+              'subtotal',
               'total'
             ]
           ">
@@ -97,15 +100,26 @@
         </td>
         <td>
           <div [hidden]="editIndex === i" (click)="startEdit(i)">
-            {{ data.value.discount | currency }}
+            {{ data.value.discount || 0 | percent }}
           </div>
           <input
             aria-label="Discount"
             (click)="$event.stopPropagation()"
             [hidden]="editIndex !== i"
             nz-input
-            type="number"
             [formControl]="getFormControl(rowForms[i], 'discount')" />
+        </td>
+        <td>
+          <div [hidden]="editIndex === i" (click)="startEdit(i)">
+            {{ data.value.subtotal | currency }}
+          </div>
+          <input
+            aria-label="Subtotal"
+            (click)="$event.stopPropagation()"
+            [hidden]="editIndex !== i"
+            nz-input
+            type="number"
+            [formControl]="getFormControl(rowForms[i], 'subtotal')" />
         </td>
         <td>
           <div [hidden]="editIndex === i" (click)="startEdit(i)">
@@ -126,6 +140,7 @@
             type="button"
             class="!rounded-lg items-center justify-center flex flex-col"
             nz-button
+            [disabled]="isDisabled"
             nz-popconfirm
             nzPopconfirmTitle="Are you sure?"
             (nzOnConfirm)="deleteItem(i)">
@@ -145,7 +160,10 @@
     class="fixed bottom-[5rem] w-full flex flex-col justify-center items-center">
     <button
       nz-button
-      [disabled]="rowForms.length > 0 && !rowForms[rowForms.length - 1].valid"
+      [disabled]="
+        (rowForms.length > 0 && !rowForms[rowForms.length - 1].valid) ||
+        isDisabled
+      "
       (click)="requestAddItem()"
       nzType="primary"
       nzSize="large"
@@ -163,4 +181,14 @@
       {{ getErrorMessageForField(field) }}
     </span>
   </div>
+</ng-template>
+
+<ng-template #noDataTemplate>
+  <app-table-state-template
+    class="[&>*]:!h-[50dvh]"
+    [iconType]="'plus-circle'"
+    [mainMessage]="'No Items In Invoice'"
+    [additionalInfo]="
+      'Please add an item to the invoice to get started.'
+    "></app-table-state-template>
 </ng-template>

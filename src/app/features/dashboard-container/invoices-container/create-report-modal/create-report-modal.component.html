@@ -1,0 +1,70 @@
+<div class="flex flex-col mt-[1rem] min-w-full overflow-hidden">
+  <div class="overflow-auto max-h-[80dvh]">
+    <div class="flex flex-row gap-4 mx-2 items-center justify-between">
+      <app-date-range-picker
+        [label]="'Select Date Range'"
+        [isRequired]="true"
+        (changed)="handleDateChanged($event)"></app-date-range-picker>
+      <div class="flex flex-row gap-2">
+        <button
+          nz-button
+          title="Download Report"
+          class="!rounded-lg !items-center justify-center !flex !flex-col relative top-4">
+          <div class="flex flex-row gap-1 items-center">
+            <span class="sr-only">Download Report</span>
+            <span
+              class="items-center flex flex-col justify-center"
+              nz-icon
+              [nzType]="'download'"
+              nzTheme="outline"></span>
+          </div>
+        </button>
+        <button
+          nz-button
+          title="Print Report"
+          class="!rounded-lg !items-center justify-center !flex !flex-col relative top-4">
+          <div class="flex flex-row gap-1 items-center">
+            <span class="sr-only">Print Report</span>
+            <span
+              class="items-center flex flex-col justify-center"
+              nz-icon
+              [nzType]="'printer'"
+              nzTheme="outline"></span>
+          </div>
+        </button>
+        <button
+          nz-button
+          title="Email Report"
+          class="!rounded-lg !items-center justify-center !flex !flex-col relative top-4">
+          <div class="flex flex-row gap-1 items-center">
+            <span class="sr-only">Email Report</span>
+            <span
+              class="items-center flex flex-col justify-center"
+              nz-icon
+              [nzType]="'mail'"
+              nzTheme="outline"></span>
+          </div>
+        </button>
+      </div>
+    </div>
+    <app-invoice-report-table
+      [stateTemplate]="
+        (dateRange$ | async)?.length !== 2 ? filterStateTemplate : undefined
+      "
+      [currentPage]="(currentPage$ | async) || 1"
+      [limit]="limit"
+      [totalItems]="totalRecords"
+      [isActionRowVisible]="false"
+      [listOfData]="reports"
+      (pageChange)="onPageChange($event)"
+      class="[&>*]:mt-8" />
+  </div>
+</div>
+
+<ng-template #filterStateTemplate>
+  <app-table-state-template
+    class="[&>*]:!h-[55dvh]"
+    [iconType]="'search'"
+    [mainMessage]="'Select a Date Range To Start'"
+    [additionalInfo]="'Please adjust the filters to find desired invoices.'" />
+</ng-template>

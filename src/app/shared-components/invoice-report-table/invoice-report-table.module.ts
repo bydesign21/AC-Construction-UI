@@ -9,6 +9,8 @@ import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzTableModule } from 'ng-zorro-antd/table';
+import { NzPaginationModule } from 'ng-zorro-antd/pagination';
+import { TableStateTemplateModule } from '../table-state-template/table-state-template.module';
 
 @NgModule({
   declarations: [InvoiceReportTableComponent],
@@ -22,6 +24,8 @@ import { NzTableModule } from 'ng-zorro-antd/table';
     NzButtonModule,
     NzPopconfirmModule,
     NzIconModule,
+    NzPaginationModule,
+    TableStateTemplateModule,
   ],
   exports: [InvoiceReportTableComponent],
 })

@@ -12,6 +12,7 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { PasswordResetModalComponent } from './password-reset-modal/password-reset-modal.component';
 import { PasswordResetComponent } from './password-reset/password-reset.component';
+import { NzButtonModule } from 'ng-zorro-antd/button';
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import { PasswordResetComponent } from './password-reset/password-reset.componen
     NzMessageModule,
     NzModalModule,
     FormsModule,
+    NzButtonModule,
   ],
   providers: [provideRouter(routes), SupabaseService, provideAnimations()],
   exports: [
@@ -38,4 +40,4 @@ import { PasswordResetComponent } from './password-reset/password-reset.componen
     PasswordResetComponent,
   ],
 })
-export class AuthModule {}
+export class AuthModule { }

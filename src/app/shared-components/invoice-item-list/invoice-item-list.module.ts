@@ -10,7 +10,7 @@ import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
-import { TableFormService } from '../table-form.service';
+import { TableStateTemplateModule } from '../table-state-template/table-state-template.module';
 
 @NgModule({
   declarations: [InvoiceItemListComponent],
@@ -26,8 +26,9 @@ import { TableFormService } from '../table-form.service';
     NzIconModule,
     ReactiveFormsModule,
     NzToolTipModule,
+    TableStateTemplateModule,
   ],
-  providers: [TableFormService],
+  providers: [],
   exports: [InvoiceItemListComponent],
 })
-export class InvoiceItemListModule {}
+export class InvoiceItemListModule { }

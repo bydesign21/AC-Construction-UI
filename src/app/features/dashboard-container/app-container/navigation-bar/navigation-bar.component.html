@@ -1,0 +1,79 @@
+<nav class="bg-gray-400 z-[1000]">
+  <div class="mx-[1rem] px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16">
+      <!-- Logo Area -->
+      <div (click)="handleLogoClicked()" class="flex-shrink-0">
+        <img
+          class="max-w-[55dvw] sm:max-w-[20dvw]"
+          src="./assets/images/logo.png"
+          alt="Logo" />
+      </div>
+
+      <!-- Profile Dropdown -->
+      <div class="ml-4 flex items-center">
+        <div class="ml-3 relative">
+          <div>
+            <button
+              #dropdownIcon
+              (click)="toggleDropdown()"
+              type="button"
+              class="flex items-center text-sm text-white p-2 hover:text-gray-800 focus:text-red-500"
+              id="user-menu-button"
+              aria-expanded="false"
+              aria-haspopup="true"
+              (focus)="isDropdownIconFocused = true"
+              (blur)="isDropdownIconFocused = false">
+              <span class="sr-only">Profile</span>
+              <span
+                nz-icon
+                nzType="setting"
+                nzTheme="outline"
+                class="text-xl text-white mr-2"></span>
+              <span
+                nz-icon
+                nzType="down"
+                nzTheme="outline"
+                class="text-md text-white mr-2"
+                [ngClass]="{ '!text-gray-800': isDropdownIconFocused }"></span>
+            </button>
+          </div>
+
+          <!-- Dropdown menu -->
+          <div
+            #dropdownMenu
+            class="origin-top-right absolute right-0 mt-2 w-48 z-[1001] rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
+            [class.hidden]="!dropdownOpen"
+            role="menu"
+            aria-orientation="vertical"
+            aria-labelledby="user-menu-button">
+            <nz-button-group
+              [ariaDisabled]="isLoading$ | async"
+              class="flex flex-col gap-1 w-full">
+              <a
+                [ariaDisabled]="isLoading$ | async"
+                [routerLink]="['profile']"
+                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-red-500"
+                role="menuitem"
+                >Your Profile</a
+              >
+              <a
+                [ariaDisabled]="isLoading$ | async"
+                [routerLink]="['profile', 'settings']"
+                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-red-500"
+                role="menuitem"
+                >Settings</a
+              >
+              <a
+                [ariaDisabled]="isLoading$ | async"
+                (click)="handleSignOut()"
+                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-red-500"
+                role="menuitem"
+                >Sign out</a
+              >
+            </nz-button-group>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>

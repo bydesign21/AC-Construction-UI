@@ -1,0 +1,62 @@
+<div class="flex flex-col mt-[2rem] min-w-full overflow-hidden">
+  <div class="flex flex-row items-center justify-between">
+    <h1 class="text-2xl">Invoices</h1>
+    <div class="flex flex-row gap-1">
+      <button
+        (click)="handleCreateInvoiceReport()"
+        title="Create Report"
+        nz-button
+        class="ml-2 items-center flex mb-[0.5em] !rounded-lg">
+        <span
+          >Create Report
+          <span
+            class="items-center flex relative bottom-[0.15rem]"
+            nz-icon
+            [nzTheme]="'outline'"
+            nzType="project"></span
+        ></span>
+      </button>
+      <button
+        (click)="handleClientManagement()"
+        title="Manage Clients"
+        nz-button
+        class="ml-2 items-center flex mb-[0.5em] !rounded-lg">
+        <span
+          >Manage Clients
+          <span
+            class="items-center flex relative bottom-[0.15rem]"
+            nz-icon
+            [nzTheme]="'outline'"
+            nzType="user-add"></span
+        ></span>
+      </button>
+      <button
+        (click)="handleCreateInvoice()"
+        title="Create Invoice"
+        nz-button
+        class="ml-2 items-center flex mb-[0.5em] !rounded-lg">
+        <span
+          >Create Invoice
+          <span
+            class="items-center flex relative bottom-[0.15rem]"
+            nz-icon
+            [nzTheme]="'outline'"
+            nzType="plus-circle"></span
+        ></span>
+      </button>
+    </div>
+  </div>
+  <div class="flex flex-col gap-4">
+    <app-invoice-report-table
+      [currentPage]="currentPage"
+      [limit]="limit"
+      [loading$]="loading$"
+      [totalItems]="totalRecords"
+      [isActionRowVisible]="true"
+      [listOfData]="(orders$ | async) || []"
+      (deleteItem)="handleDeleteItem($event)"
+      (printItem)="handlePrintItem($event)"
+      (viewItem)="handleViewItem($event)"
+      (pageChange)="onPageChange($event)" />
+  </div>
+</div>

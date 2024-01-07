@@ -3,6 +3,7 @@
   <nz-table
     [nzPageSize]="limit"
     #nzTable
+    [nzNoResult]="stateTemplate ? stateTemplate : noResultsTemplate"
     [nzLoading]="loading$ | async"
     [nzData]="listOfData"
     [nzLoadingIndicator]="loadingIndicator"
@@ -101,14 +102,11 @@
   ></span>
 </ng-template>
 
-<ng-template #noResult>
-  <!-- create beautiful UI empty state with icon and text -->
-  <div class="flex flex-col items-center justify-center">
-    <span
-      class="!text-[4rem] items-center justify-center h-[1.4rem]"
-      nz-icon
-      [nzType]="'file-search'"
-      nzTheme="outline"></span>
-    <span class="!text-xl">No Results</span>
-  </div>
+<ng-template #noResultsTemplate>
+  <app-table-state-template
+    *ngIf="(loading$ | async) === false"
+    class="[&>*]:!h-[55dvh]"
+    [iconType]="'file-search'"
+    [mainMessage]="'No Checks Found'"
+    [additionalInfo]="'Please create your first check.'" />
 </ng-template>

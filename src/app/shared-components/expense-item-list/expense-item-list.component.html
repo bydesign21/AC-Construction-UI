@@ -4,17 +4,19 @@
   #table
   class="flex flex-col justify-center items-center min-w-full overflow-hidden">
   <nz-table
+    [ngClass]="isDisabled ? 'opacity-60 cursor-not-allowed' : ''"
     class="min-w-full overflow-hidden mb-[3.5rem]"
     #editRowTable
     nzBordered
     [nzTableLayout]="'fixed'"
     [nzPageSize]="8"
+    [nzNoResult]="noDataTemplate"
     [nzPaginationPosition]="'bottom'"
     [nzShowPagination]="false"
     [nzData]="items || []">
     <thead>
       <tr>
-        <th class="w-[10rem]">
+        <th class="lg:w-[15rem]">
           <div class="flex flex-row items-center justify-between">
             <span>Employee</span>
             <span
@@ -28,7 +30,7 @@
             </span>
           </div>
         </th>
-        <th class="w-[15rem]">
+        <th class="lg:w-[15rem]">
           <div class="flex flex-row items-center justify-between">
             <span>Address</span>
             <span
@@ -98,7 +100,7 @@
             </span>
           </div>
         </th>
-        <th class="w-[10rem]">
+        <th class="lg:w-[10rem]">
           <div class="flex flex-row items-center justify-between">
             <span>Date</span>
             <span
@@ -112,7 +114,7 @@
             </span>
           </div>
         </th>
-        <th class="w-[8rem]">
+        <th class="lg:w-[8rem]">
           <div class="flex flex-row items-center justify-between">
             <span>Type</span>
             <span
@@ -135,9 +137,9 @@
         class="editable-row"
         (click)="stopEdit(); startEdit(i); $event.stopPropagation()"
         (blur)="stopEdit()">
-        <td class="max-w-[10rem]">
+        <td class="!max-w-[15rem]">
           <div
-            class="max-w-[10rem] truncate"
+            class="!max-w-[15rem] truncate"
             [hidden]="editIndex === i"
             (click)="startEdit(i); $event.stopPropagation()">
             <span
@@ -152,21 +154,26 @@
               >{{ data.value?.employeeName }}</span
             >
           </div>
-          <input
-            aria-label="Employee Name"
-            nz-input
+          <nz-input-group
             [hidden]="editIndex !== i"
-            class="w-[8rem]"
-            [nzAutocomplete]="employeeNameAutoComplete"
-            [formControl]="getFormControl(rowForms[i], 'employeeName')"
-            (click)="$event.stopPropagation()" />
-
+            class="flex flex-row justify-end"
+            [nzSuffixIcon]="'search'">
+            <input
+              nz-input
+              [nzAutocomplete]="employeeNameAutoComplete"
+              placeholder="Employee Name"
+              aria-label="Employee Name"
+              [(ngModel)]="searchTermInternal"
+              (ngModelChange)="handleEmployeeSearch($event)"
+              [formControl]="getFormControl(rowForms[i], 'employeeName')"
+              (click)="$event.stopPropagation()" />
+          </nz-input-group>
           <nz-autocomplete #employeeNameAutoComplete>
             <nz-auto-option
               *ngFor="let option of employeeList"
-              [nzValue]="option.label"
-              [nzLabel]="option.label">
-              <span>{{ option.label }}</span>
+              [nzValue]="option.name"
+              [nzLabel]="option.name">
+              <span>{{ option.name }}</span>
             </nz-auto-option>
           </nz-autocomplete>
           <!-- TODO: Append autocomplete to input on open -->
@@ -191,11 +198,11 @@
             {{ data.value.sqftPrice | currency }}
           </div>
           <input
+            currencyMask
             aria-label="Sqft Price"
             (click)="$event.stopPropagation()"
             [hidden]="editIndex !== i"
             nz-input
-            type="number"
             [formControl]="getFormControl(rowForms[i], 'sqftPrice')"
             (ngModelChange)="handleSqftCostCalc(i)" />
         </td>
@@ -221,11 +228,11 @@
             {{ data.value.amount | currency }}
           </div>
           <input
+            currencyMask
             aria-label="Amount"
             (click)="$event.stopPropagation()"
             [hidden]="editIndex !== i"
             nz-input
-            type="number"
             [formControl]="getFormControl(rowForms[i], 'amount')" />
         </td>
         <td>
@@ -335,4 +342,14 @@
       {{ data }}
     </span>
   </div>
+</ng-template>
+
+<ng-template #noDataTemplate>
+  <app-table-state-template
+    class="[&>*]:!h-[50dvh]"
+    [iconType]="'plus-circle'"
+    [mainMessage]="'No Expenses In Weekly Report'"
+    [additionalInfo]="
+      'Please add an expense to the weekly report to get started.'
+    "></app-table-state-template>
 </ng-template>

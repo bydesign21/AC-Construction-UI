@@ -1,11 +1,13 @@
 <div
-  class="shadow overflow-scroll sm:rounded-lg p-4 border border-gray-900 bg-white h-full invoice-report-table">
+  class="shadow overflow-scroll sm:rounded-lg p-4 border border-gray-900 bg-white h-full client-list-table">
   <nz-table
-    [nzPageSize]="8"
+    class="pb-4"
+    [nzPageSize]="limit"
     #nzTable
+    [nzNoResult]="noResultTemplate"
+    [nzLoading]="loading$ | async"
     [nzData]="listOfData"
-    [nzPaginationPosition]="'bottom'"
-    [nzShowPagination]="listOfData.length > 0"
+    [nzShowPagination]="false"
     [nzTableLayout]="'fixed'">
     <thead>
       <tr
@@ -22,7 +24,7 @@
     </thead>
     <tbody>
       <tr *ngFor="let data of nzTable.data; index as i">
-        <td>{{ data.name }}</td>
+        <td>{{ data.companyName }}</td>
         <td>
           {{ data.phone }}
         </td>
@@ -65,7 +67,7 @@
               class="!rounded-lg items-center justify-center flex flex-col"
               nz-popconfirm
               nzPopconfirmTitle="Are you sure?"
-              (nzOnConfirm)="handleDeleteItem(i)">
+              (nzOnConfirm)="handleDeleteItem(data?.id || '')">
               <div>
                 <span
                   class="items-center !text-red-400 justify-center h-[1.4rem]"
@@ -80,4 +82,23 @@
       </tr>
     </tbody>
   </nz-table>
+  <div class="flex flex-row min-w-full justify-end" *ngIf="count > 0">
+    <nz-pagination
+      [nzPageIndex]="currentPage"
+      [nzTotal]="count"
+      [nzPageSize]="limit"
+      (nzPageIndexChange)="handlePageChange($event)">
+    </nz-pagination>
+  </div>
 </div>
+
+<ng-template #noResultTemplate>
+  <app-table-state-template
+    *ngIf="(loading$ | async) === false"
+    class="[&>*]:!h-[55dvh]"
+    [iconType]="'frown'"
+    [mainMessage]="'No Clients Found'"
+    [additionalInfo]="
+      'Please refine your search term or add your first client.'
+    "></app-table-state-template>
+</ng-template>

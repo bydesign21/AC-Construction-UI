@@ -24,7 +24,7 @@ export class AuthContainerComponent implements OnInit {
       sessionStorage.getItem('isAuthenticated') || 'false'
     );
     if (isAuthenticated) {
-      await this.router.navigate([''], { replaceUrl: true });
+      await this.router.navigate(['/dashboard'], { replaceUrl: true });
       this.cd.detectChanges();
     }
   }

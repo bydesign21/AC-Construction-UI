@@ -10,4 +10,5 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 export class ExpenseItemTagComponent {
   @Input() value: number = 0;
   @Input() label: string = '';
+  @Input() isExpense: boolean = false;
 }

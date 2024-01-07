@@ -5,8 +5,9 @@ import {
   Input,
   OnInit,
   Output,
+  TemplateRef,
 } from '@angular/core';
-import { Check } from '../../features/dashboard/checks-container/check-model/model';
+import { Check } from '../../features/dashboard-container/checks-container/check-model/model';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
@@ -18,6 +19,7 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class ChecksReportTableComponent implements OnInit {
   @Input() limit: number = 10;
+  @Input() stateTemplate?: TemplateRef<any> | string;
   @Input() loading$: BehaviorSubject<boolean> = new BehaviorSubject(true);
   @Input() listOfData: Check[] = [];
   @Input() isActionRowVisible: boolean = false;
@@ -65,7 +67,6 @@ export class ChecksReportTableComponent implements OnInit {
 
   handlePageChange(page: number) {
     if (page !== this.currentPage) {
-      console.log('page', page);
       this.pageChange.emit(page);
     }
   }

@@ -1,0 +1,127 @@
+<div
+  class="shadow overflow-scroll sm:rounded-lg p-4 !pb-0 mb-2 border border-gray-900 bg-white weekly-report-table">
+  <nz-table
+    [nzPageSize]="limit"
+    #nzTable
+    [nzNoResult]="stateTemplate ? stateTemplate : noResultsTemplate"
+    [nzData]="listOfData"
+    [nzShowPagination]="false"
+    [nzTableLayout]="'fixed'">
+    <thead>
+      <tr
+        class="px-6 flex-row py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+        <th
+          *ngFor="let th of tableHeaders"
+          nzCustomFilter
+          [nzSortFn]="th?.sortFn"
+          [nzShowFilter]="true"
+          class="!font-bold">
+          {{ th.label }}
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of nzTable.data; index as i">
+        <td class="italic">
+          {{ data.date[0] | date: 'MM/dd/YYYY' }} -
+          {{ data.date[1] | date: 'MM/dd/YYYY' }}
+        </td>
+        <td>{{ data.revenue | currency }}</td>
+        <td class="text-red-400 font-bold">
+          {{ data.totalExpenses | currency }}
+        </td>
+        <td
+          [class]="
+            data.profit > 0
+              ? 'text-green-700 font-bold'
+              : 'text-red-400 font-bold'
+          ">
+          {{ data.profit | currency }}
+        </td>
+        <td
+          [class]="
+            data.profitSplit > 0
+              ? 'text-green-700 font-bold'
+              : 'text-red-400 font-bold'
+          ">
+          {{ data.profitSplit | currency }}
+        </td>
+        <td *ngIf="isActionRowVisible">
+          <div class="flex flex-row gap-2 justify-center">
+            <button
+              title="View Item"
+              (click)="handleViewItem(data)"
+              nz-button
+              class="!rounded-lg items-center justify-center flex flex-col">
+              <div>
+                <span
+                  class="items-center justify-center h-[1.4rem]"
+                  nz-icon
+                  [nzType]="'eye'"
+                  nzTheme="outline"></span>
+                <span class="sr-only">View</span>
+              </div>
+            </button>
+            <button
+              (click)="handlePrintItem(data)"
+              nz-button
+              title="Print Item"
+              class="!rounded-lg items-center justify-center flex flex-col">
+              <div>
+                <span
+                  class="items-center justify-center h-[1.4rem]"
+                  nz-icon
+                  [nzType]="'printer'"
+                  nzTheme="outline"></span>
+                <span class="sr-only">Print</span>
+              </div>
+            </button>
+            <button
+              nz-button
+              title="Delete Item"
+              class="!rounded-lg items-center justify-center flex flex-col"
+              (click)="handleDeleteItem(i)">
+              <div>
+                <span
+                  class="items-center !text-red-400 justify-center h-[1.4rem]"
+                  nz-icon
+                  [nzType]="'delete'"
+                  nzTheme="outline"></span>
+                <span class="sr-only">Delete</span>
+              </div>
+            </button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+  <div class="flex flex-row min-w-full justify-end" *ngIf="totalRecords > 0">
+    <nz-pagination
+      [nzPageIndex]="currentPage"
+      [nzTotal]="totalRecords"
+      [nzPageSize]="limit"
+      (nzPageIndexChange)="handlePageChange($event)">
+    </nz-pagination>
+  </div>
+</div>
+
+<ng-template #loadingIndicator>
+  <div class="flex relative top-[30dvh] flex-col items-center justify-center">
+    <nz-spin [nzIndicator]="indicator" nzSize="large"></nz-spin>
+  </div>
+</ng-template>
+
+<ng-template #indicator>
+  <span class="!text-[4rem] flex flex-col items-center justify-center"
+    ><i nz-icon nzTheme="outline" nzType="loading"></i
+  ></span>
+</ng-template>
+
+<ng-template #noResultsTemplate>
+  <app-table-state-template
+    *ngIf="(loading$ | async) === false"
+    class="[&>*]:!h-[55dvh]"
+    [iconType]="'file-search'"
+    [mainMessage]="'No Weekly Reports were found'"
+    [additionalInfo]="'Please create your first weekly report.'" />
+</ng-template>

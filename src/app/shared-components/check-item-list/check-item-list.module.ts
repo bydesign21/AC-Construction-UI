@@ -12,6 +12,7 @@ import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { TableFormService } from '../table-form.service';
 import { CurrencyMaskModule } from 'ng2-currency-mask';
 import { CheckItemListComponent } from './check-item-list.component';
+import { TableStateTemplateModule } from '../table-state-template/table-state-template.module';
 
 @NgModule({
   declarations: [CheckItemListComponent],
@@ -28,8 +29,9 @@ import { CheckItemListComponent } from './check-item-list.component';
     ReactiveFormsModule,
     NzToolTipModule,
     CurrencyMaskModule,
+    TableStateTemplateModule,
   ],
   providers: [TableFormService],
   exports: [CheckItemListComponent],
 })
-export class CheckItemListModule {}
+export class CheckItemListModule { }

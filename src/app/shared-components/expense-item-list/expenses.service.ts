@@ -4,13 +4,13 @@ import {
   ExpenseItem,
   ExpenseTypes,
   WeeklyReportTotals,
-} from '../../features/dashboard/weekly-reports-container/weekly-reports-model/model';
+} from '../../features/dashboard-container/weekly-reports-container/weekly-reports-model/model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ExpensesService {
-  constructor(private utils: SharedUtilsService) {}
+  constructor(private utils: SharedUtilsService) { }
 
   calculateTotals(params: {
     expenseList: ExpenseItem[];
@@ -46,8 +46,8 @@ export class ExpensesService {
       }
     });
 
-    expenses.total += params.payroll;
-    expenses.profit = params.revenue - expenses.total;
+    expenses.total += Number(params.payroll);
+    expenses.profit = Number(params.revenue) - expenses.total;
     expenses.profitSplit = expenses.profit / 2;
     return expenses as WeeklyReportTotals;
   }

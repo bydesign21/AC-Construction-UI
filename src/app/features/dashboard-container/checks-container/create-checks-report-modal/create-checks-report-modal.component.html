@@ -1,0 +1,123 @@
+<div class="flex flex-col mt-[1rem] min-w-full overflow-hidden">
+  <div class="overflow-auto max-h-[80dvh]">
+    <div class="flex flex-row gap-4 mx-2 items-center justify-between">
+      <div class="flex flex-row gap-4 justify-around items-center">
+        <app-date-range-picker
+          [label]="'Select Date Range'"
+          [isRequired]="true"
+          (changed)="handleDateChanged($event)"></app-date-range-picker>
+        <!-- create client nz-select -->
+        <div class="w-[12rem]">
+          <nz-form-label
+            class="!text-left [&>*]:!text-lg"
+            [nzNoColon]="true"
+            [nzRequired]="false">
+            Select Employee
+          </nz-form-label>
+          <nz-select
+            class="w-full"
+            nzShowSearch
+            nzAllowClear
+            [nzNotFoundContent]="
+              searchTerm.length > 0
+                ? noResultsSearchTemplate
+                : typeToSearchTemplate
+            "
+            [nzServerSearch]="true"
+            [nzShowSearch]="true"
+            [nzPlaceHolder]="selectedEmployee || 'Select Employee'"
+            [(ngModel)]="selectedEmployee"
+            (nzOnSearch)="handleEmployeeSearch($event)"
+            (ngModelChange)="handleEmployeeSelected($event)">
+            <nz-option
+              *ngFor="let employee of (employees$ | async) || []"
+              [nzLabel]="employee.name"
+              [nzValue]="employee.name"></nz-option>
+          </nz-select>
+        </div>
+      </div>
+      <div class="flex flex-row gap-2">
+        <button
+          nz-button
+          title="Download Report"
+          class="!rounded-lg !items-center justify-center !flex !flex-col relative top-4">
+          <div class="flex flex-row gap-1 items-center">
+            <span class="sr-only">Download Report</span>
+            <span
+              class="items-center flex flex-col justify-center"
+              nz-icon
+              [nzType]="'download'"
+              nzTheme="outline"></span>
+          </div>
+        </button>
+        <button
+          nz-button
+          title="Print Report"
+          class="!rounded-lg !items-center justify-center !flex !flex-col relative top-4">
+          <div class="flex flex-row gap-1 items-center">
+            <span class="sr-only">Print Report</span>
+            <span
+              class="items-center flex flex-col justify-center"
+              nz-icon
+              [nzType]="'printer'"
+              nzTheme="outline"></span>
+          </div>
+        </button>
+        <button
+          nz-button
+          title="Email Report"
+          class="!rounded-lg !items-center justify-center !flex !flex-col relative top-4">
+          <div class="flex flex-row gap-1 items-center">
+            <span class="sr-only">Email Report</span>
+            <span
+              class="items-center flex flex-col justify-center"
+              nz-icon
+              [nzType]="'mail'"
+              nzTheme="outline"></span>
+          </div>
+        </button>
+      </div>
+    </div>
+    <app-checks-report-table
+      [stateTemplate]="
+        selectedEmployee || dateRange.length > 0
+          ? noResultsTableTemplate
+          : FilterChecksTemplate
+      "
+      [currentPage]="currentPage"
+      [limit]="limit"
+      [loading$]="loading$"
+      [totalRecords]="totalRecords"
+      (pageChange)="handlePageChange($event)"
+      [listOfData]="checks$ | async"
+      class="[&>*]:mt-8" />
+  </div>
+</div>
+
+<!-- No Results Found Template -->
+<ng-template #noResultsSearchTemplate>
+  <app-no-results-input-template></app-no-results-input-template>
+</ng-template>
+
+<!-- Type to Search Template -->
+<ng-template #typeToSearchTemplate>
+  <app-type-to-search-template></app-type-to-search-template>
+</ng-template>
+
+<ng-template #noResultsTableTemplate>
+  <app-table-state-template
+    class="[&>*]:!h-[55dvh]"
+    [iconType]="'frown'"
+    [mainMessage]="'No Checks Found'"
+    [additionalInfo]="'We couldn’t find any checks matching your criteria.'" />
+</ng-template>
+
+<ng-template #FilterChecksTemplate>
+  <app-table-state-template
+    class="[&>*]:!h-[55dvh]"
+    [iconType]="'search'"
+    [mainMessage]="'Add Filters To Get Started'"
+    [additionalInfo]="
+      'Use the filters above to find the checks you’re looking for.'
+    " />
+</ng-template>
