@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { AuthService } from '../../../auth/auth.service';
 import { Router } from '@angular/router';
-import { take } from 'rxjs';
+import { BehaviorSubject, take } from 'rxjs';
 import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
@@ -23,6 +23,7 @@ export class NavigationBarComponent {
   @ViewChild('dropdownIcon')
   dropdownIcon: ElementRef<HTMLButtonElement> | null = null;
   @HostListener('document:click', ['$event'])
+  isLoading$ = new BehaviorSubject<boolean>(false);
   clickOutside(event: any) {
     if (
       this.dropdownMenu &&
@@ -40,7 +41,7 @@ export class NavigationBarComponent {
     private router: Router,
     private cd: ChangeDetectorRef,
     private message: NzMessageService
-  ) {}
+  ) { }
 
   dropdownOpen = false;
   isDropdownIconFocused = false;
@@ -50,23 +51,32 @@ export class NavigationBarComponent {
   }
 
   handleSignOut() {
+    if (this.isLoading$.getValue()) return;
+    this.isLoading$.next(true);
     this.auth
       .signOut()
       .pipe(take(1))
       .subscribe({
-        next: async () => {
-          await this.router.navigate(['auth', 'login'], { replaceUrl: true });
-          this.message.success('Successfully signed out');
-          this.cd.detectChanges();
+        next: () => {
+          this.router
+            .navigate(['auth', 'login'], { replaceUrl: true })
+            .then(() => {
+              this.message.success('Successfully signed out');
+              this.cd.detectChanges();
+            });
         },
         error: err => {
           this.message.error(err);
         },
+        complete: () => {
+          this.isLoading$.next(false);
+        },
       });
   }
 
-  async handleLogoClicked() {
-    await this.router.navigate([''], { replaceUrl: true });
-    this.cd.detectChanges();
+  handleLogoClicked() {
+    this.router.navigate([''], { replaceUrl: true }).then(() => {
+      this.cd.detectChanges();
+    });
   }
 }

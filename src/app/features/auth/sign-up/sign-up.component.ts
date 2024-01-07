@@ -5,7 +5,7 @@ import {
 } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AuthService } from '../auth.service';
-import { take } from 'rxjs';
+import { BehaviorSubject, take } from 'rxjs';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { Router } from '@angular/router';
 
@@ -17,12 +17,13 @@ import { Router } from '@angular/router';
   styleUrl: './sign-up.component.scss',
 })
 export class SignUpComponent {
+  isLoading$ = new BehaviorSubject<boolean>(false);
   constructor(
     private auth: AuthService,
     private message: NzMessageService,
     private router: Router,
     private cd: ChangeDetectorRef
-  ) {}
+  ) { }
 
   signupForm = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
@@ -33,18 +34,33 @@ export class SignUpComponent {
   });
 
   onSubmit() {
-    if (
-      this.signupForm.valid &&
-      this.signupForm.controls.password.value ===
-        this.signupForm.controls.confirmPassword.value
-    ) {
-      const { email, firstname, lastname, password } = this.signupForm.value;
-      if (email && firstname && lastname && password) {
-        this.handleSignUp(email, password, firstname, lastname);
-      } else {
-        this.message.error('Please ensure all fields are completed');
-      }
+    if (!this.signupForm.valid) {
+      this.message.error('Please ensure all fields are correctly filled out.');
+      this.highlightInvalidFields();
+      return;
     }
+
+    if (
+      this.signupForm.controls.password.value !==
+      this.signupForm.controls.confirmPassword.value
+    ) {
+      this.message.error('Passwords do not match.');
+      return;
+    }
+
+    const { email, firstname, lastname, password } = this.signupForm.value;
+    if (this.signupForm.valid && email && password && firstname && lastname) {
+      this.handleSignUp(email, password, firstname, lastname);
+    }
+  }
+
+  private highlightInvalidFields() {
+    for (const key of Object.keys(
+      this.signupForm.controls
+    ) as (keyof typeof this.signupForm.controls)[]) {
+      this.signupForm.controls[key].markAsTouched();
+    }
+    this.cd.detectChanges();
   }
 
   handleSignUp(
@@ -53,13 +69,20 @@ export class SignUpComponent {
     firstname: string,
     lastname: string
   ) {
+    this.isLoading$.next(true);
     this.auth
       .signUp(email, password, firstname, lastname)
       .pipe(take(1))
       .subscribe({
         next: () => {
           this.signupForm.reset();
-          this.message.success('Successfully signed up');
+          this.router
+            .navigate(['auth', 'login'], { replaceUrl: true })
+            .then(() => {
+              this.message.success('Successfully signed up');
+              this.isLoading$.next(false);
+              this.cd.detectChanges();
+            });
         },
         error: err => {
           this.message.error(err);
@@ -67,8 +90,9 @@ export class SignUpComponent {
       });
   }
 
-  async handleLoginRedirect() {
-    await this.router.navigate(['auth', 'login'], { replaceUrl: true });
-    this.cd.detectChanges();
+  handleLoginRedirect() {
+    this.router
+      .navigate(['auth', 'login'], { replaceUrl: true })
+      .then(() => this.cd.detectChanges());
   }
 }

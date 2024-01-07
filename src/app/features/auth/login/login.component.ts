@@ -8,7 +8,7 @@ import {
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AuthService } from '../auth.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import { take } from 'rxjs';
+import { BehaviorSubject, take, tap } from 'rxjs';
 import { Router } from '@angular/router';
 import { NzModalService } from 'ng-zorro-antd/modal';
 
@@ -22,6 +22,7 @@ import { NzModalService } from 'ng-zorro-antd/modal';
 export class LoginComponent {
   @ViewChild('passwordResetModalContent', { static: false })
   passwordResetModalContent!: TemplateRef<any>;
+  isLoading$ = new BehaviorSubject<boolean>(false);
 
   constructor(
     private auth: AuthService,
@@ -29,7 +30,7 @@ export class LoginComponent {
     private router: Router,
     private cd: ChangeDetectorRef,
     private modal: NzModalService
-  ) {}
+  ) { }
 
   loginForm = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
@@ -40,23 +41,27 @@ export class LoginComponent {
     const { email, password } = this.loginForm.value;
     if (this.loginForm.valid) {
       if (email && password) {
+        this.isLoading$.next(true);
         this.auth
           .login(email, password)
           .pipe(take(1))
           .subscribe({
-            next: async res => {
+            next: res => {
               const { user, session } = res;
               sessionStorage.setItem('session', JSON.stringify(session));
               sessionStorage.setItem('isAuthenticated', 'true');
-              await this.router.navigate(['/dashboard'], { replaceUrl: true });
-              this.message.success(
-                `Welcome,  ${
-                  user?.user_metadata?.firstName
-                    ? user.user_metadata.firstName
-                    : 'User'
-                }`
-              );
-              this.cd.detectChanges();
+              this.router
+                .navigate(['dashboard'], { replaceUrl: true })
+                .then(() => {
+                  this.message.success(
+                    `Welcome, ${user?.user_metadata?.firstName
+                      ? user.user_metadata.firstName
+                      : 'User'
+                    }`
+                  );
+                  this.isLoading$.next(false);
+                  this.cd.detectChanges(); // Trigger change detection manually
+                });
             },
             error: err => {
               console.error(err);

@@ -51,6 +51,7 @@ import { InvoicesModule } from './invoices-container/invoices.module';
 import { SharedUtilsService } from '../../shared-components/shared-utils.service';
 import { NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 import { ProfileModule } from './profile-container/profile.module';
+import { NzButtonModule } from 'ng-zorro-antd/button';
 
 const icons = [
   SettingOutline,
@@ -89,6 +90,7 @@ const icons = [
     NzMessageModule,
     NavigationCardModule,
     NzMenuModule,
+    NzButtonModule,
     NzDrawerModule,
     SecondaryNavigationBarModule,
     CurrencyPipe,
