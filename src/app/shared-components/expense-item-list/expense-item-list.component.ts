@@ -56,7 +56,7 @@ export class ExpenseItemListComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  constructor(private ts: TableFormService) {}
+  constructor(private ts: TableFormService) { }
 
   rowForms: FormGroup[] = [];
   editIndex: number | null = null;
@@ -116,7 +116,6 @@ export class ExpenseItemListComponent implements OnInit, OnChanges, OnDestroy {
     const formConfig = {
       employeeName: {
         defaultValue: item.employeeName,
-        validators: [Validators.required],
       },
       address: {
         defaultValue: item.address,

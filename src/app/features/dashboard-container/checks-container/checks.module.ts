@@ -17,6 +17,9 @@ import { DateRangePickerModule } from '../../../shared-components/date-range-pic
 import { ExpenseItemTagModule } from '../../../shared-components/expense-item-tag/expense-item-tag.module';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
+import { NzModalModule } from 'ng-zorro-antd/modal';
 
 @NgModule({
   declarations: [
@@ -40,8 +43,12 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
     NzIconModule,
     NzButtonModule,
     RouterModule,
+    NzInputModule,
+    NgxMaskPipe,
+    NgxMaskDirective,
+    NzModalModule,
   ],
-  providers: [provideRouter(routes)],
+  providers: [provideRouter(routes), provideNgxMask()],
   exports: [
     ChecksContainerComponent,
     CreateCheckModalComponent,

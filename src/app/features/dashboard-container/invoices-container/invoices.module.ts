@@ -19,6 +19,7 @@ import { NzFormModule } from 'ng-zorro-antd/form';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TableStateTemplateModule } from '../../../shared-components/table-state-template/table-state-template.module';
 import { CurrencyMaskModule } from 'ng2-currency-mask';
+import { NzModalModule } from 'ng-zorro-antd/modal';
 
 @NgModule({
   declarations: [
@@ -43,6 +44,7 @@ import { CurrencyMaskModule } from 'ng2-currency-mask';
     FormsModule,
     TableStateTemplateModule,
     CurrencyMaskModule,
+    NzModalModule,
   ],
   providers: [provideRouter(routes)],
   exports: [

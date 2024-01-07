@@ -50,11 +50,36 @@
               [nzValue]="employee.name"></nz-option>
           </nz-select>
         </div>
+        <div class="w-[6rem]">
+          <nz-form-label
+            class="!text-left [&>*]:!text-lg"
+            [nzNoColon]="true"
+            [nzRequired]="false">
+            Discount
+          </nz-form-label>
+          <input
+            [disabled]="isEditMode"
+            class="!text-right"
+            nz-input
+            aria-label="discount"
+            [(ngModel)]="discountDisplay"
+            (ngModelChange)="onDiscountChange(discountDisplay)"
+            (blur)="onDiscountBlur()"
+            mask="percent"
+            suffix="%" />
+        </div>
+        <div class="flex flex-row relative top-[1rem]">
+          <app-expense-item-tag
+            class="[&>*]:!m-0 mr-0 !ml-auto"
+            [isExpense]="true"
+            [label]="'Subtotal'"
+            [value]="subtotal"></app-expense-item-tag>
+        </div>
         <div class="flex flex-row relative top-[1rem]">
           <app-expense-item-tag
             [isExpense]="true"
             [label]="'Total'"
-            [value]="calculateTotal()"></app-expense-item-tag>
+            [value]="total"></app-expense-item-tag>
         </div>
       </div>
       <div class="flex flex-row gap-2">

@@ -10,14 +10,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { NZ_MODAL_DATA, NzModalRef } from 'ng-zorro-antd/modal';
-import {
-  BehaviorSubject,
-  Observable,
-  Subject,
-  debounceTime,
-  take,
-  takeUntil,
-} from 'rxjs';
+import { BehaviorSubject, Subject, take, takeUntil } from 'rxjs';
 import {
   Check,
   CheckLineItem,
@@ -46,9 +39,14 @@ export class CreateCheckModalComponent implements OnInit, OnDestroy {
   checkItemList: CheckLineItem[] = [];
   checkNumber?: string;
   searchTermInternal: string = '';
+  discount: number = 0;
+  discountDisplay: string = '0';
+  subtotal: number = 0;
+  total: number = 0;
   isEditMode = false;
   employeeInputTouched$ = new BehaviorSubject<boolean>(false);
   checkFormTouched$ = new BehaviorSubject<boolean>(false);
+  isDiscountTouched$ = new BehaviorSubject<boolean>(false);
 
   constructor(
     private cd: ChangeDetectorRef,
@@ -56,7 +54,7 @@ export class CreateCheckModalComponent implements OnInit, OnDestroy {
     private checks: ChecksService,
     @Inject(NZ_MODAL_DATA)
     public data?: { check?: Check }
-  ) {}
+  ) { }
 
   get selectedEmployee() {
     return this.searchTerm$.getValue();
@@ -71,8 +69,13 @@ export class CreateCheckModalComponent implements OnInit, OnDestroy {
       this.check = this.data?.check;
     }
     if (this.check) {
+      console.log('this.check', this.check);
       this.isEditMode = true;
       this.checkNumber = this.check.checkNumber;
+      this.discount = this.check.discount || 0;
+      this.onDiscountBlur();
+      this.subtotal = this.check.subtotal || 0;
+      this.total = this.check.total || 0;
       this.selectedEmployee = this.check.name;
       this.checkItemList = this.check.lineItems;
     }
@@ -92,13 +95,14 @@ export class CreateCheckModalComponent implements OnInit, OnDestroy {
   isFormValid(): boolean {
     const isFormsValid =
       this.IsCheckFormValid$.getValue() && this.selectedEmployee.length > 0;
-    const isEitherFormOrInputTouched =
+    const isAnyInputTouched =
       this.checkFormTouched$.getValue() ||
-      this.employeeInputTouched$.getValue();
+      this.employeeInputTouched$.getValue() ||
+      this.isDiscountTouched$.getValue();
 
     console.log('isFormsValid', isFormsValid);
-    console.log('isEitherFormOrInputTouched', isEitherFormOrInputTouched);
-    return isFormsValid && isEitherFormOrInputTouched;
+    console.log('isEitherFormOrInputTouched', isAnyInputTouched);
+    return isFormsValid && isAnyInputTouched;
   }
 
   onCancel() {
@@ -138,7 +142,9 @@ export class CreateCheckModalComponent implements OnInit, OnDestroy {
       name: this.searchTerm$.getValue() || '',
       date: new Date().toISOString(),
       lineItems: this.checkItemList,
-      total: this.calculateTotal(),
+      discount: this.discount,
+      total: this.total,
+      subtotal: this.subtotal,
       isPaid: false,
       isVoid: false,
     };
@@ -146,17 +152,34 @@ export class CreateCheckModalComponent implements OnInit, OnDestroy {
     this.modal.destroy(check);
   }
 
-  calculateTotal() {
+  calculateTotals() {
+    const discount = this.discount || 0;
+    console.log('discount', discount);
     let total = 0;
     for (const item of this.checkItemList) {
       total += item?.total || 0;
     }
-    return total;
+    this.subtotal = total;
+    this.total = total - total * discount;
+    this.cd.detectChanges();
+  }
+
+  onDiscountChange(value: string) {
+    this.isDiscountTouched$.next(true);
+    const numericValue = parseFloat(value.replace('%', ''));
+    if (!isNaN(numericValue)) {
+      this.discount = numericValue / 100;
+    }
+    this.calculateTotals();
+  }
+
+  onDiscountBlur() {
+    this.discountDisplay = (this.discount * 100).toFixed(0);
   }
 
   handleLineItemsChanged(items: CheckLineItem[]) {
     this.checkItemList = items;
-    this.cd.detectChanges();
+    this.calculateTotals();
   }
 
   handleIsValid(isValid: boolean) {

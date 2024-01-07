@@ -56,11 +56,14 @@ export const routes: Routes = [
             '../dashboard-container/clients-container/clients/clients.module'
           ).then(m => m.ClientsModule),
       },
-      // {
-      //   path: '**',
-      //   redirectTo: '/dashboard',
-      //   pathMatch: 'full',
-      // },
+      {
+        path: 'profile',
+        loadChildren: () =>
+          import(
+            '../dashboard-container/profile-container/profile.module'
+          ).then(m => m.ProfileModule),
+        data: { breadcrumb: 'Profile' },
+      },
     ],
   },
 ];

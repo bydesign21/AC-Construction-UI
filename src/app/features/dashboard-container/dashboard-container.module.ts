@@ -49,6 +49,8 @@ import { WeeklyReportsModule } from './weekly-reports-container/weekly-reports.m
 import { ChecksModule } from './checks-container/checks.module';
 import { InvoicesModule } from './invoices-container/invoices.module';
 import { SharedUtilsService } from '../../shared-components/shared-utils.service';
+import { NgxMaskPipe, provideNgxMask } from 'ngx-mask';
+import { ProfileModule } from './profile-container/profile.module';
 
 const icons = [
   SettingOutline,
@@ -89,17 +91,13 @@ const icons = [
     NzMenuModule,
     NzDrawerModule,
     SecondaryNavigationBarModule,
-    ClientsModule,
-    EmployeesModule,
-    DashboardModule,
-    WeeklyReportsModule,
-    ChecksModule,
-    InvoicesModule,
+    CurrencyPipe,
+    NgxMaskPipe,
   ],
   providers: [
-    provideRouter(routes, withDebugTracing()),
+    provideRouter(routes),
+    provideNgxMask({}),
     AuthService,
-    CurrencyPipe,
     ExpensesService,
     WeeklyReportsService,
     ChecksService,

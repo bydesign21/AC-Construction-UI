@@ -11,9 +11,7 @@ import { InvoicesService } from '../invoice-service/invoices.service';
 import {
   BehaviorSubject,
   Subject,
-  combineLatest,
   distinctUntilChanged,
-  of,
   switchMap,
   take,
   takeUntil,
