@@ -22,8 +22,8 @@ export class NavigationBarComponent {
   @ViewChild('dropdownMenu') dropdownMenu: ElementRef | null = null;
   @ViewChild('dropdownIcon')
   dropdownIcon: ElementRef<HTMLButtonElement> | null = null;
-  @HostListener('document:click', ['$event'])
   isLoading$ = new BehaviorSubject<boolean>(false);
+  @HostListener('document:click', ['$event'])
   clickOutside(event: any) {
     if (
       this.dropdownMenu &&

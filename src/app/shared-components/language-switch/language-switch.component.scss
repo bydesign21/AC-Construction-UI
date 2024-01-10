@@ -1,0 +1,12 @@
+::ng-deep {
+  nz-switch.lang-switch {
+    button.ant-switch {
+      @apply bg-green-500;
+      background-image: none;
+    }
+    button.ant-switch.ant-switch-checked {
+      @apply bg-red-500;
+      background-image: none;
+    }
+  }
+}

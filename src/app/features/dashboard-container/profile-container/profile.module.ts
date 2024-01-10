@@ -8,6 +8,16 @@ import { SettingsComponent } from './settings/settings.component';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzBreadCrumbModule } from 'ng-zorro-antd/breadcrumb';
+import { NzTabsModule } from 'ng-zorro-antd/tabs';
+import { ProfileService } from './profile-services/profile.service';
+import { ProfileCardModule } from '../../../shared-components/profile-card/profile-card.module';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzModalModule } from 'ng-zorro-antd/modal';
+import { AuthModule } from '../../auth/auth.module';
+import { LanguageSwitchModule } from '../../../shared-components/language-switch/language-switch.module';
+import { TranslatePipe } from '../../../shared-components/pipes/translate.pipe';
+import { LanguageService } from '../../../shared-components/language-service/language.service';
+import { provideHttpClient } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -15,14 +25,25 @@ import { NzBreadCrumbModule } from 'ng-zorro-antd/breadcrumb';
     ProfileComponent,
     SettingsComponent,
   ],
+  providers: [
+    provideRouter(routes),
+    ProfileService,
+    LanguageService,
+    provideHttpClient(),
+  ],
+  exports: [ProfileContainerComponent, ProfileComponent, SettingsComponent],
   imports: [
     CommonModule,
     RouterModule,
     NzMenuModule,
     NzIconModule,
+    NzButtonModule,
     NzBreadCrumbModule,
+    NzTabsModule,
+    ProfileCardModule,
+    NzModalModule,
+    LanguageSwitchModule,
+    TranslatePipe,
   ],
-  providers: [provideRouter(routes)],
-  exports: [ProfileContainerComponent, ProfileComponent, SettingsComponent],
 })
 export class ProfileModule { }

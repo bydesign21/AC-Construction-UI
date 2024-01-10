@@ -14,9 +14,9 @@
     [nzData]="items || []">
     <thead>
       <tr>
-        <th *ngFor="let field of ['description', 'total']">
+        <th *ngFor="let field of ['checks.DESCRIPTION', 'checks.TOTAL']">
           <div class="flex flex-row items-center justify-between">
-            <span>{{ field | titlecase }}</span>
+            <span>{{ (field | translate | async) || 'field' }}</span>
             <span
               *ngIf="isFieldErrorPresent(field)"
               nz-icon
@@ -29,7 +29,7 @@
             </span>
           </div>
         </th>
-        <th>Action</th>
+        <th>{{ ('checks.ACTION' | translate | async) || 'Action' }}</th>
       </tr>
     </thead>
     <tbody>

@@ -1,6 +1,8 @@
 <div class="flex flex-col mt-[2rem] min-w-full overflow-hidden">
   <div class="flex flex-row items-center justify-between">
-    <h1 class="text-2xl">Checks</h1>
+    <h1 class="text-2xl">
+      {{ ('checks.CHECKS' | translate | async) || 'Checks' }}
+    </h1>
     <div class="flex flex-row gap-1">
       <button
         (click)="handleCreateCheckReport()"
@@ -8,7 +10,9 @@
         nz-button
         class="ml-2 items-center flex mb-[0.5em] !rounded-lg">
         <span
-          >Create Report
+          >{{
+            ('checks.CREATE_REPORT' | translate | async) || 'Create Report'
+          }}
           <span
             class="items-center flex relative bottom-[0.15rem]"
             nz-icon
@@ -22,7 +26,10 @@
         nz-button
         class="ml-2 items-center flex mb-[0.5em] !rounded-lg">
         <span
-          >Manage Employees
+          >{{
+            ('checks.MANAGE_EMPLOYEES' | translate | async) ||
+              'Manage Employees'
+          }}
           <span
             class="items-center flex relative bottom-[0.15rem]"
             nz-icon
@@ -36,7 +43,7 @@
         nz-button
         class="ml-2 items-center flex mb-[0.5em] !rounded-lg">
         <span
-          >Create Check
+          >{{ ('checks.CREATE_CHECK' | translate | async) || 'Create Check' }}
           <span
             class="items-center flex relative bottom-[0.15rem]"
             nz-icon

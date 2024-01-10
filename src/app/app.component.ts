@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { NzI18nService, en_US } from 'ng-zorro-antd/i18n';
-
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -11,7 +10,7 @@ import { NzI18nService, en_US } from 'ng-zorro-antd/i18n';
   styleUrl: './app.component.scss',
 })
 export class AppComponent implements OnInit {
-  constructor(private i18n: NzI18nService) {}
+  constructor(private i18n: NzI18nService) { }
   title = 'AC-Construction-UI';
 
   ngOnInit(): void {
