@@ -18,7 +18,7 @@
           [nzSortFn]="th?.sortFn"
           [nzShowFilter]="true"
           class="!font-bold">
-          {{ th.label }}
+          {{ (th.label | translate | async) || th.label }}
         </th>
       </tr>
     </thead>
@@ -32,7 +32,9 @@
         <td *ngIf="isActionRowVisible">
           <div class="flex flex-row gap-2 justify-center">
             <button
-              title="View Item"
+              [title]="
+                ('COMMON.ITEMS.VIEW_ITEM' | translate | async) || 'View Item'
+              "
               (click)="handleViewItem(data)"
               nz-button
               class="!rounded-lg items-center justify-center flex flex-col">
@@ -42,13 +44,17 @@
                   nz-icon
                   [nzType]="'eye'"
                   nzTheme="outline"></span>
-                <span class="sr-only">View</span>
+                <span class="sr-only"
+                  >{{ ('COMMON.ACTIONS.VIEW' | translate | async) || 'View' }}
+                </span>
               </div>
             </button>
             <button
               (click)="handlePrintItem(data)"
               nz-button
-              title="Print Item"
+              [title]="
+                ('COMMON.ITEMS.PRINT_ITEM' | translate | async) || 'Print Item'
+              "
               class="!rounded-lg items-center justify-center flex flex-col">
               <div>
                 <span
@@ -56,12 +62,17 @@
                   nz-icon
                   [nzType]="'printer'"
                   nzTheme="outline"></span>
-                <span class="sr-only">Print</span>
+                <span class="sr-only">{{
+                  ('COMMON.ACTIONS.PRINT' | translate | async) || 'Print'
+                }}</span>
               </div>
             </button>
             <button
               nz-button
-              title="Delete Item"
+              [title]="
+                ('COMMON.ITEMS.DELETE_ITEM' | translate | async) ||
+                'Delete Item'
+              "
               class="!rounded-lg items-center justify-center flex flex-col"
               (click)="handleDeleteItem(data?.checkNumber || '')">
               <div>
@@ -70,7 +81,9 @@
                   nz-icon
                   [nzType]="'delete'"
                   nzTheme="outline"></span>
-                <span class="sr-only">Delete</span>
+                <span class="sr-only">{{
+                  ('COMMON.ACTIONS.DELETE' | translate | async) || 'Delete'
+                }}</span>
               </div>
             </button>
           </div>
@@ -107,6 +120,11 @@
     *ngIf="(loading$ | async) === false"
     class="[&>*]:!h-[55dvh]"
     [iconType]="'file-search'"
-    [mainMessage]="'No Checks Found'"
-    [additionalInfo]="'Please create your first check.'" />
+    [mainMessage]="
+      ('CHECKS.NO_CHECKS_FOUND' | translate | async) || 'No Checks Found'
+    "
+    [additionalInfo]="
+      ('CHECKS.PLEASE_CREATE_YOUR_FIRST_CHECK' | translate | async) ||
+      'Please create your first check.'
+    " />
 </ng-template>

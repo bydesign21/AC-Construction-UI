@@ -20,6 +20,7 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 import { NzModalModule } from 'ng-zorro-antd/modal';
+import { TranslatePipe } from '../../../shared-components/pipes/translate.pipe';
 
 @NgModule({
   declarations: [
@@ -47,6 +48,7 @@ import { NzModalModule } from 'ng-zorro-antd/modal';
     NgxMaskPipe,
     NgxMaskDirective,
     NzModalModule,
+    TranslatePipe,
   ],
   providers: [provideRouter(routes), provideNgxMask()],
   exports: [

@@ -32,25 +32,26 @@ export class ChecksReportTableComponent implements OnInit {
 
   tableHeaders: any[] = [
     {
-      label: 'Check #',
+      label: 'CHECKS.CHECK_NUMBER',
       sortFn: (a: Check, b: Check) =>
         a?.checkNumber
           ?.toString()
           .localeCompare(b?.checkNumber?.toString() || ''),
     },
     {
-      label: 'Date',
+      label: 'CHECKS.CHECK_DATE',
       sortFn: (a: Check, b: Check) => a.date.localeCompare(b.date),
     },
     {
-      label: 'Amount',
+      label: 'CHECKS.CHECK_AMOUNT',
       sortFn: (a: Check, b: Check) =>
         a.total.toString().localeCompare(b.total.toString()),
     },
   ];
 
   ngOnInit(): void {
-    if (this.isActionRowVisible) this.tableHeaders.push({ label: 'Actions' });
+    if (this.isActionRowVisible)
+      this.tableHeaders.push({ label: 'COMMON.ACTIONS.ACTIONS' });
   }
 
   handleDeleteItem(checkNumber: string) {

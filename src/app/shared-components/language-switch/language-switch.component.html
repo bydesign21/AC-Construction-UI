@@ -1,0 +1,19 @@
+<nz-switch
+  [disabled]="disabled"
+  [ngModel]="checked"
+  class="lang-switch"
+  [nzUnCheckedChildren]="uncheckedTemplate"
+  [nzCheckedChildren]="checkedTemplate"
+  (ngModelChange)="onLanguageChange($event)">
+</nz-switch>
+
+<ng-template #uncheckedTemplate>
+  <span class="flex flex-row items-center justify-between gap-1 h-[1rem]">
+    es-MX <i class="text-xl">{{ mexicanFlag }}</i></span
+  >
+</ng-template>
+<ng-template #checkedTemplate>
+  <span class="flex flex-row items-center justify-between gap-1 h-[1rem]"
+    ><i class="text-xl">{{ americanFlag }}</i> en-US</span
+  >
+</ng-template>

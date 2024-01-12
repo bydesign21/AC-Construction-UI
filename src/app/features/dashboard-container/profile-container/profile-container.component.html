@@ -1,40 +1,19 @@
 <div class="flex flex-col gap-4">
-  <!-- Breadcrumb Container -->
-  <nav aria-label="breadcrumb" class="bg-white px-4 py-2 shadow-md mt-4">
-    <nz-breadcrumb>
-      <nz-breadcrumb-item *ngFor="let breadcrumb of breadcrumbs">
-        <a [routerLink]="[breadcrumb.url]">{{ breadcrumb.label }}</a>
-      </nz-breadcrumb-item>
-    </nz-breadcrumb>
-  </nav>
-
-  <!-- Profile Section -->
-  <div class="flex flex-col sm:flex-row gap-4">
-    <!-- Menu -->
-    <div class="h-screen sm:w-1/4 flex flex-col bg-gray-200">
-      <!-- nz menu -->
-      <ul nz-menu class="m-0 p-0">
-        <li
-          nz-menu-item
-          *ngFor="let item of items"
-          [nzMatchRouter]="true"
-          [nzMatchRouterExact]="true"
-          [routerLink]="item?.routerUrl"
-          class="flex items-center gap-2 p-2 hover:bg-gray-300">
-          <span
-            *ngIf="item.iconUrl"
-            nz-icon
-            [nzType]="item.iconUrl"
-            nzTheme="outline"></span>
-          <span *ngIf="item.iconClass" [ngClass]="item.iconClass"></span>
-          {{ item.label }}
-        </li>
-      </ul>
-    </div>
-
-    <!-- Content Area -->
-    <div class="sm:w-3/4 flex flex-col p-4">
-      <router-outlet></router-outlet>
-    </div>
-  </div>
+  <nz-tabset
+    class="!mt-4"
+    [nzAnimated]="false"
+    [nzSelectedIndex]="selectedTabIndex"
+    (nzSelectChange)="handleTabChanged($event)">
+    <nz-tab
+      class="!text-gray-600 !hover:text-blue-500"
+      *ngFor="let item of items; let i = index"
+      [nzTitle]="(item.label | translate | async) || item.label"
+      [nzForceRender]="true"
+      [nzDisabled]="false"
+      [nzClosable]="false">
+      <ng-container *ngIf="selectedTabIndex === i">
+        <router-outlet></router-outlet>
+      </ng-container>
+    </nz-tab>
+  </nz-tabset>
 </div>

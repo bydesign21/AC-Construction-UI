@@ -42,16 +42,10 @@ import { ExpensesService } from '../../shared-components/expense-item-list/expen
 import { WeeklyReportsService } from './weekly-reports-container/weekly-reports-services/weekly-reports.service';
 import { ChecksService } from './checks-container/checks-services/checks.service';
 import { InvoicesService } from './invoices-container/invoice-service/invoices.service';
-import { ClientsModule } from './clients-container/clients/clients.module';
-import { EmployeesModule } from './employees-container/employees.module';
-import { DashboardModule } from './dashboard-container/dashboard.module';
-import { WeeklyReportsModule } from './weekly-reports-container/weekly-reports.module';
-import { ChecksModule } from './checks-container/checks.module';
-import { InvoicesModule } from './invoices-container/invoices.module';
 import { SharedUtilsService } from '../../shared-components/shared-utils.service';
 import { NgxMaskPipe, provideNgxMask } from 'ngx-mask';
-import { ProfileModule } from './profile-container/profile.module';
 import { NzButtonModule } from 'ng-zorro-antd/button';
+import { TranslatePipe } from '../../shared-components/pipes/translate.pipe';
 
 const icons = [
   SettingOutline,

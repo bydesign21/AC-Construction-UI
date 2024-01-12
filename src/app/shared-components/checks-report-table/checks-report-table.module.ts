@@ -12,6 +12,8 @@ import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzPaginationModule } from 'ng-zorro-antd/pagination';
 import { TableStateTemplateModule } from '../table-state-template/table-state-template.module';
+import { TranslatePipe } from '../pipes/translate.pipe';
+import { provideHttpClient } from '@angular/common/http';
 
 @NgModule({
   declarations: [ChecksReportTableComponent],
@@ -28,7 +30,9 @@ import { TableStateTemplateModule } from '../table-state-template/table-state-te
     NzSpinModule,
     NzPaginationModule,
     TableStateTemplateModule,
+    TranslatePipe,
   ],
+  providers: [provideHttpClient()],
   exports: [ChecksReportTableComponent],
 })
-export class ChecksReportTableModule {}
+export class ChecksReportTableModule { }

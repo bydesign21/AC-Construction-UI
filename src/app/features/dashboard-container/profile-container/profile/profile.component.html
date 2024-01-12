@@ -1,1 +1,22 @@
-<p>profile works!</p>
+@if (userProfile) {
+  <app-profile-card (save)="handleUpdateProfile($event)" [user]="userProfile" />
+  <div class="!min-h-[5dvh] !flex !flex-col !mt-4 !items-start !justify-center">
+    <!-- Password reset button -->
+    <div class="flex flex-row gap-4">
+      <button
+        nz-button
+        nzType="default"
+        class="!text-red-500"
+        (click)="handleResetPasswordClicked()">
+        {{ ('AUTH.RESET_PASSWORD' | translate | async) || 'Reset Password' }}
+      </button>
+      <button
+        nz-button
+        nzType="default"
+        class="!text-white !bg-red-500 !hover:bg-red-600 !focus:bg-red"
+        (click)="handleDeleteAccountClicked()">
+        {{ ('PROFILE.DELETE_ACCOUNT' | translate | async) || 'Delete Account' }}
+      </button>
+    </div>
+  </div>
+}

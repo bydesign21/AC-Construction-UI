@@ -13,6 +13,7 @@ import { TableFormService } from '../table-form.service';
 import { CurrencyMaskModule } from 'ng2-currency-mask';
 import { CheckItemListComponent } from './check-item-list.component';
 import { TableStateTemplateModule } from '../table-state-template/table-state-template.module';
+import { TranslatePipe } from '../pipes/translate.pipe';
 
 @NgModule({
   declarations: [CheckItemListComponent],
@@ -30,6 +31,7 @@ import { TableStateTemplateModule } from '../table-state-template/table-state-te
     NzToolTipModule,
     CurrencyMaskModule,
     TableStateTemplateModule,
+    TranslatePipe,
   ],
   providers: [TableFormService],
   exports: [CheckItemListComponent],

@@ -1,0 +1,6 @@
+.tab {
+  @apply text-gray-600 hover:text-blue-500;
+}
+.tab.active {
+  @apply text-blue-700 border-b-2 border-blue-700;
+}

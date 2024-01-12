@@ -6,6 +6,7 @@ import {
   OnInit,
 } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { NzTabChangeEvent } from 'ng-zorro-antd/tabs';
 import { Subject, filter, map, takeUntil } from 'rxjs';
 
 @Component({
@@ -17,7 +18,7 @@ import { Subject, filter, map, takeUntil } from 'rxjs';
 })
 export class ProfileContainerComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
-  breadcrumbs: Array<{ label: string; url: string }> = [];
+  selectedTabIndex = 0;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -26,16 +27,37 @@ export class ProfileContainerComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.generateBreadcrumbs(this.activatedRoute.root);
+    this.setSelectedTabFromRoute();
+    this.subscribeToRouteChanges();
+  }
+
+  private setSelectedTabFromRoute() {
+    const currentRoute = this.getCurrentRoute();
+    this.updateSelectedTab(currentRoute);
+  }
+
+  private subscribeToRouteChanges() {
     this.router.events
       .pipe(
         filter(event => event instanceof NavigationEnd),
+        map(() => this.getCurrentRoute()),
         takeUntil(this.destroy$)
       )
-      .subscribe(() => {
-        this.generateBreadcrumbs(this.activatedRoute.root);
-        this.cd.detectChanges();
-      });
+      .subscribe(route => this.updateSelectedTab(route));
+  }
+
+  private getCurrentRoute(): string {
+    return this.activatedRoute.firstChild?.snapshot?.url?.[0]?.path ?? '';
+  }
+
+  private updateSelectedTab(route: string) {
+    const tabIndex = this.items.findIndex(item =>
+      item.routerUrl.endsWith(route)
+    );
+    if (tabIndex > -1) {
+      this.selectedTabIndex = tabIndex;
+      this.cd.markForCheck();
+    }
   }
 
   ngOnDestroy(): void {
@@ -43,37 +65,21 @@ export class ProfileContainerComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  private generateBreadcrumbs(
-    route: ActivatedRoute,
-    path: string = '',
-    breadcrumbs: Array<{ label: string; url: string }> = []
-  ): void {
-    if (route.snapshot.url.length > 0) {
-      path += `/${route.snapshot.url.map(segment => segment.path).join('/')}`;
-
-      if (route.snapshot.data.breadcrumb) {
-        const label = route.snapshot.data.breadcrumb;
-        console.log(label);
-        breadcrumbs.push({ label, url: path });
-      }
-    }
-
-    if (route.firstChild) {
-      this.generateBreadcrumbs(route.firstChild, path, breadcrumbs);
-    } else {
-      this.breadcrumbs = breadcrumbs;
-    }
+  handleTabChanged(event: NzTabChangeEvent) {
+    this.selectedTabIndex = event?.index ?? 0;
+    this.router?.navigate([this.items?.[this.selectedTabIndex]?.routerUrl]);
+    this.cd.markForCheck();
   }
 
   items = [
     {
-      label: 'Profile',
+      label: 'COMMON.PERSONAL_DETAILS.PROFILE',
       routerUrl: '/profile',
       iconUrl: 'user',
       iconClass: '',
     },
     {
-      label: 'Settings',
+      label: 'COMMON.MISC.SETTINGS',
       routerUrl: '/profile/settings',
       iconUrl: 'setting',
       iconClass: '',

@@ -59,13 +59,17 @@ export class LoginComponent {
                       : 'User'
                     }`
                   );
-                  this.isLoading$.next(false);
-                  this.cd.detectChanges(); // Trigger change detection manually
+                  this.cd.detectChanges();
                 });
             },
             error: err => {
               console.error(err);
               this.message.error(err);
+              this.isLoading$.next(false);
+            },
+            complete: () => {
+              this.isLoading$.next(false);
+              this.cd.detectChanges();
             },
           });
       }

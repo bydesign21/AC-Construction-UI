@@ -13,7 +13,7 @@ export class AuthService {
       this.sb.client.auth.signInWithPassword({ email: username, password })
     ).pipe(
       map(res => {
-        if (res.error !== null) throw res.error.message;
+        if (res.error !== null) throw new Error(res.error.message);
         else return res.data;
       }),
       catchError(err => throwError(() => new Error(err)))
@@ -24,7 +24,8 @@ export class AuthService {
     username: string,
     password: string,
     firstName: string,
-    lastName: string
+    lastName: string,
+    langPref: string = 'en'
   ) {
     return from(
       this.sb.client.auth.signUp({
@@ -34,12 +35,13 @@ export class AuthService {
           data: {
             firstName,
             lastName,
+            langPref,
           },
         },
       })
     ).pipe(
       map(res => {
-        if (res.error !== null) throw res.error.message;
+        if (res.error !== null) throw new Error(res.error.message);
         else return res.data;
       }),
       catchError(err => throwError(() => new Error(err)))
@@ -49,7 +51,7 @@ export class AuthService {
   signOut() {
     return from(this.sb.client.auth.signOut()).pipe(
       map(res => {
-        if (res.error !== null) throw res.error.message;
+        if (res.error !== null) throw new Error(res.error.message);
         else {
           sessionStorage.clear();
           return res;
@@ -66,7 +68,7 @@ export class AuthService {
       })
     ).pipe(
       map(res => {
-        if (res.error !== null) throw res.error.message;
+        if (res.error !== null) throw new Error(res.error.message);
         else return res;
       }),
       catchError(err => throwError(() => new Error(err)))
@@ -76,7 +78,7 @@ export class AuthService {
   updatePassword(email: string, password: string) {
     return from(this.sb.client.auth.updateUser({ email, password })).pipe(
       map(res => {
-        if (res.error !== null) throw res.error.message;
+        if (res.error !== null) throw new Error(res.error.message);
         else return res;
       }),
       catchError(err => throwError(() => new Error(err)))
@@ -86,7 +88,7 @@ export class AuthService {
   refreshSession(): Observable<boolean> {
     return from(this.sb.client.auth.refreshSession()).pipe(
       map(res => {
-        if (res.error !== null) throw res.error.message;
+        if (res.error !== null) throw new Error(res.error.message);
         else {
           const { session } = res.data;
           sessionStorage.setItem('session', JSON.stringify(session));
