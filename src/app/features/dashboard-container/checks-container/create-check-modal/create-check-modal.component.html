@@ -4,14 +4,14 @@
       *ngIf="data?.check || check"
       class="flex flex-row w-full justify-end items-center">
       <button
-        [title]="('checks.EDIT_CHECK' | translate | async) || 'Edit Check'"
+        [title]="('CHECKS.EDIT_CHECK' | translate | async) || 'Edit Check'"
         class="!flex !flex-row !justify-center !items-center !rounded-2xl !gap-1"
         nz-button
         [nzType]="isEditMode ? 'primary' : 'default'"
         (click)="handleEditModeToggled()"
         type="button">
         <span class="sr-only">{{
-          ('checks.EDIT' | translate | async) || 'Edit'
+          ('COMMON.ACTIONS.EDIT' | translate | async) || 'Edit'
         }}</span>
         <span
           class="!flex !flex-row !justify-center !items-center !ml-0"
@@ -28,7 +28,7 @@
             [nzNoColon]="true"
             [nzRequired]="false">
             {{
-              ('checks.SELECT_EMPLOYEE' | translate | async) ||
+              ('EMPLOYEES.SELECT_EMPLOYEE' | translate | async) ||
                 'Select Employee'
             }}
           </nz-form-label>
@@ -45,7 +45,11 @@
             [nzServerSearch]="true"
             [nzShowSearch]="true"
             [nzServerSearch]="true"
-            [nzPlaceHolder]="selectedEmployee || 'Select Employee'"
+            [nzPlaceHolder]="
+              selectedEmployee ||
+              ('EMPLOYEES.SELECT_EMPLOYEE' | translate | async) ||
+              'Select Employee'
+            "
             [(ngModel)]="selectedEmployee"
             (nzOnSearch)="handleEmployeeSearch($event)"
             (ngModelChange)="handleEmployeeSelected($event)">
@@ -60,13 +64,17 @@
             class="!text-left [&>*]:!text-lg"
             [nzNoColon]="true"
             [nzRequired]="false">
-            {{ ('checks.DISCOUNT' | translate | async) || 'Discount' }}
+            {{
+              ('COMMON.FINANCIAL.DISCOUNT' | translate | async) || 'Discount'
+            }}
           </nz-form-label>
           <input
             [disabled]="isEditMode"
             class="!text-right"
             nz-input
-            [title]="('checks.DISCOUNT' | translate | async) || 'Discount'"
+            [title]="
+              ('COMMON.FINANCIAL.DISCOUNT' | translate | async) || 'Discount'
+            "
             [(ngModel)]="discountDisplay"
             (ngModelChange)="onDiscountChange(discountDisplay)"
             (blur)="onDiscountBlur()"
@@ -77,13 +85,15 @@
           <app-expense-item-tag
             class="[&>*]:!m-0 mr-0 !ml-auto"
             [isExpense]="true"
-            [label]="('checks.SUBTOTAL' | translate | async) || 'Subtotal'"
+            [label]="
+              ('COMMON.FINANCIAL.SUBTOTAL' | translate | async) || 'Subtotal'
+            "
             [value]="subtotal"></app-expense-item-tag>
         </div>
         <div class="flex flex-row relative top-[1rem]">
           <app-expense-item-tag
             [isExpense]="true"
-            [label]="('checks.TOTAL' | translate | async) || 'Total'"
+            [label]="('COMMON.FINANCIAL.TOTAL' | translate | async) || 'Total'"
             [value]="total"></app-expense-item-tag>
         </div>
       </div>
@@ -91,12 +101,13 @@
         <button
           nz-button
           [title]="
-            ('checks.DOWNLOAD_REPORT' | translate | async) || 'Download Report'
+            ('COMMON.REPORTS.DOWNLOAD_REPORT' | translate | async) ||
+            'Download Report'
           "
           class="!rounded-lg !items-center justify-center !flex !flex-col relative">
           <div class="flex flex-row gap-1 items-center">
             <span class="sr-only">{{
-              ('checks.DOWNLOAD_REPORT' | translate | async) ||
+              ('COMMON.REPORTS.DOWNLOAD_REPORT' | translate | async) ||
                 'Download Report'
             }}</span>
             <span
@@ -109,12 +120,14 @@
         <button
           nz-button
           [title]="
-            ('checks.PRINT_REPORT' | translate | async) || 'Print Report'
+            ('COMMON.REPORTS.PRINT_REPORT' | translate | async) ||
+            'Print Report'
           "
           class="!rounded-lg !items-center justify-center !flex !flex-col relative">
           <div class="flex flex-row gap-1 items-center">
             <span class="sr-only">{{
-              ('checks.PRINT_REPORT' | translate | async) || 'Print Report'
+              ('COMMON.REPORTS.PRINT_REPORT' | translate | async) ||
+                'Print Report'
             }}</span>
             <span
               class="items-center flex flex-col justify-center"
@@ -126,12 +139,14 @@
         <button
           nz-button
           [title]="
-            ('checks.EMAIL_REPORT' | translate | async) || 'Email Report'
+            ('COMMON.REPORTS.EMAIL_REPORT' | translate | async) ||
+            'Email Report'
           "
           class="!rounded-lg !items-center justify-center !flex !flex-col relative">
           <div class="flex flex-row gap-1 items-center">
             <span class="sr-only">{{
-              ('checks.EMAIL_REPORT' | translate | async) || 'Email Report'
+              ('COMMON.REPORTS.EMAIL_REPORT' | translate | async) ||
+                'Email Report'
             }}</span>
             <span
               class="items-center flex flex-col justify-center"
@@ -157,7 +172,7 @@
 
 <ng-template #modalFooter>
   <button nz-button nzType="default" (click)="onCancel()">
-    {{ ('checks.CANCEL' | translate | async) || 'Cancel' }}
+    {{ ('COMMON.ACTIONS.CANCEL' | translate | async) || 'Cancel' }}
   </button>
   <button
     nz-button
@@ -166,8 +181,8 @@
     (click)="submitForm()">
     {{
       data?.check || check
-        ? ('checks.UPDATE' | translate | async) || 'Update'
-        : ('checks.CREATE' | translate | async) || 'Create'
+        ? ('COMMON.ACTIONS.UPDATE' | translate | async) || 'Update'
+        : ('COMMON.ACTIONS.CREATE' | translate | async) || 'Create'
     }}
   </button>
 </ng-template>

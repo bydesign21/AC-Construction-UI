@@ -56,6 +56,6 @@ export class LanguageSwitchComponent implements ControlValueAccessor {
   onLanguageChange(event: boolean): void {
     this.checked = event;
     this.onChange(this.checked ? 'en-US' : 'es-MX');
-    this.cd.markForCheck();
+    this.cd.detectChanges();
   }
 }

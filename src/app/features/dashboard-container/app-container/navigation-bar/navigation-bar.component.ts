@@ -48,6 +48,12 @@ export class NavigationBarComponent {
 
   toggleDropdown() {
     this.dropdownOpen = !this.dropdownOpen;
+    this.cd.markForCheck();
+  }
+
+  closeDropdown() {
+    this.dropdownOpen = false;
+    this.cd.markForCheck();
   }
 
   handleSignOut() {

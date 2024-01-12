@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../../auth/auth.service';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { PasswordResetModalComponent } from '../../../auth/password-reset-modal/password-reset-modal.component';
+import { LanguageService } from '../../../../shared-components/language-service/language.service';
 
 @Component({
   selector: 'app-profile',
@@ -21,7 +22,8 @@ export class ProfileComponent implements OnInit {
     private message: NzMessageService,
     private router: Router,
     private auth: AuthService,
-    private modal: NzModalService
+    private modal: NzModalService,
+    private language: LanguageService
   ) { }
   userProfile: User | null = null;
 
@@ -34,7 +36,10 @@ export class ProfileComponent implements OnInit {
           console.log('res', res);
           this.userProfile = res;
           this.updateSessionStorage(res);
-          localStorage.setItem('langPref', res.user_metadata.langPref);
+          this.language.setLanguagePreference(
+            res.user_metadata?.langPref || 'en-US'
+          );
+          this.cd.detectChanges();
           this.message.success('Profile updated successfully');
         },
         error: err => {

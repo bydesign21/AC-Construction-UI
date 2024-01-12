@@ -8,14 +8,14 @@
         nzType="default"
         class="!text-red-500"
         (click)="handleResetPasswordClicked()">
-        {{ ('profile.RESET_PASSWORD' | translate | async) || 'Reset Password' }}
+        {{ ('AUTH.RESET_PASSWORD' | translate | async) || 'Reset Password' }}
       </button>
       <button
         nz-button
         nzType="default"
         class="!text-white !bg-red-500 !hover:bg-red-600 !focus:bg-red"
         (click)="handleDeleteAccountClicked()">
-        {{ ('profile.DELETE_ACCOUNT' | translate | async) || 'Delete Account' }}
+        {{ ('PROFILE.DELETE_ACCOUNT' | translate | async) || 'Delete Account' }}
       </button>
     </div>
   </div>

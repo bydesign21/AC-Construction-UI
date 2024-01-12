@@ -1,21 +1,30 @@
 <div class="flex flex-col mt-[2rem] min-w-full overflow-hidden">
   <h1 class="text-2xl">
-    {{ ('dashboard.DASHBOARD' | translate | async) || 'Dashboard' }}
+    {{ ('COMMON.FEATURES.DASHBOARD' | translate | async) || 'Dashboard' }}
   </h1>
   <div class="my-[1rem] sm:grid sm:grid-cols-4 gap-4 flex flex-col min-w-full">
     <app-navigation-card
       [icon]="'./assets/images/logo.png'"
       [title]="
-        ('dashboard.WEEKLY_REPORTS' | translate | async) || 'Weekly Reports'
+        ('COMMON.FEATURES.WEEKLY_REPORTS' | translate | async) ||
+        'Weekly Reports'
       "
       [navigateTo]="'../weekly-reports'"></app-navigation-card>
     <app-navigation-card
       [icon]="'./assets/images/logo.png'"
-      [title]="('dashboard.INVOICES' | translate | async) || 'Invoices'"
+      [title]="('COMMON.FEATURES.INVOICES' | translate | async) || 'Invoices'"
       [navigateTo]="'../invoices'"></app-navigation-card>
     <app-navigation-card
       [icon]="'./assets/images/logo.png'"
-      [title]="('dashboard.CHECKS' | translate | async) || 'Checks'"
+      [title]="('COMMON.FEATURES.CHECKS' | translate | async) || 'Checks'"
       [navigateTo]="'../checks'"></app-navigation-card>
+    <app-navigation-card
+      [icon]="'./assets/images/logo.png'"
+      [title]="('COMMON.FEATURES.CLIENTS' | translate | async) || 'Clients'"
+      [navigateTo]="'../clients'"></app-navigation-card>
+    <app-navigation-card
+      [icon]="'./assets/images/logo.png'"
+      [title]="('COMMON.FEATURES.EMPLOYEES' | translate | async) || 'Employees'"
+      [navigateTo]="'../employees'"></app-navigation-card>
   </div>
 </div>

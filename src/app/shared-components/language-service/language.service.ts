@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of, catchError } from 'rxjs';
+import { Observable, of, catchError, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Injectable({
@@ -8,19 +8,32 @@ import { map } from 'rxjs/operators';
 })
 export class LanguageService {
   private translationCache: { [lang: string]: any } = {};
+  languagePreference$ = new BehaviorSubject<string>(
+    this.getLanguagePreferenceFromStorage()
+  );
 
   constructor(private http: HttpClient) { }
 
-  getLanguagePreference(): string {
+  private getLangPref(): string {
+    return this.languagePreference$.getValue();
+  }
+
+  private getLanguagePreferenceFromStorage(): string {
     return localStorage.getItem('langPref') || 'en-US';
+  }
+
+  getLanguagePreference(): Observable<string> {
+    return this.languagePreference$.asObservable();
   }
 
   setLanguagePreference(langPref: string): void {
     localStorage.setItem('langPref', langPref);
+    this.languagePreference$.next(langPref);
   }
 
   getTranslationFile(): Observable<any> {
-    const langPref = this.getLanguagePreference();
+    const langPref = this.getLangPref();
+    console.log('langPref', langPref);
     if (this.translationCache[langPref]) {
       return of(this.translationCache[langPref]);
     }

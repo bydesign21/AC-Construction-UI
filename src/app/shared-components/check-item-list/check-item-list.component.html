@@ -14,7 +14,10 @@
     [nzData]="items || []">
     <thead>
       <tr>
-        <th *ngFor="let field of ['checks.DESCRIPTION', 'checks.TOTAL']">
+        <th
+          *ngFor="
+            let field of ['COMMON.MISC.DESCRIPTION', 'COMMON.FINANCIAL.TOTAL']
+          ">
           <div class="flex flex-row items-center justify-between">
             <span>{{ (field | translate | async) || 'field' }}</span>
             <span
@@ -29,7 +32,7 @@
             </span>
           </div>
         </th>
-        <th>{{ ('checks.ACTION' | translate | async) || 'Action' }}</th>
+        <th>{{ ('COMMON.ACTIONS.ACTION' | translate | async) || 'Action' }}</th>
       </tr>
     </thead>
     <tbody>
@@ -66,7 +69,9 @@
         <td class="flex flex-col items-center justify-center">
           <button
             [disabled]="isDisabled"
-            title="Delete Row"
+            [title]="
+              ('COMMON.MISC.DELETE_ROW' | translate | async) || 'Delete Row'
+            "
             type="button"
             class="!rounded-lg items-center justify-center flex flex-col"
             nz-button
@@ -78,7 +83,10 @@
               nz-icon
               [nzType]="'delete'"
               nzTheme="outline"
-              ><span class="sr-only">Delete Item</span></span
+              ><span class="sr-only">{{
+                ('COMMON.ITEMS.DELETE_ITEM' | translate | async) ||
+                  'Delete Item'
+              }}</span></span
             >
           </button>
         </td>
@@ -97,7 +105,9 @@
       nzType="primary"
       nzSize="large"
       class="!rounded-lg w-[40%] justify-center items-center flex flex-auto">
-      Add Line Item
+      <span class="!text-lg">
+        {{ ('COMMON.ITEMS.ADD_ITEM' | translate | async) || 'Add Item' }}
+      </span>
     </button>
   </div>
 </div>
@@ -116,8 +126,11 @@
   <app-table-state-template
     class="[&>*]:!h-[50dvh]"
     [iconType]="'plus-circle'"
-    [mainMessage]="'No Items In Check'"
+    [mainMessage]="
+      ('CHECKS.NO_ITEMS_IN_CHECK' | translate | async) || 'No Items in Check'
+    "
     [additionalInfo]="
-      'Please add an item to the check to get started.'
+      ('CHECKS.NO_ITEMS_IN_CHECK_SUBTITLE' | translate | async) ||
+      'Please add items to the check to begin.'
     "></app-table-state-template>
 </ng-template>

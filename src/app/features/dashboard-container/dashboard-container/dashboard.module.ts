@@ -5,18 +5,11 @@ import { NavigationCardModule } from '../../../shared-components/navigation-card
 import { provideRouter } from '@angular/router';
 import { routes } from './dashboard.routes';
 import { TranslatePipe } from '../../../shared-components/pipes/translate.pipe';
-import { HttpClientModule, provideHttpClient } from '@angular/common/http';
-import { LanguageService } from '../../../shared-components/language-service/language.service';
 
 @NgModule({
   declarations: [DashboardComponent],
-  providers: [provideRouter(routes), provideHttpClient(), LanguageService],
+  providers: [provideRouter(routes)],
   exports: [DashboardComponent],
-  imports: [
-    CommonModule,
-    NavigationCardModule,
-    TranslatePipe,
-    HttpClientModule,
-  ],
+  imports: [CommonModule, NavigationCardModule, TranslatePipe],
 })
 export class DashboardModule { }

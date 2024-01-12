@@ -32,7 +32,9 @@
         <td *ngIf="isActionRowVisible">
           <div class="flex flex-row gap-2 justify-center">
             <button
-              [title]="('checks.VIEW_ITEM' | translate | async) || 'View Item'"
+              [title]="
+                ('COMMON.ITEMS.VIEW_ITEM' | translate | async) || 'View Item'
+              "
               (click)="handleViewItem(data)"
               nz-button
               class="!rounded-lg items-center justify-center flex flex-col">
@@ -43,7 +45,7 @@
                   [nzType]="'eye'"
                   nzTheme="outline"></span>
                 <span class="sr-only"
-                  >{{ ('checks.VIEW' | translate | async) || 'View' }}
+                  >{{ ('COMMON.ACTIONS.VIEW' | translate | async) || 'View' }}
                 </span>
               </div>
             </button>
@@ -51,7 +53,7 @@
               (click)="handlePrintItem(data)"
               nz-button
               [title]="
-                ('checks.PRINT_ITEM' | translate | async) || 'Print Item'
+                ('COMMON.ITEMS.PRINT_ITEM' | translate | async) || 'Print Item'
               "
               class="!rounded-lg items-center justify-center flex flex-col">
               <div>
@@ -61,14 +63,15 @@
                   [nzType]="'printer'"
                   nzTheme="outline"></span>
                 <span class="sr-only">{{
-                  ('checks.PRINT' | translate | async) || 'Print'
+                  ('COMMON.ACTIONS.PRINT' | translate | async) || 'Print'
                 }}</span>
               </div>
             </button>
             <button
               nz-button
               [title]="
-                ('checks.DELETE_ITEM' | translate | async) || 'Delete Item'
+                ('COMMON.ITEMS.DELETE_ITEM' | translate | async) ||
+                'Delete Item'
               "
               class="!rounded-lg items-center justify-center flex flex-col"
               (click)="handleDeleteItem(data?.checkNumber || '')">
@@ -79,7 +82,7 @@
                   [nzType]="'delete'"
                   nzTheme="outline"></span>
                 <span class="sr-only">{{
-                  ('checks.DELETE' | translate | async) || 'Delete'
+                  ('COMMON.ACTIONS.DELETE' | translate | async) || 'Delete'
                 }}</span>
               </div>
             </button>
@@ -118,10 +121,10 @@
     class="[&>*]:!h-[55dvh]"
     [iconType]="'file-search'"
     [mainMessage]="
-      ('checks.NO_CHECKS_FOUND' | translate | async) || 'No Checks Found'
+      ('CHECKS.NO_CHECKS_FOUND' | translate | async) || 'No Checks Found'
     "
     [additionalInfo]="
-      ('checks.PLEASE_CREATE_YOUR_FIRST_CHECK' | translate | async) ||
+      ('CHECKS.PLEASE_CREATE_YOUR_FIRST_CHECK' | translate | async) ||
       'Please create your first check.'
     " />
 </ng-template>

@@ -73,13 +73,13 @@ export class ProfileContainerComponent implements OnInit, OnDestroy {
 
   items = [
     {
-      label: 'profile.PROFILE',
+      label: 'COMMON.PERSONAL_DETAILS.PROFILE',
       routerUrl: '/profile',
       iconUrl: 'user',
       iconClass: '',
     },
     {
-      label: 'profile.SETTINGS',
+      label: 'COMMON.MISC.SETTINGS',
       routerUrl: '/profile/settings',
       iconUrl: 'setting',
       iconClass: '',

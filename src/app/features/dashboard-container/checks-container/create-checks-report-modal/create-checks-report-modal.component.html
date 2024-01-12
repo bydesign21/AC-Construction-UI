@@ -3,16 +3,21 @@
     <div class="flex flex-row gap-4 mx-2 items-center justify-between">
       <div class="flex flex-row gap-4 justify-around items-center">
         <app-date-range-picker
-          [label]="'Select Date Range'"
+          [label]="
+            ('COMMON.MISC.SELECT_DATE_RANGE' | translate | async) ||
+            'Select Date Range'
+          "
           [isRequired]="true"
           (changed)="handleDateChanged($event)"></app-date-range-picker>
-        <!-- create client nz-select -->
         <div class="w-[12rem]">
           <nz-form-label
             class="!text-left [&>*]:!text-lg"
             [nzNoColon]="true"
             [nzRequired]="false">
-            Select Employee
+            {{
+              ('EMPLOYEES.SELECT_EMPLOYEE' | translate | async) ||
+                'Select Employee'
+            }}
           </nz-form-label>
           <nz-select
             class="w-full"
@@ -25,7 +30,11 @@
             "
             [nzServerSearch]="true"
             [nzShowSearch]="true"
-            [nzPlaceHolder]="selectedEmployee || 'Select Employee'"
+            [nzPlaceHolder]="
+              selectedEmployee ||
+              ('EMPLOYEES.SELECT_EMPLOYEE' | translate | async) ||
+              'Select Employee'
+            "
             [(ngModel)]="selectedEmployee"
             (nzOnSearch)="handleEmployeeSearch($event)"
             (ngModelChange)="handleEmployeeSelected($event)">
@@ -39,10 +48,16 @@
       <div class="flex flex-row gap-2">
         <button
           nz-button
-          title="Download Report"
+          [title]="
+            ('COMMON.REPORTS.DOWNLOAD_REPORT' | translate | async) ||
+            'Download Report'
+          "
           class="!rounded-lg !items-center justify-center !flex !flex-col relative top-4">
           <div class="flex flex-row gap-1 items-center">
-            <span class="sr-only">Download Report</span>
+            <span class="sr-only">{{
+              ('COMMON.REPORTS.DOWNLOAD_REPORT' | translate | async) ||
+                'Download Report'
+            }}</span>
             <span
               class="items-center flex flex-col justify-center"
               nz-icon
@@ -52,10 +67,16 @@
         </button>
         <button
           nz-button
-          title="Print Report"
+          [title]="
+            ('COMMON.REPORTS.PRINT_REPORT' | translate | async) ||
+            'Print Report'
+          "
           class="!rounded-lg !items-center justify-center !flex !flex-col relative top-4">
           <div class="flex flex-row gap-1 items-center">
-            <span class="sr-only">Print Report</span>
+            <span class="sr-only">{{
+              ('COMMON.REPORTS.PRINT_REPORT' | translate | async) ||
+                'Print Report'
+            }}</span>
             <span
               class="items-center flex flex-col justify-center"
               nz-icon
@@ -65,10 +86,16 @@
         </button>
         <button
           nz-button
-          title="Email Report"
+          [title]="
+            ('COMMON.REPORTS.EMAIL_REPORT' | translate | async) ||
+            'Email Report'
+          "
           class="!rounded-lg !items-center justify-center !flex !flex-col relative top-4">
           <div class="flex flex-row gap-1 items-center">
-            <span class="sr-only">Email Report</span>
+            <span class="sr-only">{{
+              ('COMMON.REPORTS.EMAIL_REPORT' | translate | async) ||
+                'Email Report'
+            }}</span>
             <span
               class="items-center flex flex-col justify-center"
               nz-icon
@@ -108,16 +135,25 @@
   <app-table-state-template
     class="[&>*]:!h-[55dvh]"
     [iconType]="'frown'"
-    [mainMessage]="'No Checks Found'"
-    [additionalInfo]="'We couldn’t find any checks matching your criteria.'" />
+    [mainMessage]="
+      ('CHECKS.NO_CHECKS_FOUND' | translate | async) || 'No Results Found'
+    "
+    [additionalInfo]="
+      ('CHECKS.NO_CHECKS_FOUND_SUBTITLE' | translate | async) ||
+      'We couldn’t find any checks matching your criteria.'
+    " />
 </ng-template>
 
 <ng-template #FilterChecksTemplate>
   <app-table-state-template
     class="[&>*]:!h-[55dvh]"
     [iconType]="'search'"
-    [mainMessage]="'Add Filters To Get Started'"
+    [mainMessage]="
+      ('CHECKS.ADD_FILTERS_TO_GET_STARTED' | translate | async) ||
+      'Add filters to get started'
+    "
     [additionalInfo]="
+      ('CHECKS.ADD_FILTERS_SUBTITLE' | translate | async) ||
       'Use the filters above to find the checks you’re looking for.'
     " />
 </ng-template>

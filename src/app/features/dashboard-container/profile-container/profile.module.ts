@@ -13,24 +13,15 @@ import { ProfileService } from './profile-services/profile.service';
 import { ProfileCardModule } from '../../../shared-components/profile-card/profile-card.module';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzModalModule } from 'ng-zorro-antd/modal';
-import { AuthModule } from '../../auth/auth.module';
 import { LanguageSwitchModule } from '../../../shared-components/language-switch/language-switch.module';
 import { TranslatePipe } from '../../../shared-components/pipes/translate.pipe';
-import { LanguageService } from '../../../shared-components/language-service/language.service';
-import { provideHttpClient } from '@angular/common/http';
-
 @NgModule({
   declarations: [
     ProfileContainerComponent,
     ProfileComponent,
     SettingsComponent,
   ],
-  providers: [
-    provideRouter(routes),
-    ProfileService,
-    LanguageService,
-    provideHttpClient(),
-  ],
+  providers: [provideRouter(routes), ProfileService],
   exports: [ProfileContainerComponent, ProfileComponent, SettingsComponent],
   imports: [
     CommonModule,

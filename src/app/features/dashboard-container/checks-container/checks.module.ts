@@ -21,8 +21,6 @@ import { NzInputModule } from 'ng-zorro-antd/input';
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { TranslatePipe } from '../../../shared-components/pipes/translate.pipe';
-import { provideHttpClient } from '@angular/common/http';
-import { LanguageService } from '../../../shared-components/language-service/language.service';
 
 @NgModule({
   declarations: [
@@ -52,12 +50,7 @@ import { LanguageService } from '../../../shared-components/language-service/lan
     NzModalModule,
     TranslatePipe,
   ],
-  providers: [
-    provideRouter(routes),
-    provideNgxMask(),
-    provideHttpClient(),
-    LanguageService,
-  ],
+  providers: [provideRouter(routes), provideNgxMask()],
   exports: [
     ChecksContainerComponent,
     CreateCheckModalComponent,

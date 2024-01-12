@@ -7,8 +7,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { LanguageSwitchModule } from '../language-switch/language-switch.module';
 import { TranslatePipe } from '../pipes/translate.pipe';
-import { LanguageService } from '../language-service/language.service';
-import { provideHttpClient } from '@angular/common/http';
 
 @NgModule({
   declarations: [ProfileCardComponent],
@@ -21,7 +19,6 @@ import { provideHttpClient } from '@angular/common/http';
     LanguageSwitchModule,
     TranslatePipe,
   ],
-  providers: [LanguageService, provideHttpClient()],
   exports: [ProfileCardComponent],
 })
 export class ProfileCardModule { }

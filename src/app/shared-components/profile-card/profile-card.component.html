@@ -10,7 +10,8 @@
       <input
         nz-input
         [placeholder]="
-          ('profile.FIRST_NAME' | translate | async) || 'First Name'
+          ('COMMON.PERSONAL_DETAILS.FIRST_NAME' | translate | async) ||
+          'First Name'
         "
         formControlName="firstName"
         class="!w-full !px-3 !py-2 !border !border-gray-300 !rounded-md !focus:outline-none !focus:ring-2 !focus:ring-indigo-500" />
@@ -19,7 +20,10 @@
     <nz-input-group nzCompact class="!mb-2">
       <input
         nz-input
-        [placeholder]="('profile.LAST_NAME' | translate | async) || 'Last Name'"
+        [placeholder]="
+          ('COMMON.PERSONAL_DETAILS.LAST_NAME' | translate | async) ||
+          'Last Name'
+        "
         formControlName="lastName"
         class="!w-full !px-3 !py-2 !border !border-gray-300 !rounded-md !focus:outline-none !focus:ring-2 !focus:ring-indigo-500" />
     </nz-input-group>
@@ -29,7 +33,9 @@
         class="!w-full !px-3 !py-2 !border !border-gray-300 !rounded-md !focus:outline-none !focus:ring-2 !focus:ring-indigo-500"
         nz-input
         type="email"
-        [placeholder]="('profile.EMAIL' | translate | async) || 'Email'"
+        [placeholder]="
+          ('COMMON.COMMUNICATION.EMAIL' | translate | async) || 'Email'
+        "
         formControlName="email" />
     </nz-input-group>
     <!-- Validation messages for email -->
@@ -40,14 +46,14 @@
         nz-button
         nzType="default"
         (click)="onSaveChanges()">
-        {{ ('profile.SAVE' | translate | async) || 'Save' }}
+        {{ ('COMMON.ACTIONS.SAVE' | translate | async) || 'Save' }}
       </button>
       <button
         type="button"
         nz-button
         nzType="default"
         (click)="toggleEditMode()">
-        {{ ('profile.CANCEL' | translate | async) || 'Cancel' }}
+        {{ ('COMMON.ACTIONS.CANCEL' | translate | async) || 'Cancel' }}
       </button>
     </div>
   </form>
@@ -57,7 +63,8 @@
       <p class="!px-3 !py-2">
         <strong
           >{{
-            ('profile.FIRST_NAME' | translate | async) || 'First Name'
+            ('COMMON.PERSONAL_DETAILS.FIRST_NAME' | translate | async) ||
+              'First Name'
           }}:</strong
         >
         {{ user.user_metadata.firstName }}
@@ -65,13 +72,18 @@
       <p class="!px-3 !py-2">
         <strong
           >{{
-            ('profile.LAST_NAME' | translate | async) || 'Last Name'
+            ('COMMON.PERSONAL_DETAILS.LAST_NAME' | translate | async) ||
+              'Last Name'
           }}:</strong
         >
         {{ user.user_metadata.lastName }}
       </p>
       <p class="!px-3 !py-2">
-        <strong>{{ ('profile.EMAIL' | translate | async) || 'Email' }}:</strong>
+        <strong
+          >{{
+            ('COMMON.COMMUNICATION.EMAIL' | translate | async) || 'Email'
+          }}:</strong
+        >
         {{ user.email }}
       </p>
       <!-- Display other user details -->
@@ -80,7 +92,7 @@
         nz-button
         nzType="primary"
         (click)="toggleEditMode()">
-        {{ ('profile.EDIT' | translate | async) || 'Edit' }}
+        {{ ('COMMON.ACTIONS.EDIT' | translate | async) || 'Edit' }}
       </button>
     </div>
   </ng-template>

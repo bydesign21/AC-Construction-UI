@@ -1,17 +1,21 @@
 <div class="flex flex-col mt-[2rem] min-w-full overflow-hidden">
   <div class="flex flex-row items-center justify-between">
     <h1 class="text-2xl">
-      {{ ('checks.CHECKS' | translate | async) || 'Checks' }}
+      {{ ('COMMON.FEATURES.CHECKS' | translate | async) || 'Checks' }}
     </h1>
     <div class="flex flex-row gap-1">
       <button
         (click)="handleCreateCheckReport()"
-        title="Create Report"
+        [title]="
+          ('COMMON.REPORTS.CREATE_REPORT' | translate | async) ||
+          'Create Report'
+        "
         nz-button
         class="ml-2 items-center flex mb-[0.5em] !rounded-lg">
         <span
           >{{
-            ('checks.CREATE_REPORT' | translate | async) || 'Create Report'
+            ('COMMON.REPORTS.CREATE_REPORT' | translate | async) ||
+              'Create Report'
           }}
           <span
             class="items-center flex relative bottom-[0.15rem]"
@@ -22,12 +26,15 @@
       </button>
       <button
         (click)="handleEmployeeManagement()"
-        title="Manage Employees"
+        [title]="
+          ('EMPLOYEES.MANAGE_EMPLOYEES' | translate | async) ||
+          'Manage Employees'
+        "
         nz-button
         class="ml-2 items-center flex mb-[0.5em] !rounded-lg">
         <span
           >{{
-            ('checks.MANAGE_EMPLOYEES' | translate | async) ||
+            ('EMPLOYEES.MANAGE_EMPLOYEES' | translate | async) ||
               'Manage Employees'
           }}
           <span
@@ -39,11 +46,11 @@
       </button>
       <button
         (click)="handleCreateCheck()"
-        title="Create Check"
+        [title]="('CHECKS.CREATE_CHECK' | translate | async) || 'Create Check'"
         nz-button
         class="ml-2 items-center flex mb-[0.5em] !rounded-lg">
         <span
-          >{{ ('checks.CREATE_CHECK' | translate | async) || 'Create Check' }}
+          >{{ ('CHECKS.CREATE_CHECK' | translate | async) || 'Create Check' }}
           <span
             class="items-center flex relative bottom-[0.15rem]"
             nz-icon
