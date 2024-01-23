@@ -78,7 +78,7 @@ export class WeeklyReportsContainerComponent implements OnInit, OnDestroy {
 
   handleViewItem(item: WeeklyReport) {
     const modal = this.modal.create({
-      nzTitle: 'View Weekly Report',
+      nzTitle: `'WEEKLY_REPORTS.VIEW_WEEKLY_REPORT' | translate | async`,
       nzOkText: 'Update',
       nzOkDisabled: true,
       nzCancelText: 'Cancel',

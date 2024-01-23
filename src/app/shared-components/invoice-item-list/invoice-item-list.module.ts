@@ -31,4 +31,4 @@ import { TableStateTemplateModule } from '../table-state-template/table-state-te
   providers: [],
   exports: [InvoiceItemListComponent],
 })
-export class InvoiceItemListModule { }
+export class InvoiceItemListModule {}

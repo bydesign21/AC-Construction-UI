@@ -35,7 +35,7 @@ export class CreateReportModalComponent implements OnInit, OnDestroy {
   constructor(
     private invoices: InvoicesService,
     private cd: ChangeDetectorRef
-  ) { }
+  ) {}
 
   handleDateChanged(dateRange: Date[]) {
     this.dateRange$.next(dateRange);

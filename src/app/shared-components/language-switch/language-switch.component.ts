@@ -28,13 +28,13 @@ export class LanguageSwitchComponent implements ControlValueAccessor {
   mexicanFlag = '\uD83C\uDDF2\uD83C\uDDFD';
   americanFlag = '\uD83C\uDDFA\uD83C\uDDF8';
   checked = false;
-  onChange: any = () => { };
-  onTouched: any = () => { };
+  onChange: any = () => {};
+  onTouched: any = () => {};
 
   constructor(
     private icon: NzIconService,
     private cd: ChangeDetectorRef
-  ) { }
+  ) {}
 
   writeValue(value: any): void {
     this.checked = value === 'en-US';

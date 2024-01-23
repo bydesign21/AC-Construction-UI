@@ -23,7 +23,7 @@ export class SignUpComponent {
     private message: NzMessageService,
     private router: Router,
     private cd: ChangeDetectorRef
-  ) { }
+  ) {}
 
   signupForm = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),

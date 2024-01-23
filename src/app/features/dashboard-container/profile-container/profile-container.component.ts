@@ -24,7 +24,7 @@ export class ProfileContainerComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private cd: ChangeDetectorRef
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.setSelectedTabFromRoute();

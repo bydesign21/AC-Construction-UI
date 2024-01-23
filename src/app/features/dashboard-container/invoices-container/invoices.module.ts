@@ -53,4 +53,4 @@ import { NzModalModule } from 'ng-zorro-antd/modal';
     CreateReportModalComponent,
   ],
 })
-export class InvoicesModule { }
+export class InvoicesModule {}

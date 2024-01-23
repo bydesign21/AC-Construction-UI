@@ -43,4 +43,8 @@ export class SecondaryNavigationBarService {
   setNavigationVisibility(isVisible: boolean) {
     this.isNavigationVisible.next(isVisible);
   }
+
+  refreshNavigationLinks() {
+    this.navigationLinks.next(this.navigationLinks.value);
+  }
 }

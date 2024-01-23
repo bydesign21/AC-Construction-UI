@@ -11,9 +11,11 @@ import { NzTableModule } from 'ng-zorro-antd/table';
 import { EmployeeListTableComponent } from './employee-list-table.component';
 import { TableStateTemplateModule } from '../table-state-template/table-state-template.module';
 import { NzPaginationModule } from 'ng-zorro-antd/pagination';
+import { TranslatePipe } from '../pipes/translate.pipe';
 
 @NgModule({
   declarations: [EmployeeListTableComponent],
+  exports: [EmployeeListTableComponent],
   imports: [
     CommonModule,
     FormsModule,
@@ -26,7 +28,7 @@ import { NzPaginationModule } from 'ng-zorro-antd/pagination';
     NzIconModule,
     TableStateTemplateModule,
     NzPaginationModule,
+    TranslatePipe,
   ],
-  exports: [EmployeeListTableComponent],
 })
 export class EmployeeListTableModule {}

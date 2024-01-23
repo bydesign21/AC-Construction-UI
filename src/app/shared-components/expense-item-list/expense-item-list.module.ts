@@ -13,9 +13,12 @@ import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { NzAutocompleteModule } from 'ng-zorro-antd/auto-complete';
 import { TableStateTemplateModule } from '../table-state-template/table-state-template.module';
 import { CurrencyMaskModule } from 'ng2-currency-mask';
+import { TranslatePipe } from '../pipes/translate.pipe';
 
 @NgModule({
   declarations: [ExpenseItemListComponent],
+  exports: [ExpenseItemListComponent],
+  providers: [],
   imports: [
     CommonModule,
     FormsModule,
@@ -31,8 +34,7 @@ import { CurrencyMaskModule } from 'ng2-currency-mask';
     NzAutocompleteModule,
     TableStateTemplateModule,
     CurrencyMaskModule,
+    TranslatePipe,
   ],
-  exports: [ExpenseItemListComponent],
-  providers: [],
 })
-export class ExpenseItemListModule { }
+export class ExpenseItemListModule {}

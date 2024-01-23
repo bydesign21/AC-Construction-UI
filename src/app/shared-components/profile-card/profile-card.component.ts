@@ -26,7 +26,7 @@ export class ProfileCardComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private cd: ChangeDetectorRef
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     console.log('this.user', this.user);

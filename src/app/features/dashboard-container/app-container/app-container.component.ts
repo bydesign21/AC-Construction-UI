@@ -12,24 +12,32 @@ export class AppContainerComponent implements OnInit {
   constructor(private navigation: SecondaryNavigationBarService) {}
   ngOnInit(): void {
     this.navigation.setNavigationLinks([
-      { label: 'Dashboard', iconUrl: 'home', routerUrl: 'dashboard' },
       {
-        label: 'Weekly Reports',
+        label: 'COMMON.FEATURES.DASHBOARD',
+        iconUrl: 'home',
+        routerUrl: 'dashboard',
+      },
+      {
+        label: 'COMMON.FEATURES.WEEKLY_REPORTS',
         iconUrl: 'project',
         routerUrl: 'weekly-reports',
       },
       {
-        label: 'Employees',
+        label: 'COMMON.FEATURES.EMPLOYEES',
         iconUrl: 'team',
         routerUrl: 'employees',
       },
       {
-        label: 'Clients',
+        label: 'COMMON.FEATURES.CLIENTS',
         iconUrl: 'user',
         routerUrl: 'clients',
       },
-      { label: 'Invoices', iconUrl: 'profile', routerUrl: 'invoices' },
-      { label: 'Checks', iconUrl: 'mail', routerUrl: 'checks' },
+      {
+        label: 'COMMON.FEATURES.INVOICES',
+        iconUrl: 'profile',
+        routerUrl: 'invoices',
+      },
+      { label: 'COMMON.FEATURES.CHECKS', iconUrl: 'mail', routerUrl: 'checks' },
     ]);
   }
 }

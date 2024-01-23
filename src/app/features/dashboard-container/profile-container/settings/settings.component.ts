@@ -7,7 +7,6 @@ import { Component } from '@angular/core';
   styleUrl: './settings.component.scss',
 })
 export class SettingsComponent {
-
   handleLanguageChange(event: string) {
     console.log(event);
   }

@@ -45,7 +45,6 @@ import { InvoicesService } from './invoices-container/invoice-service/invoices.s
 import { SharedUtilsService } from '../../shared-components/shared-utils.service';
 import { NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 import { NzButtonModule } from 'ng-zorro-antd/button';
-import { TranslatePipe } from '../../shared-components/pipes/translate.pipe';
 
 const icons = [
   SettingOutline,
@@ -102,4 +101,4 @@ const icons = [
   ],
   exports: [AppContainerComponent, NavigationBarComponent],
 })
-export class DashboardContainerModule { }
+export class DashboardContainerModule {}

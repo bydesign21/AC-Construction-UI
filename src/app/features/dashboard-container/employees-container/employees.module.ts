@@ -13,9 +13,12 @@ import { provideRouter } from '@angular/router';
 import { routes } from './employees.routes';
 import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 import { CurrencyMaskModule } from 'ng2-currency-mask';
+import { TranslatePipe } from '../../../shared-components/pipes/translate.pipe';
 
 @NgModule({
   declarations: [EmployeeContainerComponent, CreateEmployeeFormComponent],
+  providers: [provideRouter(routes)],
+  exports: [EmployeeContainerComponent, CreateEmployeeFormComponent],
   imports: [
     CommonModule,
     NzInputModule,
@@ -28,8 +31,7 @@ import { CurrencyMaskModule } from 'ng2-currency-mask';
     EmployeeListTableModule,
     NzCheckboxModule,
     CurrencyMaskModule,
+    TranslatePipe,
   ],
-  providers: [provideRouter(routes)],
-  exports: [EmployeeContainerComponent, CreateEmployeeFormComponent],
 })
-export class EmployeesModule { }
+export class EmployeesModule {}

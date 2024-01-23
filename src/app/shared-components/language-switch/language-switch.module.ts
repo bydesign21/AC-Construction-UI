@@ -10,4 +10,4 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
   imports: [CommonModule, NzSwitchModule, FormsModule, NzIconModule],
   exports: [LanguageSwitchComponent],
 })
-export class LanguageSwitchModule { }
+export class LanguageSwitchModule {}

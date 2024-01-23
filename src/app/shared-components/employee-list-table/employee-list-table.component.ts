@@ -34,21 +34,22 @@ export class EmployeeListTableComponent implements OnInit {
 
   tableHeaders: any[] = [
     {
-      label: 'Name',
+      label: 'COMMON.PERSONAL_DETAILS.NAME',
       sortFn: (a: Employee, b: Employee) => a.name.localeCompare(b.name),
     },
     {
-      label: 'Phone',
+      label: 'COMMON.COMMUNICATION.PHONE',
       sortFn: (a: Employee, b: Employee) => a.phone.localeCompare(b.phone),
     },
     {
-      label: 'Email',
+      label: 'COMMON.COMMUNICATION.EMAIL',
       sortFn: (a: Employee, b: Employee) => a.email.localeCompare(b.email),
     },
   ];
 
   ngOnInit(): void {
-    if (this.isActionRowVisible) this.tableHeaders.push({ label: 'Actions' });
+    if (this.isActionRowVisible)
+      this.tableHeaders.push({ label: 'COMMON.ACTIONS.ACTIONS' });
   }
 
   handleDeleteItem(item: Employee) {

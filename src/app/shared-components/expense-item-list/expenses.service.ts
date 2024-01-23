@@ -10,7 +10,7 @@ import {
   providedIn: 'root',
 })
 export class ExpensesService {
-  constructor(private utils: SharedUtilsService) { }
+  constructor(private utils: SharedUtilsService) {}
 
   calculateTotals(params: {
     expenseList: ExpenseItem[];

@@ -8,10 +8,9 @@ describe('ProfileCardComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ProfileCardComponent]
-    })
-    .compileComponents();
-    
+      imports: [ProfileCardComponent],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(ProfileCardComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

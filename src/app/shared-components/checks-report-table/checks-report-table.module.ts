@@ -35,4 +35,4 @@ import { provideHttpClient } from '@angular/common/http';
   providers: [provideHttpClient()],
   exports: [ChecksReportTableComponent],
 })
-export class ChecksReportTableModule { }
+export class ChecksReportTableModule {}

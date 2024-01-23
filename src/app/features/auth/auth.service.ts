@@ -6,7 +6,7 @@ import { Observable, catchError, from, map, of, tap, throwError } from 'rxjs';
   providedIn: 'root',
 })
 export class AuthService {
-  constructor(private sb: SupabaseService) { }
+  constructor(private sb: SupabaseService) {}
 
   login(username: string, password: string): Observable<any> {
     return from(

@@ -41,7 +41,7 @@ export class NavigationBarComponent {
     private router: Router,
     private cd: ChangeDetectorRef,
     private message: NzMessageService
-  ) { }
+  ) {}
 
   dropdownOpen = false;
   isDropdownIconFocused = false;

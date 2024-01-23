@@ -57,4 +57,4 @@ import { TranslatePipe } from '../../../shared-components/pipes/translate.pipe';
     CreateChecksReportModalComponent,
   ],
 })
-export class ChecksModule { }
+export class ChecksModule {}
