@@ -12,4 +12,4 @@ import { TranslatePipe } from '../../../shared-components/pipes/translate.pipe';
   exports: [DashboardComponent],
   imports: [CommonModule, NavigationCardModule, TranslatePipe],
 })
-export class DashboardModule { }
+export class DashboardModule {}

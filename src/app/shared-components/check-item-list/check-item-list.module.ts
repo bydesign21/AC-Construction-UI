@@ -36,4 +36,4 @@ import { TranslatePipe } from '../pipes/translate.pipe';
   providers: [TableFormService],
   exports: [CheckItemListComponent],
 })
-export class CheckItemListModule { }
+export class CheckItemListModule {}

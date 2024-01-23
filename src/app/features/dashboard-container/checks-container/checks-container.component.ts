@@ -30,7 +30,7 @@ export class ChecksContainerComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private message: NzMessageService
-  ) { }
+  ) {}
   checks$: BehaviorSubject<Check[]> = new BehaviorSubject<Check[]>([]);
   reportChecks$: BehaviorSubject<Check[]> = new BehaviorSubject<Check[]>([]);
   loading$ = new BehaviorSubject<boolean>(true);

@@ -8,6 +8,7 @@ import { AuthService } from '../../../auth/auth.service';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { PasswordResetModalComponent } from '../../../auth/password-reset-modal/password-reset-modal.component';
 import { LanguageService } from '../../../../shared-components/language-service/language.service';
+import { SecondaryNavigationBarService } from '../../../../shared-components/secondary-navigation-bar/secondary-navigation-bar.service';
 
 @Component({
   selector: 'app-profile',
@@ -23,8 +24,9 @@ export class ProfileComponent implements OnInit {
     private router: Router,
     private auth: AuthService,
     private modal: NzModalService,
-    private language: LanguageService
-  ) { }
+    private language: LanguageService,
+    private navigation: SecondaryNavigationBarService
+  ) {}
   userProfile: User | null = null;
 
   handleUpdateProfile(newProfile: UserAttributes) {
@@ -39,6 +41,7 @@ export class ProfileComponent implements OnInit {
           this.language.setLanguagePreference(
             res.user_metadata?.langPref || 'en-US'
           );
+          this.navigation.refreshNavigationLinks();
           this.cd.detectChanges();
           this.message.success('Profile updated successfully');
         },

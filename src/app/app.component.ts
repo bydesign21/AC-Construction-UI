@@ -2,13 +2,14 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { NzI18nService, en_US, es_ES } from 'ng-zorro-antd/i18n';
-import { LanguageService } from './shared-components/language-service/language.service';
 import { Subject, takeUntil } from 'rxjs';
+import { TranslatePipe } from './shared-components/pipes/translate.pipe';
+import { LanguageService } from './shared-components/language-service/language.service';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet],
-  providers: [LanguageService],
+  imports: [CommonModule, RouterOutlet, TranslatePipe],
+  providers: [TranslatePipe],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
@@ -16,7 +17,7 @@ export class AppComponent implements OnInit, OnDestroy {
   constructor(
     private i18n: NzI18nService,
     private language: LanguageService
-  ) { }
+  ) {}
   title = 'AC-Construction-UI';
   destroy$ = new Subject();
 

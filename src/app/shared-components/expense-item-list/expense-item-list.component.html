@@ -18,7 +18,9 @@
       <tr>
         <th class="lg:w-[15rem]">
           <div class="flex flex-row items-center justify-between">
-            <span>Employee</span>
+            <span>{{
+              ('EMPLOYEES.EMPLOYEE' | translate | async) || 'Employee'
+            }}</span>
             <span
               *ngIf="isFieldErrorPresent('employeeName')"
               nz-icon
@@ -32,7 +34,9 @@
         </th>
         <th class="lg:w-[15rem]">
           <div class="flex flex-row items-center justify-between">
-            <span>Address</span>
+            <span>{{
+              ('COMMON.LOCATION.ADDRESS' | translate | async) || 'Address'
+            }}</span>
             <span
               *ngIf="isFieldErrorPresent('address')"
               nz-icon
@@ -46,7 +50,11 @@
         </th>
         <th>
           <div class="flex flex-row items-center justify-between">
-            <span>Sqft Price</span>
+            <span>{{
+              ('COMMON.MISC.SQFT_PRICE' | translate | async) ||
+                'Sqft
+              Price'
+            }}</span>
             <span
               *ngIf="isFieldErrorPresent('sqftPrice')"
               nz-icon
@@ -60,7 +68,9 @@
         </th>
         <th>
           <div class="flex flex-row items-center justify-between">
-            <span>Sqft</span>
+            <span>{{
+              ('COMMON.MISC.SQFT' | translate | async) || 'Sqft'
+            }}</span>
             <span
               *ngIf="isFieldErrorPresent('sqft')"
               nz-icon
@@ -74,7 +84,9 @@
         </th>
         <th>
           <div class="flex flex-row items-center justify-between">
-            <span>Amount</span>
+            <span>{{
+              ('COMMON.FINANCIAL.AMOUNT' | translate | async) || 'Amount'
+            }}</span>
             <span
               *ngIf="isFieldErrorPresent('amount')"
               nz-icon
@@ -88,7 +100,9 @@
         </th>
         <th>
           <div class="flex flex-row items-center justify-between">
-            <span>Paid</span>
+            <span>{{
+              ('COMMON.FINANCIAL.PAID' | translate | async) || 'Paid'
+            }}</span>
             <span
               *ngIf="isFieldErrorPresent('isPaid')"
               nz-icon
@@ -102,7 +116,9 @@
         </th>
         <th class="lg:w-[10rem]">
           <div class="flex flex-row items-center justify-between">
-            <span>Date</span>
+            <span
+              >{{ ('COMMON.MISC.DATE' | translate | async) || 'Date' }}
+            </span>
             <span
               *ngIf="isFieldErrorPresent('date')"
               nz-icon
@@ -116,7 +132,9 @@
         </th>
         <th class="lg:w-[8rem]">
           <div class="flex flex-row items-center justify-between">
-            <span>Type</span>
+            <span>{{
+              ('COMMON.MISC.TYPE' | translate | async) || 'Type'
+            }}</span>
             <span
               *ngIf="isFieldErrorPresent('type')"
               nz-icon
@@ -128,7 +146,7 @@
             </span>
           </div>
         </th>
-        <th>Action</th>
+        <th>{{ ('COMMON.ACTIONS.ACTION' | translate | async) || 'Action' }}</th>
       </tr>
     </thead>
     <tbody>
@@ -320,7 +338,7 @@
       nzType="primary"
       nzSize="large"
       class="!rounded-lg w-[40%] justify-center items-center flex flex-auto">
-      Add Expense
+      {{ ('WEEKLY_REPORTS.ADD_EXPENSE' | translate | async) || 'Add Expense' }}
     </button>
   </div>
 </div>

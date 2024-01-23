@@ -35,31 +35,32 @@ export class WeeklyReportsTableComponent implements OnInit {
     return a.date[1].getTime() - b.date[1].getTime();
   };
   tableHeaders: any = [
-    { label: 'Date Range', sortFn: this.sortDateRangeFn },
+    { label: 'COMMON.MISC.DATE_RANGE', sortFn: this.sortDateRangeFn },
     {
-      label: 'Revenue',
+      label: 'WEEKLY_REPORTS.REVENUE',
       sortFn: (a: WeeklyReport, b: WeeklyReport) =>
         a.revenue.toString().localeCompare(b.revenue.toString()),
     },
     {
-      label: 'Expenses',
+      label: 'WEEKLY_REPORTS.EXPENSES',
       sortFn: (a: WeeklyReport, b: WeeklyReport) =>
         a.totalExpenses.toString().localeCompare(b.totalExpenses.toString()),
     },
     {
-      label: 'Net Profit',
+      label: 'WEEKLY_REPORTS.NET_PROFIT',
       sortFn: (a: WeeklyReport, b: WeeklyReport) =>
         a.profit.toString().localeCompare(b.profit.toString()),
     },
     {
-      label: 'Split Profit',
+      label: 'WEEKLY_REPORTS.SPLIT_PROFIT',
       sortFn: (a: WeeklyReport, b: WeeklyReport) =>
         a.profitSplit.toString().localeCompare(b.profitSplit.toString()),
     },
   ];
 
   ngOnInit(): void {
-    if (this.isActionRowVisible) this.tableHeaders.push({ label: 'Actions' });
+    if (this.isActionRowVisible)
+      this.tableHeaders.push({ label: 'COMMON.ACTIONS.ACTIONS' });
   }
 
   parseEndDate(dateRange: string): Date {

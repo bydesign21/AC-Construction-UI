@@ -26,14 +26,7 @@ export class SecondaryNavigationBarComponent implements OnInit, OnDestroy {
   isMobileViewPort = window.innerWidth <= 640;
   isMobileMenuOpen = false;
   isMenuVisible = true;
-  items: SecondaryNavigationLink[] = [
-    { label: 'test', iconUrl: 'menu', routerUrl: '' },
-    { label: 'test', iconUrl: 'menu', routerUrl: '' },
-    { label: 'test', iconUrl: 'menu', routerUrl: '' },
-    { label: 'test', iconUrl: 'menu', routerUrl: '' },
-    { label: 'test', iconUrl: 'menu', routerUrl: '' },
-    { label: 'test', iconUrl: 'menu', routerUrl: '' },
-  ];
+  items: SecondaryNavigationLink[] = [];
   destroy$ = new Subject();
 
   ngOnInit(): void {

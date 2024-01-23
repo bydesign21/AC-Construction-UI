@@ -7,12 +7,15 @@
             class="!text-left [&>*]:!text-lg"
             [nzNoColon]="true"
             [nzRequired]="false">
-            Search
+            {{ ('COMMON.ACTIONS.SEARCH' | translate | async) || 'Search' }}
           </nz-form-label>
           <nz-input-group [nzSuffixIcon]="'search'">
             <input
               nz-input
-              placeholder="Search Clients"
+              [placeholder]="
+                ('CLIENTS.SEARCH_CLIENTS' | translate | async) ||
+                'Search Clients'
+              "
               aria-label="search"
               [(ngModel)]="searchTerm"
               (ngModelChange)="handleClientSearch($event)" />
@@ -23,10 +26,12 @@
         <button
           (click)="handleCreateClientClicked()"
           nz-button
-          title="Add Client"
+          [title]="('CLIENTS.ADD_CLIENT' | translate | async) || 'Add Client'"
           class="!rounded-lg !items-center justify-center !flex !flex-col">
           <div class="flex flex-row gap-1 items-center">
-            <span>Add Client</span>
+            <span>{{
+              ('CLIENTS.ADD_CLIENT' | translate | async) || 'Add Client'
+            }}</span>
             <span
               class="items-center flex flex-col justify-center"
               nz-icon

@@ -7,7 +7,7 @@ import { User, UserAttributes } from '@supabase/supabase-js';
   providedIn: 'root',
 })
 export class ProfileService {
-  constructor(private sb: SupabaseService) { }
+  constructor(private sb: SupabaseService) {}
 
   getProfile(): Observable<User> {
     return from(this.sb.client.auth.getUser()).pipe(

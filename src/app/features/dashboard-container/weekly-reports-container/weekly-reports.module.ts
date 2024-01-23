@@ -25,9 +25,19 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NoResultsInputTemplateModule } from '../../../shared-components/no-results-input-template/no-results-input-template.module';
 import { CurrencyMaskModule } from 'ng2-currency-mask';
 import { NzModalModule } from 'ng-zorro-antd/modal';
+import { TranslatePipe } from '../../../shared-components/pipes/translate.pipe';
 
 @NgModule({
   declarations: [
+    WeeklyReportsContainerComponent,
+    CreateWeeklyReportModalComponent,
+    CreateWeeklyReportAnalysisModalComponent,
+    DeleteWeeklyReportModalComponent,
+    WeeklyReportsTableComponent,
+    WeeklyReportInputRowComponent,
+  ],
+  providers: [provideRouter(routes)],
+  exports: [
     WeeklyReportsContainerComponent,
     CreateWeeklyReportModalComponent,
     CreateWeeklyReportAnalysisModalComponent,
@@ -55,15 +65,7 @@ import { NzModalModule } from 'ng-zorro-antd/modal';
     NoResultsInputTemplateModule,
     CurrencyMaskModule,
     NzModalModule,
-  ],
-  providers: [provideRouter(routes)],
-  exports: [
-    WeeklyReportsContainerComponent,
-    CreateWeeklyReportModalComponent,
-    CreateWeeklyReportAnalysisModalComponent,
-    DeleteWeeklyReportModalComponent,
-    WeeklyReportsTableComponent,
-    WeeklyReportInputRowComponent,
+    TranslatePipe,
   ],
 })
-export class WeeklyReportsModule { }
+export class WeeklyReportsModule {}

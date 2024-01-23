@@ -1,3 +1,5 @@
+<!-- eslint-disable @angular-eslint/template/click-events-have-key-events -->
+<!-- eslint-disable @angular-eslint/template/interactive-supports-focus -->
 <div
   *ngIf="isMenuVisible"
   class="min-w-screen overflow-hidden h-[2.5rem] bg-gray-200 flex flex-row justify-center items-center">
@@ -59,7 +61,7 @@
         [nzType]="item.iconUrl || ''"
         nzTheme="outline"></span>
       <span class="z-[1] relative">
-        {{ item.label }}
+        {{ item.label | translate | async }}
       </span>
     </li>
   </ul>

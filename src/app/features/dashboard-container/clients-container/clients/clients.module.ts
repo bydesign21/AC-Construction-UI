@@ -12,9 +12,12 @@ import { NzModalModule } from 'ng-zorro-antd/modal';
 import { provideRouter } from '@angular/router';
 import { routes } from './clients.routes';
 import { TableStateTemplateModule } from '../../../../shared-components/table-state-template/table-state-template.module';
+import { TranslatePipe } from '../../../../shared-components/pipes/translate.pipe';
 
 @NgModule({
   declarations: [ClientsContainerComponent, CreateClientFormComponent],
+  providers: [provideRouter(routes)],
+  exports: [ClientsContainerComponent, CreateClientFormComponent],
   imports: [
     CommonModule,
     NzInputModule,
@@ -26,8 +29,7 @@ import { TableStateTemplateModule } from '../../../../shared-components/table-st
     NzButtonModule,
     NzModalModule,
     TableStateTemplateModule,
+    TranslatePipe,
   ],
-  providers: [provideRouter(routes)],
-  exports: [ClientsContainerComponent, CreateClientFormComponent],
 })
-export class ClientsModule { }
+export class ClientsModule {}

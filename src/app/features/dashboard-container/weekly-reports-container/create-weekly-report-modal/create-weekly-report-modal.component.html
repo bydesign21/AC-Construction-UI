@@ -4,13 +4,15 @@
       *ngIf="data?.report"
       class="flex flex-row w-full justify-end items-center">
       <button
-        title="Edit Client"
+        [title]="('CLIENTS.EDIT_CLIENT' | translate | async) || 'Edit Client'"
         class="!flex !flex-row !justify-center !items-center !rounded-2xl !gap-1"
         nz-button
         [nzType]="isEditMode ? 'primary' : 'default'"
         (click)="handleEditModeToggled()"
         type="button">
-        <span class="sr-only">Edit</span>
+        <span class="sr-only">{{
+          ('COMMON.ACTIONS.EDIT' | translate | async) || 'Edit'
+        }}</span>
         <span
           class="!flex !flex-row !justify-center !items-center !ml-0"
           nz-icon
@@ -33,30 +35,42 @@
       <div class="flex flex-col w-[45%] justify-around">
         <div class="flex lg:flex-row flex-col justify-around">
           <app-expense-item-label
-            [label]="'Total Expenses'"
+            [label]="
+              ('WEEKLY_REPORTS.TOTAL_EXPENSES' | translate | async) ||
+              'Total Expenses'
+            "
             [value]="totalExpenses"
             [isExpense]="true"></app-expense-item-label>
           <app-expense-item-label
-            [label]="'Profit'"
+            [label]="('WEEKLY_REPORTS.PROFIT' | translate | async) || 'Profit'"
             [value]="profit"
             [isExpense]="false"></app-expense-item-label>
           <app-expense-item-label
-            [label]="'Profit Split'"
+            [label]="
+              ('WEEKLY_REPORTS.SPLIT_PROFIT' | translate | async) ||
+              'Profit Split'
+            "
             [value]="profitSplit"
             [isExpense]="false"></app-expense-item-label>
         </div>
         <div class="flex lg:flex-row flex-col justify-between">
           <app-expense-item-tag
-            [label]="'Moulding'"
+            [label]="
+              ('WEEKLY_REPORTS.MOULDING' | translate | async) || 'Moulding'
+            "
             [value]="mouldingCost"></app-expense-item-tag>
           <app-expense-item-tag
-            [label]="'Decking'"
+            [label]="
+              ('WEEKLY_REPORTS.DECKING' | translate | async) || 'Decking'
+            "
             [value]="deckingCost"></app-expense-item-tag>
           <app-expense-item-tag
-            [label]="'Framing'"
+            [label]="
+              ('WEEKLY_REPORTS.FRAMING' | translate | async) || 'Framing'
+            "
             [value]="framingCost"></app-expense-item-tag>
           <app-expense-item-tag
-            [label]="'Misc'"
+            [label]="('WEEKLY_REPORTS.MISC' | translate | async) || 'Misc'"
             [value]="miscCost"></app-expense-item-tag>
         </div>
       </div>
@@ -76,12 +90,18 @@
 </div>
 
 <ng-template #modalFooter>
-  <button nz-button nzType="default" (click)="onCancel()">Cancel</button>
+  <button nz-button nzType="default" (click)="onCancel()">
+    {{ ('COMMON.ACTIONS.CANCEL' | translate | async) || 'Cancel' }}
+  </button>
   <button
     nz-button
     nzType="primary"
     [disabled]="!isFormValid()"
     (click)="submitForm()">
-    {{ data?.report ? 'Update' : 'Create' }}
+    {{
+      data?.report
+        ? ('COMMON.ACTIONS.UPDATE' | translate | async) || 'Update'
+        : ('COMMON.ACTIONS.CREATE' | translate | async) || 'Create'
+    }}
   </button>
 </ng-template>

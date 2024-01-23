@@ -37,4 +37,4 @@ import { TranslatePipe } from '../../../shared-components/pipes/translate.pipe';
     TranslatePipe,
   ],
 })
-export class ProfileModule { }
+export class ProfileModule {}

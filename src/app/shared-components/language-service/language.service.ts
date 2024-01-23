@@ -12,7 +12,7 @@ export class LanguageService {
     this.getLanguagePreferenceFromStorage()
   );
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   private getLangPref(): string {
     return this.languagePreference$.getValue();
@@ -65,6 +65,7 @@ export class LanguageService {
   }
 
   translate(key: string): Observable<string> {
+    console.log(`Translating ${key}`);
     return this.getTranslationFile().pipe(
       map(translations => this.getNestedTranslation(translations, key) || key)
     );

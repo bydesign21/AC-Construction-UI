@@ -21,4 +21,4 @@ import { TranslatePipe } from '../pipes/translate.pipe';
   ],
   exports: [ProfileCardComponent],
 })
-export class ProfileCardModule { }
+export class ProfileCardModule {}

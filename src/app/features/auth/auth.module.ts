@@ -40,4 +40,4 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
     PasswordResetComponent,
   ],
 })
-export class AuthModule { }
+export class AuthModule {}

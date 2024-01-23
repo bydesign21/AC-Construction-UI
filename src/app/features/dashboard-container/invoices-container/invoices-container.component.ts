@@ -31,7 +31,7 @@ export class InvoicesContainerComponent implements OnInit, OnDestroy {
     private message: NzMessageService,
     private router: Router,
     private route: ActivatedRoute
-  ) { }
+  ) {}
   orders$: BehaviorSubject<Invoice[]> = new BehaviorSubject<Invoice[]>([]);
   loading$ = new BehaviorSubject<boolean>(false);
   destroy$ = new Subject();
