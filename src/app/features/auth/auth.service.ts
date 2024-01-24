@@ -64,7 +64,8 @@ export class AuthService {
   resetPassword(email: string) {
     return from(
       this.sb.client.auth.resetPasswordForEmail(email, {
-        redirectTo: 'http://localhost:4200/auth/password-reset',
+        redirectTo:
+          'https://dev.d2qaiwv0qh7ijz.amplifyapp.com/auth/password-reset',
       })
     ).pipe(
       map(res => {
