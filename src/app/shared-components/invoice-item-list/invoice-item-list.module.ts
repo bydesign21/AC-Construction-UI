@@ -11,9 +11,12 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { TableStateTemplateModule } from '../table-state-template/table-state-template.module';
+import { TranslatePipe } from '../pipes/translate.pipe';
 
 @NgModule({
   declarations: [InvoiceItemListComponent],
+  providers: [],
+  exports: [InvoiceItemListComponent],
   imports: [
     CommonModule,
     FormsModule,
@@ -27,8 +30,7 @@ import { TableStateTemplateModule } from '../table-state-template/table-state-te
     ReactiveFormsModule,
     NzToolTipModule,
     TableStateTemplateModule,
+    TranslatePipe,
   ],
-  providers: [],
-  exports: [InvoiceItemListComponent],
 })
 export class InvoiceItemListModule {}

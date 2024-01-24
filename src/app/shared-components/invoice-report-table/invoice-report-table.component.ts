@@ -33,28 +33,29 @@ export class InvoiceReportTableComponent implements OnInit {
 
   tableHeaders: any[] = [
     {
-      label: 'Invoice #',
+      label: 'INVOICES.INVOICE_NUMBER',
       sortFn: (a: Invoice, b: Invoice) =>
         a?.orderId?.toString().localeCompare(b?.orderId?.toString() || ''),
     },
     {
-      label: 'Date',
+      label: 'COMMON.MISC.DATE',
       sortFn: (a: Invoice, b: Invoice) =>
         a.date.toString().localeCompare(b.date.toString()),
     },
     {
-      label: 'Company',
+      label: 'COMMON.BUSINESS.COMPANY',
       sortFn: (a: Invoice, b: Invoice) => a.client.localeCompare(b.client),
     },
     {
-      label: 'Amount',
+      label: 'COMMON.FINANCIAL.AMOUNT',
       sortFn: (a: Invoice, b: Invoice) =>
         a.orderTotal.toString().localeCompare(b.orderTotal.toString()),
     },
   ];
 
   ngOnInit(): void {
-    if (this.isActionRowVisible) this.tableHeaders.push({ label: 'Actions' });
+    if (this.isActionRowVisible)
+      this.tableHeaders.push({ label: 'COMMON.ACTIONS.ACTIONS' });
   }
 
   handleDeleteItem(index: number) {

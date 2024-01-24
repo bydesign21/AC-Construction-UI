@@ -11,9 +11,11 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzPaginationModule } from 'ng-zorro-antd/pagination';
 import { TableStateTemplateModule } from '../table-state-template/table-state-template.module';
+import { TranslatePipe } from '../pipes/translate.pipe';
 
 @NgModule({
   declarations: [InvoiceReportTableComponent],
+  exports: [InvoiceReportTableComponent],
   imports: [
     CommonModule,
     FormsModule,
@@ -26,7 +28,7 @@ import { TableStateTemplateModule } from '../table-state-template/table-state-te
     NzIconModule,
     NzPaginationModule,
     TableStateTemplateModule,
+    TranslatePipe,
   ],
-  exports: [InvoiceReportTableComponent],
 })
 export class InvoiceReportTableModule {}

@@ -15,6 +15,7 @@ import { Invoice } from './invoices-model/model';
 import { InvoicesService } from './invoice-service/invoices.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { ActivatedRoute, Router } from '@angular/router';
+import { TranslatePipe } from '../../../shared-components/pipes/translate.pipe';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -30,7 +31,8 @@ export class InvoicesContainerComponent implements OnInit, OnDestroy {
     private invoices: InvoicesService,
     private message: NzMessageService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private translate: TranslatePipe
   ) {}
   orders$: BehaviorSubject<Invoice[]> = new BehaviorSubject<Invoice[]>([]);
   loading$ = new BehaviorSubject<boolean>(false);
@@ -64,7 +66,12 @@ export class InvoicesContainerComponent implements OnInit, OnDestroy {
           this.totalRecords = reports.count;
         },
         error: err => {
-          this.message.error(`Error loading invoices: ${err.message}`);
+          this.message.error(
+            `${
+              this.translate.syncTransform('INVOICES.ERROR_LOADING_INVOICES') ||
+              'Error loading invoices'
+            }: ${err.message}`
+          );
         },
         complete: () => {
           this.loading$.next(false);
@@ -86,9 +93,12 @@ export class InvoicesContainerComponent implements OnInit, OnDestroy {
 
   handleViewItem(item: Invoice) {
     const modal = this.modal.create({
-      nzTitle: 'View Invoice',
-      nzOkText: 'Update',
-      nzCancelText: 'Cancel',
+      nzTitle:
+        this.translate.syncTransform('INVOICES.VIEW_INVOICE') || 'View Invoice',
+      nzOkText:
+        this.translate.syncTransform('COMMON.ACTIONS.UPDATE') || 'Update',
+      nzCancelText:
+        this.translate.syncTransform('COMMON.ACTIONS.CANCEL') || 'Cancel',
       nzOkDisabled: true,
       nzContent: CreateInvoiceModalComponent,
       nzData: { invoice: item },
@@ -120,10 +130,14 @@ export class InvoicesContainerComponent implements OnInit, OnDestroy {
 
     this.modal.create({
       nzOkDanger: true,
-      nzTitle: 'Confirm Deletion',
+      nzTitle:
+        this.translate.syncTransform('COMMON.MISC.CONFIRM_DELETION') ||
+        'Confirm Deletion',
       nzContent: DeleteWeeklyReportModalComponent,
-      nzOkText: 'Delete',
-      nzCancelText: 'Cancel',
+      nzOkText:
+        this.translate.syncTransform('COMMON.ACTIONS.DELETE') || 'Delete',
+      nzCancelText:
+        this.translate.syncTransform('COMMON.ACTIONS.CANCEL') || 'Cancel',
       nzOnOk: () => {
         deleteItem(index);
       },
@@ -133,7 +147,9 @@ export class InvoicesContainerComponent implements OnInit, OnDestroy {
   // Report Modal
   handleCreateInvoiceReport() {
     const modal = this.modal.create({
-      nzTitle: 'Create Invoices Report',
+      nzTitle:
+        this.translate.syncTransform('INVOICES.CREATE_INVOICES_REPORT') ||
+        'Create Invoices Report',
       nzContent: CreateReportModalComponent,
       nzWidth: '100dvw',
       nzBodyStyle: { height: '90dvh' },
@@ -146,9 +162,13 @@ export class InvoicesContainerComponent implements OnInit, OnDestroy {
 
   handleCreateInvoice() {
     const modal = this.modal.create({
-      nzTitle: 'Create Invoice',
-      nzOkText: 'Create',
-      nzCancelText: 'Cancel',
+      nzTitle:
+        this.translate.syncTransform('INVOICES.CREATE_INVOICE') ||
+        'Create Invoice',
+      nzOkText:
+        this.translate.syncTransform('COMMON.ACTIONS.CREATE') || 'Create',
+      nzCancelText:
+        this.translate.syncTransform('COMMON.ACTIONS.CANCEL') || 'Cancel',
       nzContent: CreateInvoiceModalComponent,
       nzWidth: '100dvw',
       nzBodyStyle: { height: '85dvh' },
@@ -171,10 +191,18 @@ export class InvoicesContainerComponent implements OnInit, OnDestroy {
       .subscribe({
         next: () => {
           this.loadData();
-          this.message.success('Invoice created successfully');
+          this.message.success(
+            this.translate.syncTransform('INVOICES.INVOICE_CREATED_SUCCESS') ||
+              'Invoice created successfully'
+          );
         },
         error: err => {
-          this.message.error(`Error creating invoice: ${err.message}`);
+          this.message.error(
+            `${
+              this.translate.syncTransform('INVOICES.INVOICE_CREATED_ERROR') ||
+              'Error creating invoice'
+            }: ${err.message}`
+          );
         },
         complete: () => this.cd.detectChanges(),
       });
@@ -187,10 +215,18 @@ export class InvoicesContainerComponent implements OnInit, OnDestroy {
       .subscribe({
         next: () => {
           this.loadData();
-          this.message.success('Invoice updated successfully');
+          this.message.success(
+            this.translate.syncTransform('INVOICES.INVOICE_UPDATE_SUCCESS') ||
+              'Invoice updated successfully'
+          );
         },
         error: err => {
-          this.message.error(`Error updating invoice: ${err.message}`);
+          this.message.error(
+            `${
+              this.translate.syncTransform('INVOICES.INVOICE_UPDATE_ERROR') ||
+              'Error updating invoice'
+            }: ${err.message}`
+          );
         },
         complete: () => this.cd.detectChanges(),
       });
@@ -204,10 +240,18 @@ export class InvoicesContainerComponent implements OnInit, OnDestroy {
         .subscribe({
           next: () => {
             this.loadData();
-            this.message.success('Invoice deleted successfully');
+            this.message.success(
+              this.translate.syncTransform('INVOICES.INVOICE_DELETE_SUCCESS') ||
+                'Invoice deleted successfully'
+            );
           },
           error: err => {
-            this.message.error(`Error deleting invoice: ${err.message}`);
+            this.message.error(
+              `${
+                this.translate.syncTransform('INVOICES.INVOICE_DELETE_ERROR') ||
+                'Error deleting invoice'
+              }: ${err.message}`
+            );
           },
           complete: () => this.cd.detectChanges(),
         });
@@ -217,7 +261,9 @@ export class InvoicesContainerComponent implements OnInit, OnDestroy {
 
   handleClientManagement() {
     this.modal.create({
-      nzTitle: 'Manage Clients',
+      nzTitle:
+        this.translate.syncTransform('CLIENTS.MANAGE_CLIENTS') ||
+        'Manage Clients',
       nzFooter: null,
       nzContent: ClientsContainerComponent,
       nzWidth: '100dvw',

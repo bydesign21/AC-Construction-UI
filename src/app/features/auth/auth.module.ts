@@ -13,6 +13,7 @@ import { NzModalModule } from 'ng-zorro-antd/modal';
 import { PasswordResetModalComponent } from './password-reset-modal/password-reset-modal.component';
 import { PasswordResetComponent } from './password-reset/password-reset.component';
 import { NzButtonModule } from 'ng-zorro-antd/button';
+import { TranslatePipe } from '../../shared-components/pipes/translate.pipe';
 
 @NgModule({
   declarations: [
@@ -30,6 +31,7 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
     NzModalModule,
     FormsModule,
     NzButtonModule,
+    TranslatePipe,
   ],
   providers: [provideRouter(routes), SupabaseService, provideAnimations()],
   exports: [

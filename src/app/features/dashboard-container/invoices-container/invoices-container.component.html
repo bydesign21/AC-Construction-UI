@@ -1,14 +1,22 @@
 <div class="flex flex-col mt-[2rem] min-w-full overflow-hidden">
   <div class="flex flex-row items-center justify-between">
-    <h1 class="text-2xl">Invoices</h1>
+    <h1 class="text-2xl">
+      {{ ('COMMON.FEATURES.INVOICES' | translate | async) || 'Invoices' }}
+    </h1>
     <div class="flex flex-row gap-1">
       <button
         (click)="handleCreateInvoiceReport()"
-        title="Create Report"
+        [title]="
+          ('COMMON.REPORTS.CREATE_REPORT' | translate | async) ||
+          'Create Report'
+        "
         nz-button
         class="ml-2 items-center flex mb-[0.5em] !rounded-lg">
         <span
-          >Create Report
+          >{{
+            ('COMMON.REPORTS.CREATE_REPORT' | translate | async) ||
+              'Create Report'
+          }}
           <span
             class="items-center flex relative bottom-[0.15rem]"
             nz-icon
@@ -18,11 +26,15 @@
       </button>
       <button
         (click)="handleClientManagement()"
-        title="Manage Clients"
+        [title]="
+          ('CLIENTS.MANAGE_CLIENTS' | translate | async) || 'Manage Clients'
+        "
         nz-button
         class="ml-2 items-center flex mb-[0.5em] !rounded-lg">
         <span
-          >Manage Clients
+          >{{
+            ('CLIENTS.MANAGE_CLIENTS' | translate | async) || 'Manage Clients'
+          }}
           <span
             class="items-center flex relative bottom-[0.15rem]"
             nz-icon
@@ -32,11 +44,15 @@
       </button>
       <button
         (click)="handleCreateInvoice()"
-        title="Create Invoice"
+        [title]="
+          ('INVOICES.CREATE_INVOICE' | translate | async) || 'Create Invoice'
+        "
         nz-button
         class="ml-2 items-center flex mb-[0.5em] !rounded-lg">
         <span
-          >Create Invoice
+          >{{
+            ('INVOICES.CREATE_INVOICE' | translate | async) || 'Create Invoice'
+          }}
           <span
             class="items-center flex relative bottom-[0.15rem]"
             nz-icon

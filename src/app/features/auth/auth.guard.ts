@@ -15,8 +15,12 @@ export class AuthGuardService implements CanActivate {
   canActivate(): Observable<boolean> | Promise<boolean> | boolean {
     return this.authService.checkSession().pipe(
       tap(isAuthenticated => {
+        console.log('current route', this.router.url);
         if (!isAuthenticated) {
-          this.router.navigate(['/auth/login']); // Redirect to login or another route
+          const currentUrl = this.router.url;
+          this.router.navigate(['/auth/login'], {
+            queryParams: { returnUrl: currentUrl },
+          });
         }
       })
     );

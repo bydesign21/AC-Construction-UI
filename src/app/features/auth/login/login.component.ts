@@ -9,8 +9,9 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AuthService } from '../auth.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { BehaviorSubject, take, tap } from 'rxjs';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NzModalService } from 'ng-zorro-antd/modal';
+import { TranslatePipe } from '../../../shared-components/pipes/translate.pipe';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -28,8 +29,10 @@ export class LoginComponent {
     private auth: AuthService,
     private message: NzMessageService,
     private router: Router,
+    private route: ActivatedRoute,
     private cd: ChangeDetectorRef,
-    private modal: NzModalService
+    private modal: NzModalService,
+    private translate: TranslatePipe
   ) {}
 
   loginForm = new FormGroup({
@@ -50,11 +53,17 @@ export class LoginComponent {
               const { user, session } = res;
               sessionStorage.setItem('session', JSON.stringify(session));
               sessionStorage.setItem('isAuthenticated', 'true');
+              const returnUrl =
+                this.route.snapshot.queryParams['returnUrl'] || '/';
               this.router
-                .navigate(['dashboard'], { replaceUrl: true })
+                .navigate([decodeURIComponent(returnUrl)], {
+                  replaceUrl: true,
+                })
                 .then(() => {
                   this.message.success(
-                    `Welcome, ${
+                    `${
+                      this.translate.syncTransform('AUTH.WELCOME') || 'Welcome'
+                    }, ${
                       user?.user_metadata?.firstName
                         ? user.user_metadata.firstName
                         : 'User'
@@ -79,7 +88,8 @@ export class LoginComponent {
 
   handleResetPasswordClicked() {
     this.modal.create({
-      nzTitle: 'Reset Password',
+      nzTitle:
+        this.translate.syncTransform('AUTH.RESET_PASSWORD') || 'Reset Password',
       nzWidth: '45dvw',
       nzContent: this.passwordResetModalContent,
       nzClassName: 'relative',

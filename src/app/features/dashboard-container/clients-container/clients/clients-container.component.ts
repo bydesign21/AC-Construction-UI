@@ -11,6 +11,7 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { BehaviorSubject, Subject, debounceTime, take, takeUntil } from 'rxjs';
 import { Client } from '../../invoices-container/invoices-model/model';
 import { InvoicesService } from '../../invoices-container/invoice-service/invoices.service';
+import { TranslatePipe } from '../../../../shared-components/pipes/translate.pipe';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -34,7 +35,8 @@ export class ClientsContainerComponent implements OnInit, OnDestroy {
     private modal: NzModalService,
     private message: NzMessageService,
     private cd: ChangeDetectorRef,
-    private invoices: InvoicesService
+    private invoices: InvoicesService,
+    private translate: TranslatePipe
   ) {}
 
   ngOnInit(): void {
