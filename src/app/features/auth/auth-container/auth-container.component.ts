@@ -19,13 +19,14 @@ export class AuthContainerComponent implements OnInit {
     private cd: ChangeDetectorRef
   ) {}
 
-  async ngOnInit(): Promise<void> {
+  ngOnInit(): void {
     const isAuthenticated = JSON.parse(
       sessionStorage.getItem('isAuthenticated') || 'false'
     );
     if (isAuthenticated) {
-      await this.router.navigate(['/dashboard'], { replaceUrl: true });
-      this.cd.detectChanges();
+      this.router
+        .navigate(['/dashboard'], { replaceUrl: true })
+        .then(() => this.cd.detectChanges());
     }
   }
 }

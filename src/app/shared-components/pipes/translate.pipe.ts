@@ -11,9 +11,15 @@ import { LanguageService } from '../language-service/language.service';
 export class TranslatePipe implements PipeTransform {
   constructor(private languageService: LanguageService) {}
 
-  transform(key: string): Observable<string> {
-    return this.languageService
-      .translate(key)
-      .pipe(map(translation => translation));
+  transform(key: string): Observable<string | null> {
+    return this.languageService.translate(key).pipe(
+      map(translation => {
+        return translation || null;
+      })
+    );
+  }
+
+  syncTransform(key: string): string | null {
+    return this.languageService.syncTranslate(key);
   }
 }

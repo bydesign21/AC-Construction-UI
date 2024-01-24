@@ -20,9 +20,16 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TableStateTemplateModule } from '../../../shared-components/table-state-template/table-state-template.module';
 import { CurrencyMaskModule } from 'ng2-currency-mask';
 import { NzModalModule } from 'ng-zorro-antd/modal';
+import { TranslatePipe } from '../../../shared-components/pipes/translate.pipe';
 
 @NgModule({
   declarations: [
+    InvoicesContainerComponent,
+    CreateInvoiceModalComponent,
+    CreateReportModalComponent,
+  ],
+  providers: [provideRouter(routes)],
+  exports: [
     InvoicesContainerComponent,
     CreateInvoiceModalComponent,
     CreateReportModalComponent,
@@ -45,12 +52,7 @@ import { NzModalModule } from 'ng-zorro-antd/modal';
     TableStateTemplateModule,
     CurrencyMaskModule,
     NzModalModule,
-  ],
-  providers: [provideRouter(routes)],
-  exports: [
-    InvoicesContainerComponent,
-    CreateInvoiceModalComponent,
-    CreateReportModalComponent,
+    TranslatePipe,
   ],
 })
 export class InvoicesModule {}

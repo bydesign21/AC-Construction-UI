@@ -51,23 +51,29 @@ export class LanguageService {
     );
   }
 
-  private getNestedTranslation(obj: any, path: string): string {
+  private getNestedTranslation(obj: any, path: string): string | null {
     const keys = path.split('.');
     let result = obj;
     for (const key of keys) {
       if (result[key]) {
         result = result[key];
       } else {
-        throw new Error(`Translation not found for path: ${path} in ${key}`);
+        result = null;
       }
     }
     return result;
   }
 
-  translate(key: string): Observable<string> {
+  translate(key: string): Observable<string | null> {
     console.log(`Translating ${key}`);
     return this.getTranslationFile().pipe(
-      map(translations => this.getNestedTranslation(translations, key) || key)
+      map(translations => this.getNestedTranslation(translations, key))
     );
+  }
+
+  syncTranslate(key: string): string | null {
+    const langPref = this.getLangPref();
+    const translations = this.translationCache[langPref];
+    return this.getNestedTranslation(translations, key);
   }
 }

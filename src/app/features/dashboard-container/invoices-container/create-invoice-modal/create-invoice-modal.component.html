@@ -4,13 +4,15 @@
       *ngIf="data?.invoice"
       class="flex flex-row w-full justify-end items-center mb-4">
       <button
-        title="Edit Client"
+        [title]="('CLIENTS.EDIT_CLIENT' | translate | async) || 'Edit Client'"
         class="!flex !flex-row !justify-center !items-center !rounded-2xl !gap-1"
         nz-button
         [nzType]="isEditMode ? 'primary' : 'default'"
         (click)="handleEditModeToggled()"
         type="button">
-        <span class="sr-only">Edit</span>
+        <span class="sr-only">{{
+          ('COMMON.ACTIONS.EDIT' | translate | async) || 'Edit'
+        }}</span>
         <span
           class="!flex !flex-row !justify-center !items-center !ml-0"
           nz-icon
@@ -25,7 +27,9 @@
             class="!text-left [&>*]:!text-lg"
             [nzNoColon]="true"
             [nzRequired]="false">
-            Select Employee
+            {{
+              ('CLIENTS.SELECT_CLIENT' | translate | async) || 'Select Client'
+            }}
           </nz-form-label>
           <nz-select
             [disabled]="isEditMode"
@@ -40,7 +44,11 @@
             [nzServerSearch]="true"
             [nzShowSearch]="true"
             [nzServerSearch]="true"
-            [nzPlaceHolder]="selectedClient || 'Select Client'"
+            [nzPlaceHolder]="
+              selectedClient ||
+              ('CLIENTS.SELECT_CLIENT' | translate | async) ||
+              'Select Client'
+            "
             [(ngModel)]="selectedClient"
             (nzOnSearch)="handleSearchTermChanged($event)"
             (ngModelChange)="handleClientChanged($event)">
@@ -53,21 +61,29 @@
         <div class="flex flex-row relative top-[1rem]">
           <app-expense-item-tag
             [isExpense]="true"
-            [label]="'Subtotal'"
+            [label]="
+              ('COMMON.FINANCIAL.SUBTOTAL' | translate | async) || 'Subtotal'
+            "
             [value]="(subtotal$ | async) || 0" />
           <app-expense-item-tag
             [isExpense]="true"
-            [label]="'Total'"
+            [label]="('COMMON.FINANCIAL.TOTAL' | translate | async) || 'Total'"
             [value]="(total$ | async) || 0" />
         </div>
       </div>
       <div class="flex flex-row gap-2">
         <button
           nz-button
-          title="Download Report"
+          [title]="
+            ('COMMON.REPORTS.DOWNLOAD_REPORT' | translate | async) ||
+            'Download Report'
+          "
           class="!rounded-lg !items-center justify-center !flex !flex-col relative">
           <div class="flex flex-row gap-1 items-center">
-            <span class="sr-only">Download Report</span>
+            <span class="sr-only">{{
+              ('COMMON.REPORTS.DOWNLOAD_REPORT' | translate | async) ||
+                'Download Report'
+            }}</span>
             <span
               class="items-center flex flex-col justify-center"
               nz-icon
@@ -77,10 +93,16 @@
         </button>
         <button
           nz-button
-          title="Print Report"
+          [title]="
+            ('COMMON.REPORTS.PRINT_REPORT' | translate | async) ||
+            'Print Report'
+          "
           class="!rounded-lg !items-center justify-center !flex !flex-col relative">
           <div class="flex flex-row gap-1 items-center">
-            <span class="sr-only">Print Report</span>
+            <span class="sr-only">{{
+              ('COMMON.REPORTS.PRINT_REPORT' | translate | async) ||
+                'Print Report'
+            }}</span>
             <span
               class="items-center flex flex-col justify-center"
               nz-icon
@@ -90,10 +112,16 @@
         </button>
         <button
           nz-button
-          title="Email Report"
+          [title]="
+            ('COMMON.REPORTS.EMAIL_REPORT' | translate | async) ||
+            'Email Report'
+          "
           class="!rounded-lg !items-center justify-center !flex !flex-col relative">
           <div class="flex flex-row gap-1 items-center">
-            <span class="sr-only">Email Report</span>
+            <span class="sr-only">{{
+              ('COMMON.REPORTS.EMAIL_REPORT' | translate | async) ||
+                'Email Report'
+            }}</span>
             <span
               class="items-center flex flex-col justify-center"
               nz-icon
@@ -122,7 +150,11 @@
     nzType="primary"
     [disabled]="!isFormValid()"
     (click)="onOk()">
-    {{ data?.invoice || order ? 'Update' : 'Create' }}
+    {{
+      data?.invoice || order
+        ? ('COMMON.ACTIONS.UPDATE' | translate | async) || 'Update'
+        : ('COMMON.ACTIONS.CREATE' | translate | async) || 'Create'
+    }}
   </button>
 </ng-template>
 

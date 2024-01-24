@@ -2,16 +2,25 @@
   <div class="overflow-auto max-h-[80dvh]">
     <div class="flex flex-row gap-4 mx-2 items-center justify-between">
       <app-date-range-picker
-        [label]="'Select Date Range'"
+        [label]="
+          ('COMMON.MISC.SELECT_DATE_RANGE' | translate | async) ||
+          'Select Date Range'
+        "
         [isRequired]="true"
         (changed)="handleDateChanged($event)"></app-date-range-picker>
       <div class="flex flex-row gap-2">
         <button
           nz-button
-          title="Download Report"
+          [title]="
+            ('COMMON.REPORTS.DOWNLOAD_REPORT' | translate | async) ||
+            'Download Report'
+          "
           class="!rounded-lg !items-center justify-center !flex !flex-col relative top-4">
           <div class="flex flex-row gap-1 items-center">
-            <span class="sr-only">Download Report</span>
+            <span class="sr-only">{{
+              ('COMMON.REPORTS.DOWNLOAD_REPORT' | translate | async) ||
+                'Download Report'
+            }}</span>
             <span
               class="items-center flex flex-col justify-center"
               nz-icon
@@ -21,10 +30,16 @@
         </button>
         <button
           nz-button
-          title="Print Report"
+          [title]="
+            ('COMMON.REPORTS.PRINT_REPORT' | translate | async) ||
+            'Print Report'
+          "
           class="!rounded-lg !items-center justify-center !flex !flex-col relative top-4">
           <div class="flex flex-row gap-1 items-center">
-            <span class="sr-only">Print Report</span>
+            <span class="sr-only">{{
+              ('COMMON.REPORTS.PRINT_REPORT' | translate | async) ||
+                'Print Report'
+            }}</span>
             <span
               class="items-center flex flex-col justify-center"
               nz-icon
@@ -37,7 +52,10 @@
           title="Email Report"
           class="!rounded-lg !items-center justify-center !flex !flex-col relative top-4">
           <div class="flex flex-row gap-1 items-center">
-            <span class="sr-only">Email Report</span>
+            <span class="sr-only">{{
+              ('COMMON.REPORTS.EMAIL_REPORT' | translate | async) ||
+                'Email Report'
+            }}</span>
             <span
               class="items-center flex flex-col justify-center"
               nz-icon
@@ -65,6 +83,12 @@
   <app-table-state-template
     class="[&>*]:!h-[55dvh]"
     [iconType]="'search'"
-    [mainMessage]="'Select a Date Range To Start'"
-    [additionalInfo]="'Please adjust the filters to find desired invoices.'" />
+    [mainMessage]="
+      ('INVOICES.FILTER_TO_START' | translate | async) ||
+      'Select a Date Range To Start'
+    "
+    [additionalInfo]="
+      ('INVOICES.FILTER_TO_START_SUBTITLE' | translate | async) ||
+      'Please adjust the filters to find desired invoices.'
+    " />
 </ng-template>

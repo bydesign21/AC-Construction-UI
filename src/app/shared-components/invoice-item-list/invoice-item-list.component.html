@@ -19,17 +19,17 @@
         <th
           *ngFor="
             let field of [
-              'planId',
-              'address',
-              'quantity',
-              'rate',
-              'discount',
-              'subtotal',
-              'total'
+              'COMMON.MISC.PLAN_ID',
+              'COMMON.LOCATION.ADDRESS',
+              'COMMON.FINANCIAL.QUANTITY',
+              'COMMON.FINANCIAL.RATE',
+              'COMMON.FINANCIAL.DISCOUNT',
+              'COMMON.FINANCIAL.SUBTOTAL',
+              'COMMON.FINANCIAL.TOTAL'
             ]
           ">
           <div class="flex flex-row items-center justify-between">
-            <span>{{ field | titlecase }}</span>
+            <span>{{ field | translate | async }}</span>
             <span
               *ngIf="isFieldErrorPresent(field)"
               nz-icon
@@ -42,7 +42,7 @@
             </span>
           </div>
         </th>
-        <th>Action</th>
+        <th>{{ ('COMMON.ACTIONS.ACTION' | translate | async) || 'Action' }}</th>
       </tr>
     </thead>
     <tbody>
@@ -136,20 +136,28 @@
 
         <td class="flex flex-col items-center justify-center">
           <button
-            title="Delete Row"
+            [title]="
+              ('COMMON.ITEMS.DELETE_ITEM' | translate | async) || 'Delete Item'
+            "
             type="button"
             class="!rounded-lg items-center justify-center flex flex-col"
             nz-button
             [disabled]="isDisabled"
             nz-popconfirm
-            nzPopconfirmTitle="Are you sure?"
+            [nzPopconfirmTitle]="
+              ('COMMON.MISC.CONFIRM_PROMPT' | translate | async) ||
+              'Are you sure?'
+            "
             (nzOnConfirm)="deleteItem(i)">
             <span
               class="items-center !text-red-400 justify-center h-[1.4rem]"
               nz-icon
               [nzType]="'delete'"
               nzTheme="outline"
-              ><span class="sr-only">Delete Item</span></span
+              ><span class="sr-only">{{
+                ('COMMON.ITEMS.DELETE_ITEM' | translate | async) ||
+                  'Delete Item'
+              }}</span></span
             >
           </button>
         </td>
@@ -168,7 +176,7 @@
       nzType="primary"
       nzSize="large"
       class="!rounded-lg w-[40%] justify-center items-center flex flex-auto">
-      Add Line Item
+      {{ ('INVOICES.ADD_LINE_ITEM' | translate | async) || 'Add Line Item' }}
     </button>
   </div>
 </div>
@@ -187,8 +195,12 @@
   <app-table-state-template
     class="[&>*]:!h-[50dvh]"
     [iconType]="'plus-circle'"
-    [mainMessage]="'No Items In Invoice'"
+    [mainMessage]="
+      ('INVOICES.NO_ITEMS_IN_INVOICE' | translate | async) ||
+      'No Items In Invoice'
+    "
     [additionalInfo]="
+      ('INVOICES.NO_ITEMS_IN_INVOICE_SUBTITLE' | translate | async) ||
       'Please add an item to the invoice to get started.'
     "></app-table-state-template>
 </ng-template>

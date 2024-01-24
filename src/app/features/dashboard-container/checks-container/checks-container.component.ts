@@ -14,6 +14,7 @@ import { Check } from './check-model/model';
 import { ChecksService } from './checks-services/checks.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { TranslatePipe } from '../../../shared-components/pipes/translate.pipe';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -29,7 +30,8 @@ export class ChecksContainerComponent implements OnInit {
     private checks: ChecksService,
     private router: Router,
     private route: ActivatedRoute,
-    private message: NzMessageService
+    private message: NzMessageService,
+    private translate: TranslatePipe
   ) {}
   checks$: BehaviorSubject<Check[]> = new BehaviorSubject<Check[]>([]);
   reportChecks$: BehaviorSubject<Check[]> = new BehaviorSubject<Check[]>([]);
@@ -76,10 +78,13 @@ export class ChecksContainerComponent implements OnInit {
 
   handleViewItem(item: Check) {
     const modal = this.modal.create({
-      nzTitle: 'View Check',
-      nzOkText: 'Update',
+      nzTitle:
+        this.translate.syncTransform('CHECKS.VIEW_CHECK') || 'View Check',
+      nzOkText:
+        this.translate.syncTransform('COMMON.ACTIONS.UPDATE') || 'Update',
       nzOkDisabled: true,
-      nzCancelText: 'Cancel',
+      nzCancelText:
+        this.translate.syncTransform('COMMON.ACTIONS.CANCEL') || 'Cancel',
       nzContent: CreateCheckModalComponent,
       nzData: { check: item },
       nzWidth: '100dvw',
@@ -112,10 +117,18 @@ export class ChecksContainerComponent implements OnInit {
           );
           checks[checkIndex] = check;
           this.checks$.next([...checks]);
-          this.message.success('Check updated successfully');
+          this.message.success(
+            this.translate.syncTransform('CHECKS.CHECK_UPDATE_SUCCESS') ||
+              'Check updated successfully'
+          );
         },
         error: err => {
-          this.message.error(`Error updating check: ${err.message}`);
+          this.message.error(
+            `${
+              this.translate.syncTransform('CHECKS.CHECK_UPDATE_ERROR') ||
+              'Error updating check'
+            }: ${err.message}`
+          );
         },
         complete: () => this.cd.detectChanges(),
       });
@@ -128,10 +141,14 @@ export class ChecksContainerComponent implements OnInit {
   handleDeleteItem(checkNumber: string) {
     this.modal.create({
       nzOkDanger: true,
-      nzTitle: 'Confirm Deletion',
+      nzTitle:
+        this.translate.syncTransform('COMMON.MISC.CONFIRM_DELETION') ||
+        'Confirm Deletion',
       nzContent: DeleteWeeklyReportModalComponent,
-      nzOkText: 'Delete',
-      nzCancelText: 'Cancel',
+      nzOkText:
+        this.translate.syncTransform('COMMON.ACTIONS.DELETE') || 'Delete',
+      nzCancelText:
+        this.translate.syncTransform('COMMON.ACTIONS.CANCEL') || 'Cancel',
       nzOnOk: () => {
         this.deleteCheck(checkNumber);
       },
@@ -145,10 +162,18 @@ export class ChecksContainerComponent implements OnInit {
       .subscribe({
         next: () => {
           this.loadData(this.currentPage);
-          this.message.success('Check deleted successfully');
+          this.message.success(
+            this.translate.syncTransform('CHECKS.CHECK_DELETE_SUCCESS') ||
+              'Check deleted successfully'
+          );
         },
         error: err => {
-          this.message.error(`Error deleting check: ${err.message}`);
+          this.message.error(
+            `${
+              this.translate.syncTransform('CHECKS.CHECK_DELETE_ERROR') ||
+              'Error deleting check'
+            }: ${err.message}`
+          );
         },
         complete: () => this.cd.detectChanges(),
       });
@@ -157,7 +182,9 @@ export class ChecksContainerComponent implements OnInit {
   // Report Modal
   handleCreateCheckReport() {
     const modal = this.modal.create({
-      nzTitle: 'Create Check Report',
+      nzTitle:
+        this.translate.syncTransform('CHECKS.CREATE_CHECK_REPORTs') ||
+        'Create Check Report',
       nzContent: CreateChecksReportModalComponent,
       nzWidth: '100dvw',
       nzBodyStyle: { height: '90dvh' },
@@ -174,9 +201,12 @@ export class ChecksContainerComponent implements OnInit {
 
   handleCreateCheck() {
     const modal = this.modal.create({
-      nzTitle: 'Create Check',
-      nzOkText: 'Create',
-      nzCancelText: 'Cancel',
+      nzTitle:
+        this.translate.syncTransform('CHECKS.CREATE_CHECK') || 'Create Check',
+      nzOkText:
+        this.translate.syncTransform('COMMON.ACTIONS.CREATE') || 'Create',
+      nzCancelText:
+        this.translate.syncTransform('COMMON.ACTIONS.CANCEL') || 'Cancel',
       nzOkDisabled: true,
       nzContent: CreateCheckModalComponent,
       nzWidth: '100dvw',
@@ -204,10 +234,18 @@ export class ChecksContainerComponent implements OnInit {
       .subscribe({
         next: () => {
           this.loadData(this.currentPage);
-          this.message.success('Check created successfully');
+          this.message.success(
+            this.translate.syncTransform('CHECKS.CHECK_CREATED_SUCCESS') ||
+              'Check created successfully'
+          );
         },
         error: err => {
-          this.message.error(`Error creating check: ${err.message}`);
+          this.message.error(
+            `${
+              this.translate.syncTransform('CHECKS.CHECK_CREATED_ERROR') ||
+              'Error creating check'
+            }: ${err.message}`
+          );
         },
         complete: () => this.cd.detectChanges(),
       });
@@ -217,7 +255,9 @@ export class ChecksContainerComponent implements OnInit {
 
   handleEmployeeManagement() {
     this.modal.create({
-      nzTitle: 'Manage Employees',
+      nzTitle:
+        this.translate.syncTransform('EMPLOYEES.MANAGE_EMPLOYEES') ||
+        'Manage Employees',
       nzFooter: null,
       nzContent: EmployeeContainerComponent,
       nzWidth: '100dvw',

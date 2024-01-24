@@ -5,9 +5,10 @@ import {
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../auth.service';
-import { take } from 'rxjs';
+import { switchMap, take } from 'rxjs';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { Router } from '@angular/router';
+import { TranslatePipe } from '../../../shared-components/pipes/translate.pipe';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -21,7 +22,8 @@ export class PasswordResetComponent {
     private auth: AuthService,
     private message: NzMessageService,
     private router: Router,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private translate: TranslatePipe
   ) {}
 
   passwordResetForm = new FormGroup({
@@ -38,10 +40,14 @@ export class PasswordResetComponent {
         .updatePassword(email, password)
         .pipe(take(1))
         .subscribe({
-          next: async () => {
-            this.message.success('Password successfully updated');
-            await this.router.navigate(['auth', 'login'], { replaceUrl: true });
-            this.cd.detectChanges();
+          next: () => {
+            this.message.success(
+              this.translate.syncTransform('AUTH.PASSWORD_UPDATE_SUCCESS') ||
+                'Password successfully updated'
+            );
+            this.router
+              .navigate(['auth', 'login'], { replaceUrl: true })
+              .then(() => this.cd.detectChanges());
           },
           error: err => this.message.error(err),
         });
