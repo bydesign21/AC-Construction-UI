@@ -33,7 +33,6 @@ export class LanguageService {
 
   getTranslationFile(): Observable<any> {
     const langPref = this.getLangPref();
-    console.log('langPref', langPref);
     if (this.translationCache[langPref]) {
       return of(this.translationCache[langPref]);
     }
@@ -65,7 +64,6 @@ export class LanguageService {
   }
 
   translate(key: string): Observable<string | null> {
-    console.log(`Translating ${key}`);
     return this.getTranslationFile().pipe(
       map(translations => this.getNestedTranslation(translations, key))
     );

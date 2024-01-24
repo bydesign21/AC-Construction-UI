@@ -27,7 +27,7 @@ export class EmployeeContainerComponent implements OnInit, OnDestroy {
   loading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   searchTermInternal = '';
   currentPage = 1;
-  limit = 8;
+  limit = 10;
   totalEmployeeRecords = 0;
 
   constructor(

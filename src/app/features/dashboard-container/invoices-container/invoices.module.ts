@@ -28,7 +28,7 @@ import { TranslatePipe } from '../../../shared-components/pipes/translate.pipe';
     CreateInvoiceModalComponent,
     CreateReportModalComponent,
   ],
-  providers: [provideRouter(routes)],
+  providers: [provideRouter(routes), TranslatePipe],
   exports: [
     InvoicesContainerComponent,
     CreateInvoiceModalComponent,

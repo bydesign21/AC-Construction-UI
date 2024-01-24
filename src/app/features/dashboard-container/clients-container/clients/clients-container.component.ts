@@ -25,7 +25,7 @@ export class ClientsContainerComponent implements OnInit, OnDestroy {
   clientList: Client[] = [];
   count: number = 0;
   currentPage: number = 1;
-  limit: number = 8;
+  limit: number = 10;
   searchTerm$ = new Subject<string>();
   loading$ = new BehaviorSubject<boolean>(false);
   searchTerm: string = '';
